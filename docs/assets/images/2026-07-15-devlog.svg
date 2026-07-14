@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+<title id="title">VR Avatar Viewer 開発日記 2026年7月15日</title>
+<desc id="desc">狐耳の開発者ろひと、GitHub Pages公開までの進捗を描いた開発日記画像</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff4d5"/><stop offset="1" stop-color="#ffb455"/></linearGradient>
+  <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffd947"/><stop offset="1" stop-color="#f47a16"/></linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-opacity=".22"/></filter>
+</defs>
+<rect width="1200" height="1200" fill="url(#bg)"/>
+<circle cx="1020" cy="170" r="260" fill="#fff" opacity=".32"/>
+<rect x="55" y="55" width="1090" height="1090" rx="42" fill="#fff" opacity=".2" stroke="#fff" stroke-width="5"/>
+<g filter="url(#shadow)">
+  <rect x="55" y="52" width="520" height="140" rx="24" fill="#151a24"/>
+  <text x="95" y="110" fill="#fff" font-size="38" font-weight="700" font-family="sans-serif">VR Avatar Viewer</text>
+  <text x="95" y="165" fill="#ffb13b" font-size="52" font-weight="900" font-family="sans-serif">開発日記</text>
+  <text x="925" y="105" fill="#592b09" font-size="30" font-weight="700" font-family="sans-serif">2026.07.15</text>
+</g>
+<g transform="translate(640 210)" filter="url(#shadow)">
+  <path d="M115 105 L35 5 L175 45 Z" fill="#f28b18" stroke="#66310b" stroke-width="10"/>
+  <path d="M370 105 L450 5 L310 45 Z" fill="#f28b18" stroke="#66310b" stroke-width="10"/>
+  <path d="M82 44 L58 24 L130 58 Z" fill="#ffd36e"/>
+  <path d="M403 44 L427 24 L355 58 Z" fill="#ffd36e"/>
+  <ellipse cx="242" cy="270" rx="205" ry="220" fill="#ffd8c6" stroke="#66310b" stroke-width="10"/>
+  <path d="M55 215 Q60 55 240 42 Q420 50 430 215 Q370 135 315 145 Q245 62 150 155 Q105 132 55 215Z" fill="url(#hair)" stroke="#66310b" stroke-width="10"/>
+  <path d="M155 127 Q210 45 270 70 Q220 145 192 222" fill="url(#hair)"/>
+  <ellipse cx="166" cy="278" rx="35" ry="47" fill="#b52b20"/>
+  <ellipse cx="318" cy="278" rx="35" ry="47" fill="#b52b20"/>
+  <circle cx="176" cy="263" r="10" fill="#fff"/>
+  <path d="M204 352 Q242 385 280 352" fill="none" stroke="#70331f" stroke-width="10" stroke-linecap="round"/>
+  <g fill="none" stroke="#b62424" stroke-width="8">
+    <rect x="102" y="230" width="112" height="80" rx="20"/>
+    <rect x="272" y="230" width="112" height="80" rx="20"/>
+    <path d="M214 260 L272 260"/>
+  </g>
+  <path d="M60 480 Q242 390 425 480 L465 760 L20 760Z" fill="#f5ad16" stroke="#66310b" stroke-width="10"/>
+  <path d="M90 470 L245 760" stroke="#2d241f" stroke-width="34"/>
+  <path d="M440 560 Q540 470 555 610 Q562 748 435 750 Q510 680 440 560Z" fill="#f28b18" stroke="#66310b" stroke-width="10"/>
+</g>
+<g transform="translate(90 250)" filter="url(#shadow)">
+  <rect width="475" height="650" rx="34" fill="#fffdf7" stroke="#7a4518" stroke-width="7"/>
+  <text x="45" y="90" fill="#5a2b0b" font-size="52" font-weight="900" font-family="sans-serif">本日の進捗</text>
+  <g font-family="sans-serif" font-size="37" fill="#222" font-weight="700">
+    <text x="55" y="175">✓ トップページ整備</text>
+    <text x="55" y="245">✓ GitHub Pages設定</text>
+    <text x="55" y="315">✓ 開発日記一覧</text>
+    <text x="55" y="385">✓ 今日の記事を追加</text>
+    <text x="55" y="455">✓ 画像を配置</text>
+    <text x="55" y="525">✓ コミット＆Push</text>
+  </g>
+  <text x="45" y="600" fill="#f07813" font-size="31" font-weight="800" font-family="sans-serif">毎日少しずつ、確実に。</text>
+</g>
+<g filter="url(#shadow)">
+  <rect x="85" y="960" width="1030" height="150" rx="32" fill="#151a24"/>
+  <text x="600" y="1025" text-anchor="middle" fill="#fff" font-size="46" font-weight="900" font-family="sans-serif">公式サイト、いよいよ公開へ！</text>
+  <text x="600" y="1080" text-anchor="middle" fill="#ffb13b" font-size="30" font-weight="700" font-family="sans-serif">開発の歴史も、ここから一緒に積み上げていきます。</text>
+</g>
+</svg>
