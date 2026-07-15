@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>軽くして、直して、画像まで運ぶ日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="VR操作修正、VABテクスチャ重複排除、ChatGPT画像ブリッジ整備を進めたVR Avatar Viewer開発日記です。">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VR Avatar Viewer</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.07.16 / Development Log</div>
+  <h1>軽くして、直して、画像まで運ぶ日</h1>
+  <p class="lead">昨日のVR Avatar Viewerは、アバターを軽くし、VR操作の取りこぼしを直し、ついにはChatGPTとDevSpaceの間で画像まで運び始めました。</p>
+  <div class="notice">実際のコミットと実装内容をもとにしていますが、会話や表現の一部には読み物としての演出があります。</div>
+  <p><img src="../assets/images/2026-07-16-devlog.svg" alt="ろひとChatGPTがVR操作修正、VAB軽量化、画像ブリッジを進める開発日記イラスト" width="1536" height="1024"></p>
+
+  <h2>昨日の主役は「地味だけど効く」三連戦</h2>
+  <p>最新ソースを確認すると、前回以降の大きな流れは三つでした。VR操作まわりの不具合修正、VAB 4.0のロードとテクスチャ管理の最適化、そしてChatGPT画像ブリッジの整備です。</p>
+  <p>見た目の派手さでは新機能に負けますが、こういう修正は実際に触ったときの快適さへ直接効きます。VRでは「一回押したのに反応しない」だけで、ユーザーの脳内バグ報告書が即座に生成されます。</p>
+
+  <h2>VR操作：「一回目は聞こえないふり」をやめる</h2>
+  <p>チェックボックスの初回入力、指ポーズの発動条件、揺れモノ固定、ポーズタブ内の読みにくいボタンなどが修正されました。さらに、Bloomは無効だったのではなく、何度か操作しないと反応しない状態だったことも判明。結果として入力経路とUI状態の同期をまとめて見直しています。</p>
+  <blockquote>ろひ「押したぞ」<br>UI「……」<br>ろひ「押したぞ？」<br>UI「はい、今聞こえました」<br>ろひ「一回目から聞け」</blockquote>
+
+  <h2>VAB 4.0：同じテクスチャを何度も持ち歩かない</h2>
+  <p>VABでは、同一テクスチャの重複格納を避ける処理が追加されました。アバター一体あたりの容量が70～90MB級になる課題に対し、実行速度を維持しながら無駄なデータを減らす方向です。</p>
+  <p>ロード処理側でも、実行時リソース管理、非同期化、キャッシュ利用、布物理の段階的準備などが進みました。ファッションショーモードで一瞬の停止も目立たせないため、「まず姿を出す、その後で重い準備を進める」という構成へ寄せています。</p>
+
+  <h2>画像ブリッジ：コードの次は絵まで運び始めた</h2>
+  <p>ChatGPTからDevSpaceへ画像を渡す受信ブリッジと、DevSpaceからChatGPTへ画像を返す送信ブリッジがそろいました。Base64分割、Manifest、SHA-256、Content-Type、出力先検証を使い、画像をリポジトリ内へ安全に復元する仕組みです。</p>
+  <p>昨日は96×144pxの公開画像を生み出すという、歴史的な小ささも記録しました。転送成功だけに気を取られ、公開品質の確認を忘れた結果です。今日の教訓は明快でした。</p>
+  <blockquote>画像が届いたことと、画像が読めることは別問題。</blockquote>
+
+  <h2>前回確認時からの主な変更</h2>
+  <ul>
+    <li>VR操作不具合とポーズUIの修正</li>
+    <li>VRチェックボックスの初回入力不具合を修正</li>
+    <li>指ポーズをUSE＋トリガー操作へ限定</li>
+    <li>VABテクスチャの重複排除による軽量化</li>
+    <li>VAB 4.0ロードと実行時リソース管理の最適化</li>
+    <li>負荷に応じた自動品質制御とロード停止対策</li>
+    <li>ChatGPT⇄DevSpace画像ブリッジの追加</li>
+  </ul>
+
+  <h2>本日のひとこと</h2>
+  <blockquote>バグも容量も画像も、見えないところで増える。だから一つずつ捕まえて運ぶ。</blockquote>
+  <p>機能を増やす日も大切ですが、昨日は「触ったときにちゃんと動く」「読み込みで止まらない」「記事の絵が見える」という土台をまとめて強くした一日でした。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body></html>
