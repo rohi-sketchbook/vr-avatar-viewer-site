@@ -1,5 +1,103 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 360 240" role="img" aria-labelledby="title desc">
-  <title id="title">VR Avatar Viewer 開発日記</title>
-  <desc id="desc">ユーザーとChatGPTがVR Avatar Viewerを開発する様子を描いた生成イラスト</desc>
-  <image width="360" height="240" preserveAspectRatio="xMidYMid slice" href="data:image/jpeg;base64,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"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="768" height="1024" viewBox="0 0 768 1024" role="img" aria-labelledby="title desc">
+<title id="title">画像連携成功 — VR Avatar Viewer 開発日記</title>
+<desc id="desc">狐耳と赤い眼鏡のろひが、ChatGPTとDevSpaceをつないでGitHub Pagesへ画像付き記事を公開するイラスト</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset=".58" stop-color="#0c2340"/><stop offset="1" stop-color="#143457"/></linearGradient>
+  <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#14263e"/><stop offset="1" stop-color="#0b1729"/></linearGradient>
+  <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffd84a"/><stop offset=".55" stop-color="#ff9c1b"/><stop offset="1" stop-color="#ed6812"/></linearGradient>
+  <linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffd72f"/><stop offset="1" stop-color="#f29b13"/></linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity=".35"/></filter>
+  <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="768" height="1024" fill="url(#bg)"/>
+<circle cx="654" cy="154" r="190" fill="#1c78a6" opacity=".14"/>
+<circle cx="122" cy="806" r="230" fill="#ff9d24" opacity=".08"/>
+
+<g font-family="system-ui, sans-serif">
+  <text x="42" y="64" fill="#fff" font-size="31" font-weight="800">VR Avatar Viewer</text>
+  <text x="42" y="101" fill="#4fd6ff" font-size="18" font-weight="700">DEVELOPMENT LOG — 2026.07.15</text>
+  <rect x="42" y="125" width="684" height="2" fill="#3cbde7" opacity=".4"/>
+  <text x="42" y="176" fill="#fff" font-size="38" font-weight="900">画像も、ちゃんとサイトへ。</text>
+  <text x="43" y="210" fill="#bdd2e7" font-size="19">ChatGPT ⇄ DevSpace ⇄ GitHub Pages の連携が完成。</text>
+</g>
+
+<!-- flow panel -->
+<g filter="url(#shadow)">
+  <rect x="42" y="242" width="684" height="150" rx="24" fill="url(#panel)" stroke="#2d7295" stroke-width="2"/>
+  <g font-family="system-ui, sans-serif" text-anchor="middle">
+    <rect x="72" y="277" width="150" height="78" rx="16" fill="#10283e" stroke="#4bd4ff"/>
+    <text x="147" y="307" fill="#fff" font-size="19" font-weight="800">ChatGPT</text>
+    <text x="147" y="334" fill="#78ddff" font-size="14">画像を生成</text>
+    <rect x="309" y="277" width="150" height="78" rx="16" fill="#10283e" stroke="#ffb33f"/>
+    <text x="384" y="307" fill="#fff" font-size="19" font-weight="800">DevSpace</text>
+    <text x="384" y="334" fill="#ffd075" font-size="14">記事へ配置</text>
+    <rect x="546" y="277" width="150" height="78" rx="16" fill="#10283e" stroke="#58e28c"/>
+    <text x="621" y="307" fill="#fff" font-size="19" font-weight="800">GitHub Pages</text>
+    <text x="621" y="334" fill="#82f0aa" font-size="14">サイト公開</text>
+    <path d="M230 316h65" stroke="#4bd4ff" stroke-width="5" stroke-linecap="round"/>
+    <path d="M287 306l14 10-14 10" fill="none" stroke="#4bd4ff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M467 316h65" stroke="#58e28c" stroke-width="5" stroke-linecap="round"/>
+    <path d="M524 306l14 10-14 10" fill="none" stroke="#58e28c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</g>
+
+<!-- rohi -->
+<g transform="translate(354 388)" filter="url(#shadow)">
+  <!-- tail -->
+  <path d="M258 327c120-20 127 128 29 139 68-57-2-95-55-65z" fill="url(#hair)" stroke="#6e300b" stroke-width="8"/>
+  <path d="M305 411c30 4 45 20 50 38-19 20-42 26-69 17 22-13 29-31 19-55z" fill="#fff1ce" opacity=".9"/>
+  <!-- ears -->
+  <path d="M74 100L36 5l102 46z" fill="url(#hair)" stroke="#70310b" stroke-width="8"/>
+  <path d="M302 100L340 5 238 51z" fill="url(#hair)" stroke="#70310b" stroke-width="8"/>
+  <path d="M72 64L53 26l55 26z" fill="#ffe1ae"/>
+  <path d="M304 64l19-38-55 26z" fill="#ffe1ae"/>
+  <!-- head -->
+  <ellipse cx="188" cy="181" rx="142" ry="148" fill="#ffd9c6" stroke="#70310b" stroke-width="8"/>
+  <!-- hair -->
+  <path d="M50 166C47 52 150 27 204 39c92 20 129 80 118 161-29-50-59-61-86-58-31-55-98-71-148-7-12 15-24 26-38 31z" fill="url(#hair)" stroke="#70310b" stroke-width="8"/>
+  <path d="M140 48c61 3 83 28 91 55-37 19-61 49-72 93-5-59-17-103-19-148z" fill="url(#hair)"/>
+  <!-- eyes -->
+  <ellipse cx="126" cy="190" rx="28" ry="37" fill="#a81f1f"/>
+  <ellipse cx="250" cy="190" rx="28" ry="37" fill="#a81f1f"/>
+  <circle cx="136" cy="178" r="9" fill="#fff"/>
+  <path d="M226 185q24 20 48 0" fill="none" stroke="#562018" stroke-width="7" stroke-linecap="round"/>
+  <!-- glasses -->
+  <g fill="none" stroke="#b5252d" stroke-width="7">
+    <rect x="83" y="151" width="86" height="66" rx="17" transform="rotate(-6 126 184)"/>
+    <rect x="207" y="151" width="86" height="66" rx="17" transform="rotate(6 250 184)"/>
+    <path d="M169 178h38"/>
+  </g>
+  <!-- mouth -->
+  <path d="M157 248q31 33 64 0" fill="#9f2722" stroke="#6b241b" stroke-width="5"/>
+  <path d="M173 263q16 10 33 0" stroke="#ff9b9b" stroke-width="6" stroke-linecap="round"/>
+  <!-- body -->
+  <path d="M76 323q112-84 224 0l36 255H41z" fill="url(#shirt)" stroke="#70310b" stroke-width="8"/>
+  <path d="M77 316l121 262" stroke="#25252a" stroke-width="30"/>
+  <rect x="123" y="389" width="140" height="90" rx="14" fill="#111c2c" stroke="#4bd4ff" stroke-width="4"/>
+  <text x="193" y="426" text-anchor="middle" font-family="system-ui, sans-serif" fill="#fff" font-size="17" font-weight="800">IMAGE</text>
+  <text x="193" y="451" text-anchor="middle" font-family="system-ui, sans-serif" fill="#58e28c" font-size="15">DISPLAY OK ✓</text>
+  <!-- thumb up -->
+  <path d="M293 330c34-19 55-17 68 2 14 22-4 43-26 42 14 12 10 37-9 45-17 7-33-2-42-17l-32-49z" fill="#ffd9c6" stroke="#70310b" stroke-width="8"/>
+  <path d="M332 337c22-59 52-48 48-16-3 19-13 35-28 48" fill="#ffd9c6" stroke="#70310b" stroke-width="8" stroke-linecap="round"/>
+</g>
+
+<!-- bottom cards -->
+<g font-family="system-ui, sans-serif" filter="url(#shadow)">
+  <rect x="42" y="855" width="330" height="127" rx="22" fill="url(#panel)" stroke="#2d7295"/>
+  <text x="64" y="890" fill="#4fd6ff" font-size="20" font-weight="800">今日の修正</text>
+  <text x="64" y="923" fill="#e7f3ff" font-size="16">✓ 壊れたプレースホルダーを撤去</text>
+  <text x="64" y="951" fill="#e7f3ff" font-size="16">✓ 実画像として確実に表示</text>
+
+  <rect x="396" y="855" width="330" height="127" rx="22" fill="url(#panel)" stroke="#a86a25"/>
+  <text x="418" y="890" fill="#ffc45f" font-size="20" font-weight="800">ろひのひとこと</text>
+  <text x="418" y="923" fill="#fff" font-size="17" font-weight="700">「これで毎日の絵も、</text>
+  <text x="418" y="950" fill="#fff" font-size="17" font-weight="700">ちゃんとサイトに載るね！」</text>
+</g>
+
+<g filter="url(#glow)">
+  <circle cx="687" cy="174" r="5" fill="#ffe36b"/>
+  <path d="M687 153v42M666 174h42" stroke="#ffe36b" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="318" cy="437" r="4" fill="#4fd6ff"/>
+  <path d="M318 420v34M301 437h34" stroke="#4fd6ff" stroke-width="3" stroke-linecap="round"/>
+</g>
 </svg>
