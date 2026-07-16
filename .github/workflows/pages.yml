@@ -1,8 +1,8 @@
-name: Deploy GitHub Pages
+name: Deploy GitHub Pages (Manual)
 
+# GitHub Pages は main ブランチからの公開を正本とする。
+# 二重デプロイを避けるため、このワークフローは手動確認用に限定する。
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
