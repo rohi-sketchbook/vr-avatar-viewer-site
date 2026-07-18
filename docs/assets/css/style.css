@@ -45,7 +45,7 @@ section { padding: 42px 0; }
 .feature-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 0; list-style: none; }
 .feature-list li { padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.03); }
 .article { padding: clamp(22px, 5vw, 52px); margin: 48px auto; }
-.article img { width: 100%; border-radius: 20px; border: 1px solid var(--line); display: block; }
+.article img { width: 100%; max-width: 100%; height: auto; border-radius: 20px; border: 1px solid var(--line); display: block; }
 .article h1 { font-size: clamp(2rem, 6vw, 4rem); }
 .article blockquote { margin: 24px 0; padding: 18px 22px; border-left: 4px solid var(--accent); background: rgba(255,159,28,.08); }
 .notice { padding: 16px 18px; border-radius: 14px; background: rgba(76,201,240,.08); border: 1px solid rgba(76,201,240,.25); color: #dff7ff; }
