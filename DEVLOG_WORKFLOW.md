@@ -162,8 +162,8 @@ X共有対応:
 
 - 各記事は絶対URLの `canonical`、Open Graph、`twitter:card=summary_large_image` を持つ。
 - `og:image` / `twitter:image` は、その記事で実際に掲載している正式4コマ画像を指す。
-- 4コマ画像の直下に `https://x.com/intent/tweet` を使った共有ボタンを置く。
-- Intentへは記事タイトル、記事URL、`VRAvatarViewer` / `Unity` のハッシュタグを渡す。
+- 4コマ画像の直下に `https://x.com/intent/tweet` を使った「Xで共有」ボタンを置く。
+- Intentの本文には記事タイトルを明示的に含め、記事URL、`VRAvatarViewer` / `Unity` のハッシュタグも渡す。
 - Web Intentから画像ファイル自体を直接アップロードしようとせず、記事URLのX Cardで4コマ画像を展開させる。
 
 専門用語は一般向けの説明を先に書き、必要なら括弧内で VAB / VBG / VAC / PhysBone などの名称を補足する。
