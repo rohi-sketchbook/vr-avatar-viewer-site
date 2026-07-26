@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>背景を持ってきたら、光まで引っ越してきた日 | VR Avatar Viewer 開発日記</title>
   <meta name="description" content="UnityPackageの背景を、モデルだけでなくベイク済みの光や影までVR Avatar Viewerへ持ち込めるようにした2026年7月25日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-25.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="背景を持ってきたら、光まで引っ越してきた日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="UnityPackageの背景を、モデルだけでなくベイク済みの光や影までVR Avatar Viewerへ持ち込めるようになった2026年7月25日の開発日記。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-25.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/2026-07-25-devlog-source.png">
+  <meta property="og:image:width" content="1402">
+  <meta property="og:image:height" content="1122">
+  <meta property="og:image:alt" content="背景とベイク済みライティングの引っ越しを描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="背景を持ってきたら、光まで引っ越してきた日">
+  <meta name="twitter:description" content="UnityPackage背景のベイク済みライティング再現が大きく前進した日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/2026-07-25-devlog-source.png">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
@@ -21,6 +35,9 @@
     <p class="lead">今日はUnityで作られた背景をVR Avatar Viewerへ持ち込む作業が、一段大きく前進しました。部屋の形だけではなく、そこに焼き込まれていた光と影まで一緒に連れてくる回です。</p>
     <div class="notice">実際のコミットと開発中の差分をもとにしています。4コマ内の会話やトラブル表現には、読み物として分かりやすくするための演出があります。</div>
     <p><img src="../assets/images/2026-07-25-devlog-source.png" alt="UnityPackage背景のベイク済みライティング再現に挑む、ろひとルミナの4コマ漫画" width="701" height="561"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98%20%E3%80%8C%E8%83%8C%E6%99%AF%E3%82%92%E6%8C%81%E3%81%A3%E3%81%A6%E3%81%8D%E3%81%9F%E3%82%89%E3%80%81%E5%85%89%E3%81%BE%E3%81%A7%E5%BC%95%E3%81%A3%E8%B6%8A%E3%81%97%E3%81%A6%E3%81%8D%E3%81%9F%E6%97%A5%E3%80%8D&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-07-25.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> 4コマをXで共有</a>
+    </div>
 
     <h2>背景を開けた。部屋は出た。でも、なんか暗い</h2>
     <p>配布されているUnityPackageから背景を読み込めるようになると、最初に目へ入るのは床や壁、家具といった3Dモデルです。ところが背景の「雰囲気」は、それだけでは決まりません。</p>

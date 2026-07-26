@@ -40,6 +40,18 @@ if (-not (Test-Path -LiteralPath $articlePath -PathType Leaf)) {
         Add-Pass 'No placeholder token remains in article'
     }
 
+    if ($article -notmatch 'twitter:card') {
+        Add-Failure 'X card metadata is missing.'
+    } else {
+        Add-Pass 'X card metadata is present'
+    }
+
+    if ($article -notmatch 'x.com/intent/tweet') {
+        Add-Failure 'X share button is missing.'
+    } else {
+        Add-Pass 'X share button is present'
+    }
+
     $titleMatch = [regex]::Match($article, '<h1>(?<title>.*?)</h1>', [System.Text.RegularExpressions.RegexOptions]::Singleline)
     $articleTitle = $null
     if ($titleMatch.Success) {
