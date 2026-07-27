@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unity Project、そのまま持ってきた日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="Unity ProjectやUnityPackageからPrefab・FBX・Material・Textureの参照を追い、VAB4.5へつなぐ取り込み経路を大きく前進させた2026年7月28日のVR Avatar Viewer開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-28.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="Unity Project、そのまま持ってきた日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="Unity Project直接取り込み、FBX座標・Bone診断、VAB4.5正規化、サムネイルやVRハンド改善まで進んだ2026年7月28日の開発日記。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-28.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-28-comic.png">
+  <meta property="og:image:width" content="1536">
+  <meta property="og:image:height" content="1024">
+  <meta property="og:image:alt" content="Unity Project直接取り込みの改善を描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unity Project、そのまま持ってきた日">
+  <meta name="twitter:description" content="Unity ProjectからPrefabやFBXの参照を追い、VAB4.5へ持ち込む経路が大きく前進した日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-28-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.07.28 / Development Log</div>
+    <h1>Unity Project、そのまま持ってきた日</h1>
+    <p class="lead">今日は、Unityで組まれたアバターやアイテムを「いったん別形式へ手で整理してから」ではなく、ProjectやUnityPackageの中にある参照関係をたどりながらVR Avatar Viewerへ持ってくる入口を大きく広げました。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間外の未コミット差分は記事の実績へ含めていません。</div>
+    <p><img src="../assets/images/devlog-2026-07-28-comic.png" alt="Unity Project直接取り込みを進める、ろひとルミナの4コマ漫画" width="1536" height="1024"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=Unity%20Project%E3%80%81%E3%81%9D%E3%81%AE%E3%81%BE%E3%81%BE%E6%8C%81%E3%81%A3%E3%81%A6%E3%81%8D%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-07-28.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>UnityのProjectを、そのまま入口にしたい</h2>
+    <p>これまでUnityPackageを読み込む処理を育ててきましたが、今日はさらに一歩進んで、Unity ProjectのAssetを直接取り込むための経路が追加されました。期間内コミット <strong>5a823bd</strong> では、Project内のAssetを扱うImporterやPrefabのOverlay処理、FBXの元Rendererとの対応付けなどが追加されています。</p>
+    <p>Unityの中では、PrefabがFBXを参照し、MaterialがTextureを参照し、その上にアバター固有の設定が重なっています。見えている1個のPrefabをコピーするだけでは足りず、「そのPrefabが何を参照しているか」を順番に追う必要があります。</p>
+    <blockquote>ろひ「Projectごと読めば早いやろ」<br>ルミナ「中の参照も全部ついてきます」<br>ろひ「箱を開けたら箱の中に箱が」</blockquote>
+
+    <h2>FBXは表示できれば終わり、ではない</h2>
+    <p>FBXは3Dモデルを運ぶためによく使われますが、座標系やBone対応がずれると、左右が入れ替わったり、手足が変な方向へ曲がったりします。コミット <strong>5bbd7bd</strong> では、UnityPackageから復元したFBXについて、座標系とBone対応を診断しやすくする処理が強化されました。</p>
+    <p>単に「読み込めたか」ではなく、どの段階でBone対応が崩れたかを切り分けられるようにすることが重要です。元のFBX、VAB4.5への書き出し、VAB4.5の再読込という複数段階を追跡できれば、左右取り違えのような問題も原因へ近づきやすくなります。</p>
+
+    <h2>アイテムも最後はVAB4.5へ</h2>
+    <p>コミット <strong>8795610</strong> では、アイテム取り込み後の保存経路をVAB4.5へ正規化し、UnityPackageのサムネイル処理も改善されました。VR Avatar Viewerでは、外部形式をそのまま抱え続けるのではなく、最終的にはViewer側の正式形式へまとめていく方針です。</p>
+    <p>これによって、取り込み口はUnity Project、UnityPackage、FBXなど複数あっても、その後の表示・管理・再読込は共通の仕組みに寄せやすくなります。</p>
+
+    <h2>「持ってきた後」も直している</h2>
+    <p>取り込みだけでなく、その後の見え方や操作も同じ日に進みました。コミット <strong>1d6d65a</strong> ではアバター配置に使うBoundsの算出を修正し、読み込んだアバターが極端な高さへ配置されるような問題へ対処しています。</p>
+    <p>さらに <strong>7712efc</strong> ではVRハンドの手首追従とPhysBoneコライダー連携を改善。続くコミットではVRシーンのUI配置、ハンド設定、ハンドマテリアルも更新されています。入口だけ作るのではなく、「取り込む → 正しく置く → VRで触る」まで一日の中でつながりました。</p>
+
+    <h2>同じ集計期間に進んだこと</h2>
+    <p>この日の集計期間には13コミットが入り、合計で<strong>73ファイル変更、5,503行追加、416行削除</strong>となりました。</p>
+    <ul>
+      <li><strong>a406064</strong> — アイテムPrefabのマテリアル復元を修正</li>
+      <li><strong>b7639a9</strong> — 第三者ライセンスを集約し、配布時の表示を整理</li>
+      <li><strong>fca8d5e</strong> — VABの未解決Bone診断を改善</li>
+      <li><strong>d0b8f5a</strong> — ConverterのSkinnedMesh書き出しを安全化</li>
+      <li><strong>7611466</strong> — Saraの胸PhysBoneについて回帰検査を追加</li>
+      <li><strong>60a05b7 / 1075c57</strong> — VRシーンのUI・ハンド設定とマテリアルを調整</li>
+    </ul>
+    <p>集計終了時点の最終HEADは <strong>1075c575d3dc52cc3c9b1d194e9d8674f815f9c2</strong>（「VRハンドマテリアルを調整」）です。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>今回はProjectの中にPrefab、FBX、Material、Textureが何層にもつながっている様子を「箱を開けたら箱の中に箱」として描きました。3コマ目ではFBX座標とBone診断、VAB4.5正規化をまとめ、最後はサムネイル、配置、VRハンドまでつながった一日の流れをそのままオチにしています。</p>
+
+    <h2>今日のまとめ</h2>
+    <ul>
+      <li>Unity ProjectのAssetを直接取り込む経路を追加</li>
+      <li>Prefab / FBX / Material / Textureの参照を追う基盤を拡張</li>
+      <li>UnityPackage由来FBXの座標系・Bone対応診断を強化</li>
+      <li>アイテムをVAB4.5へ正規化し、サムネイル処理を改善</li>
+      <li>アバター配置Boundsを修正</li>
+      <li>VRハンドの手首追従とPhysBoneコライダー連携を改善</li>
+    </ul>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>取り込み口を広げたら、最後はVRの手まで直していた。</blockquote>
+    <p>外からデータを持ってくる入口と、Viewerの中で扱う正式形式、その先のVR操作まで。今日はその一本の流れがかなり太くなった日でした。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
