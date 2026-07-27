@@ -178,7 +178,7 @@ GitHub は公開済み状態や push 後の確認に使う。記事本文の事�
 native artifact download が利用できない、無効、または転送に失敗した場合だけ使用する。
 
 - 共通ImageBridge正本: `H:\codexapp\AgentTools\image-bridge`
-- 互換用サイト側ツール: `Tools/Import-ChatGPTImage.bat` / `Tools/Import-ChatGPTImage.ps1`
+- Base64 fallback の受信には共有側の `Receive-ChatGPTImage.bat` を使用し、サイトリポジトリ内に画像ブリッジの互換スクリプトを複製しない。
 
 転送IDは1回の転送で固定する。途中で別IDへ分割しない。
 WebP は ChatGPT 側で掲載サイズへ整えて `-Scale 1`、PNG/JPEG をローカルで縮小する場合だけ必要な `-Scale` を指定する。文字が読みにくくなるため、機械的に `-Scale 0.5` を強制しない。
