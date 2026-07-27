@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI開発環境を大掃除！ ツールとルールを一本化した日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="増え続けたAI開発用ツールと仕様書を整理し、AgentToolsとDOCUMENT_MAPを軸に開発基盤を一本化した2026年7月27日のVR Avatar Viewer開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-27.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="AI開発環境を大掃除！ ツールとルールを一本化した日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="AgentToolsへの共通ツール集約と、必要な正本文書だけを読む運用へ整理した2026年7月27日の開発日記。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-27.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-27-comic.png">
+  <meta property="og:image:width" content="1055">
+  <meta property="og:image:height" content="1491">
+  <meta property="og:image:alt" content="AI開発環境の大掃除を描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AI開発環境を大掃除！ ツールとルールを一本化した日">
+  <meta name="twitter:description" content="増え続けたAI開発用ツールと説明書を整理し、明日からの開発を速くする土台を整えた日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-27-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.07.27 / Development Log</div>
+    <h1>AI開発環境を大掃除！ ツールとルールを一本化した日</h1>
+    <p class="lead">今日はアバターの新機能ではなく、その新機能を作るための「開発環境」を大掃除しました。増え続けたAI向けの説明書と補助ツールを整理し、ルミナたちが必要な情報へ迷わずたどり着ける土台を作る回です。</p>
+    <div class="notice">2026年7月26日 03:00:00〜7月27日 02:59:59（JST）のローカルGitコミットをもとにしています。4コマ内の会話や散らかり具合には、読み物として分かりやすくするための演出があります。</div>
+    <p><img src="../assets/images/devlog-2026-07-27-comic.png" alt="AI開発用の文書とツールを整理する、ろひとルミナの4コマ漫画" width="1055" height="1491"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=AI%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%82%92%E5%A4%A7%E6%8E%83%E9%99%A4%EF%BC%81%20%E3%83%84%E3%83%BC%E3%83%AB%E3%81%A8%E3%83%AB%E3%83%BC%E3%83%AB%E3%82%92%E4%B8%80%E6%9C%AC%E5%8C%96%E3%81%97%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-07-27.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>毎回、全部読むの？</h2>
+    <p>ChatGPTやDevSpaceのようなAIエージェントにプロジェクトを手伝ってもらうときは、「この形式が現在の正本」「このフォルダは触ってよい」「この操作にはこのツールを使う」といったルールを文章で共有します。</p>
+    <p>開発が進むほど、その説明も増えていきます。VR Avatar Viewerではアバター形式、背景形式、Unity固有ルール、キャッシュ配置、変換処理、Blender連携など扱う範囲が広くなり、AIが作業開始時に読む文書そのものが大きくなっていました。</p>
+    <blockquote>ろひ「毎回それ全部読むん？」<br>ルミナ「全部読むより、必要な正本へ案内してもらった方が速いですね」</blockquote>
+
+    <h2>巨大な説明書を「案内板＋専門書」に分けた</h2>
+    <p>期間内のコミット <strong>f998ae55</strong> では、AIが常時読む <code>AGENTS.md</code> を最小限のルールへ整理しました。代わりに、新しい案内役として <code>Docs/Agent/DOCUMENT_MAP.md</code> を追加し、Unity固有ルールは <code>UNITY_RULES.md</code>、プロジェクトのディレクトリ方針は <code>PROJECT_STRUCTURE.md</code> へ分離しています。</p>
+    <p>考え方はシンプルです。最初から百科事典を全部読むのではなく、まず案内板を見て、その作業に必要な専門書だけを開く方式へ変えました。</p>
+    <p>この整理だけで12ファイルが変更され、<strong>710行追加・1,075行削除</strong>。文章を消しただけではなく、VAB 4.5やVBG 2.0など「今どの仕様を正本として扱うのか」も、参照先をたどりやすい形へ整理しています。</p>
+
+    <h2>ツールもプロジェクトごとに生えていた</h2>
+    <p>もう一つの問題が補助ツールです。画像をChatGPTとローカル間で渡すImageBridge、Blenderを操作するBlenderMCP、Git作業を助けるGit Helper、Codexの動作モードを切り替える補助機能など、AI開発を支える道具が増えていました。</p>
+    <p>これらが各プロジェクトの中に重複して置かれると、どれが最新版なのか分かりにくくなります。そこでコミット <strong>d17f77d</strong> では、共通ツールの正本を <code>H:\codexapp\AgentTools</code> に集約しました。</p>
+    <p>VR Avatar Viewer側に残る <code>Tools</code> は、従来の呼び出し方を壊さないための<strong>互換ランチャー</strong>へ変更。つまり「本体は一か所、入口は今まで通り」という構成です。旧ツールのソースZIPも整理され、このコミットでは25ファイル、<strong>115行追加・2,201行削除</strong>となりました。</p>
+
+    <h2>3,276行減った。でも機能を削った日ではない</h2>
+    <p>今回の集計期間全体では、<strong>37ファイル変更、825行追加、3,276行削除</strong>でした。数字だけを見ると大胆な機能削除に見えますが、中心は重複していた説明や補助ツールの整理です。</p>
+    <p>アプリ本体の新機能を増やしたわけではありません。その代わり、「AIがどの仕様を読むか」「共通ツールはどこにあるか」という判断を単純にしました。開発環境の迷いを減らすことは、今後の実装速度だけでなく、古い仕様を誤って採用する事故を減らすことにもつながります。</p>
+
+    <h2>同じ集計期間に進んだその他の変更</h2>
+    <p>今回確認できた期間内コミットは、この文書整理とAgentTools共通化の2件です。VR Avatar Viewer本体について、同じ期間に新しいランタイム機能追加や不具合修正として確定できるコミットはありませんでした。</p>
+    <p>集計終了時点の最終HEADは <strong>d17f77d179fa9461081f1350447f3149407171f6</strong>（「AgentTools共通化と互換ランチャーを整理」）です。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、仕様書やREADMEが机を埋め尽くし、ImageBridgeやBlenderMCPまでフォルダから増殖しているように描きました。実際にはもちろん物理的に書類が積み上がったわけではありませんが、「AIへ渡す情報と道具が増えすぎると、それ自体の管理が仕事になる」という今回の状況を視覚化しています。</p>
+    <p>3コマ目の <code>AgentTools</code> と <code>DOCUMENT_MAP</code> が今回のポイントです。道具の正本を一か所へまとめ、説明書は必要なものだけ選んで読む。掃除というより、開発環境の交通整理に近い作業でした。</p>
+    <blockquote>ろひ「今日、アバターViewerより開発環境の掃除してない？」<br>ルミナ「明日から速く開発するための開発です！」</blockquote>
+
+    <h2>今日のまとめ</h2>
+    <ul>
+      <li><code>AGENTS.md</code> を常時読む最小ルールへ整理</li>
+      <li><code>DOCUMENT_MAP.md</code> を入口に、必要な正本文書だけ読む方式へ変更</li>
+      <li>Unityルールとプロジェクト構造の説明を専用文書へ分離</li>
+      <li>ImageBridge / BlenderMCP / Git Helper / Codex Modeの正本を <code>AgentTools</code> へ共通化</li>
+      <li>VR Avatar Viewer側の既存入口は互換ランチャーとして維持</li>
+      <li>集計期間全体で37ファイル変更、825行追加、3,276行削除</li>
+    </ul>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>開発はコードだけじゃない。明日迷わないように、道具箱と説明書を片付けるのも立派な開発だ。</blockquote>
+    <p>今日は画面上で見える新機能は増えていません。でも、次の機能を作るルミナたちが迷う時間は減りました。VR Avatar Viewerの開発を続けるための「足場」を、一度きれいに組み直した一日でした。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
