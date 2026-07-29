@@ -203,6 +203,44 @@ Discord投稿、commit / push、公開確認など「画像生成後に行う作
 
 正式経路は DevSpace の native artifact download を第一選択とし、Base64 ImageBridge は fallback とする。
 
+### 画像転送ガード（必須）
+
+native artifact download の前後では、共有ガードを必ず使用する。
+
+```text
+H:\codexapp\AgentTools\devlog-image-guard\Devlog-ImageTransferGuard.bat
+```
+
+このガードが、当日画像の正式保存先を次の1パスへ固定する。
+
+```text
+docs/assets/images/devlog-YYYY-MM-DD-comic.<ext>
+```
+
+呼び出し側は保存先を自分で組み立てない。ガードが返した `DESTINATION` をそのまま `download_artifact` へ渡す。`-final`、`-verify`、`-retry`、`ERROR`、`STOP` 等の別名を作ってはならない。
+
+転送前:
+
+```bat
+H:\codexapp\AgentTools\devlog-image-guard\Devlog-ImageTransferGuard.bat -Mode prepare -WorkspaceRoot "H:\codexapp\vr-avatar-viewer-site" -Date YYYY-MM-DD -Extension png
+```
+
+判定:
+
+- `ACTION=TRANSFER_ALLOWED`: 返された `DESTINATION` へ **1回だけ** `download_artifact` を実行する。
+- `ACTION=DO_NOT_TRANSFER`: 正式画像が既に存在する。`download_artifact` を呼ばず、`verify` へ進む。
+- `ACTION=STOP`: 転送しない。エラー内容を報告し、原因を解消するまで停止する。
+
+転送後:
+
+```bat
+H:\codexapp\AgentTools\devlog-image-guard\Devlog-ImageTransferGuard.bat -Mode verify -WorkspaceRoot "H:\codexapp\vr-avatar-viewer-site" -Date YYYY-MM-DD -Extension png
+```
+
+`ACTION=TRANSFER_COMPLETE` で、サイズ、SHA-256、画像寸法を確認して§6のnative転送完了とする。以後、その日付の4コマについて `download_artifact` を再実行しない。
+
+`Artifact destination already exists` が返った場合も別名へ変更して再転送しない。ガードの `prepare` / `verify` を再実行し、既存正式画像の状態を判定する。
+
 ### A. DevSpace native artifact download（標準）
 
 1. ChatGPTで採用する4コマ画像を生成する。
