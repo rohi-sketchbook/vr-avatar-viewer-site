@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VRで配信、もっと自然に！ | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="VRライブコメントビューアー、アバター化の全身追従と自己干渉、VRミラー、60FPSデスクトップ出力、Jobs/Burstによる並列化を進めた2026年7月29日のVR Avatar Viewer開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-29.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="VRで配信、もっと自然に！ | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="VR空間でコメントを読み、アバターとして自然に動き、鏡とデスクトップ出力を見やすくし、裏側ではJobs/Burstで軽量化を進めた一日の開発日記。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-29.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-29-comic.png">
+  <meta property="og:image:width" content="1316">
+  <meta property="og:image:height" content="1195">
+  <meta property="og:image:alt" content="VRライブコメント、全身追従、VRミラー、60FPS出力、Jobs/Burst改善を描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VRで配信、もっと自然に！">
+  <meta name="twitter:description" content="VR配信で使うコメント表示から、アバター追従、ミラー、60FPS出力、並列化まで進んだ日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-29-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.07.29 / Development Log</div>
+    <h1>VRで配信、もっと自然に！</h1>
+    <p class="lead">今日は、VRの中で配信コメントを確認するところから、アバターとして自分が動く感覚、鏡やデスクトップへの見え方、さらにその裏側の処理負荷まで、VRモード全体をまとめて磨いた一日でした。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間外の未コミット差分は記事の実績へ含めていません。</div>
+    <p><img src="../assets/images/devlog-2026-07-29-comic.png" alt="VRライブコメント、全身追従、VRミラー、60FPS出力、Jobs/Burst改善を描いた、ろひとルミナの4コマ漫画" width="1316" height="1195"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=VR%E3%81%A7%E9%85%8D%E4%BF%A1%E3%80%81%E3%82%82%E3%81%A3%E3%81%A8%E8%87%AA%E7%84%B6%E3%81%AB%EF%BC%81%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-07-29.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>配信コメントを、VRの外へ見に行かなくていい</h2>
+    <p>コミット <strong>6ad78de</strong> では、VRライブコメントビューアーが追加されました。YouTube Liveやニコニコ生放送のコメントをVR空間へ表示するためのProvider、吹き出し表示、履歴ボード、画像表示、安全なリモート画像取得、カメラへの表示制御まで、配信中に使うための一連の仕組みがまとめて追加されています。</p>
+    <p>VR配信では、コメントを見るためにHMDの外へ意識を戻すだけでもテンポが崩れます。コメントがVR空間の中にあれば、アバターを動かしながら視聴者の反応を確認できます。履歴ボードも用意したことで、流れてしまったコメントをあとから見返す導線も持てるようになりました。</p>
+    <blockquote>ろひ「VRの中でコメント見れるようになったん？」<br>ルミナ「配信中の視線移動を減らせます」</blockquote>
+
+    <h2>「アバターになる」を、もっと身体らしく</h2>
+    <p>コミット <strong>fb30af4</strong> では、アバター化時の全身追従とリップシンクを改善。その後の <strong>bef3450</strong> では、全身追従と自己干渉をさらに見直しました。</p>
+    <p>HMDは頭の位置を正確に追えますが、その値だけで首から下まで引っ張ると、人間の身体というより「頭に胴体がぶら下がっている」ような動きになりがちです。Final IKを使う経路や入力ドライバ、コントローラー側のColliderを調整し、頭はHMDへ追従しながら、胴体や手足はより自然な全身の動きとして成立する方向へ寄せています。</p>
+    <p>同時に、自分のVRコントローラー由来の接触判定が自分自身のアバターへ不要に干渉するケースも抑制しました。見た目だけでなく、「自分の身体として操作したときに邪魔をしない」ことも重要な改善点です。</p>
+
+    <h2>鏡とデスクトップ出力も、配信目線で見直す</h2>
+    <p>コミット <strong>48f6c1b</strong> ではVRミラーとデスクトップ出力を大きく改善し、投影計算やミラー設定、VRカメラ出力まわりを整理しました。さらに <strong>044bd7e</strong> ではVRミラーのカリング判定を修正しています。</p>
+    <p>VR内で自分のアバターを確認する鏡は、単なる装飾ではなく、表情・姿勢・衣装の見え方を確認する重要な道具です。ミラー側の投影や表示判定を見直すことで、確認用の道具として安定して使える方向へ近づけました。</p>
+    <p>そして <strong>a417b87</strong> では、VRからデスクトップへ出すプレビュー描画を60FPSで動かすためのスケジューラを整備。HMD側だけでなく、配信や録画で視聴者が見るデスクトップ出力も滑らかに保つことを狙っています。</p>
+
+    <h2>表側を増やしたぶん、裏側はJobs/Burstで軽くする</h2>
+    <p>新機能を増やす一方で、コミット <strong>403e945</strong> ではUnityのJobs / Burstを使ったアバター処理の並列化も進みました。Mesh前処理、BlendShape、PhysBone、DynamicBoneなどに並列処理用の実装やテストが入り、1本のメインスレッドへ処理が集中しにくい構成へ寄せています。</p>
+    <p>VRではフレーム時間の揺れが体感へ直結します。そのため「機能を増やしたから重くなりました」ではなく、見える機能を増やすのと同時に、裏側の処理方法そのものも作り直す必要があります。今回はまさに表と裏を同時に触った日でした。</p>
+
+    <h2>同じ集計期間に進んだこと</h2>
+    <p>今回の集計期間には13コミットが入り、合計で<strong>115ファイル変更、26,924行追加、1,327行削除</strong>となりました。</p>
+    <ul>
+      <li><strong>345b3b9</strong> — VAB4.5 Constraint復元とPhysBone初期化順を修正</li>
+      <li><strong>8aa04ea</strong> — ライト状態復元とUI表示を改善</li>
+      <li><strong>0ead3d8</strong> — 布パーツの掴み位置ずれを修正</li>
+      <li><strong>ca9b2d1</strong> — LipSync実動作診断ツールを追加</li>
+      <li><strong>8240048</strong> — アバター化時の身長補正を視点オフセット方式へ変更</li>
+      <li><strong>2e1d853</strong> — PhysBone遅延初期化テストをEditor側へ整理</li>
+    </ul>
+    <p>集計終了時点の最終HEADは <strong>2e1d853f62b1047519376db1de40a703d1700e28</strong>（「PhysBone遅延初期化テストをEditor側へ整理」）です。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は、配信中に最初に目に入る「コメント」、自分自身の感覚に直結する「全身追従」、確認と配信に使う「ミラーと60FPS出力」、最後に全部を支える「Jobs / Burst」という順番で、一日の作業を表から裏へたどる構成にしました。</p>
+    <p>4コマ自体の生成ルールもこの日から整理し、ろひの正式参照画像やページ構成、吹き出しルールなどの固定部分と、その日だけの開発内容を分離して扱う方式へ改めています。</p>
+
+    <h2>今日のまとめ</h2>
+    <ul>
+      <li>YouTube Live / ニコニコ生放送向けのVRライブコメントビューアーを追加</li>
+      <li>コメント吹き出し、履歴ボード、画像表示、安全な取得処理を整備</li>
+      <li>アバター化の全身追従、リップシンク、自己干渉を改善</li>
+      <li>VRミラーの投影・表示判定を改善</li>
+      <li>VRデスクトップ出力を60FPS化</li>
+      <li>Jobs / BurstでMesh・BlendShape・揺れ物処理の並列化を進行</li>
+    </ul>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>配信しやすくするために、コメントからCPUの中まで触る。</blockquote>
+    <p>視聴者のコメントを見るところ、自分が自然に動くところ、視聴者へ滑らかな映像を返すところ。その全部がつながって、VR Avatar Viewerが少しずつ「配信で使う道具」らしくなってきました。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
