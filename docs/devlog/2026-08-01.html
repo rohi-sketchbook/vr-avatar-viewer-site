@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>揺れものを守る「見えない壁」を、ちゃんと持ち帰る日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="UnityPackage由来のDynamicBoneと巨大なInside ColliderをVAB 4.5へ正しく変換・復元し、外部Converter・アプリ内取込・Viewerの生成処理を共通化。姿勢推定と指編集も改善した2026年8月1日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-01.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="揺れものを守る「見えない壁」を、ちゃんと持ち帰る日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="UnityPackage由来のDynamicBoneと巨大なInside ColliderをVAB 4.5へ正しく変換・復元し、外部Converter・アプリ内取込・Viewerの生成処理を共通化。姿勢推定と指編集も改善した一日の記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-01.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-01-comic.png">
+  <meta property="og:image:width" content="1448">
+  <meta property="og:image:height" content="1086">
+  <meta property="og:image:alt" content="DynamicBoneとInside Colliderの変換・復元改善を描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="揺れものを守る「見えない壁」を、ちゃんと持ち帰る日">
+  <meta name="twitter:description" content="UnityPackage由来のDynamicBoneと巨大なInside ColliderをVAB 4.5へ正しく変換・復元し、姿勢推定と指編集も改善した日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-01-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.01 / Development Log</div>
+    <h1>揺れものを守る「見えない壁」を、ちゃんと持ち帰る日</h1>
+    <p class="lead">2026-08-01 の開発日記では、UnityPackageやPrefabからアバターをVAB 4.5へ変換したとき、髪や衣装の揺れを支えるDynamicBoneとColliderを、元の意図に近い形で復元するための改善を振り返ります。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-07-31 03:00:00 JST から 2026-08-01 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-01-comic.png" alt="DynamicBoneとInside Colliderの変換・復元改善を描いた、ろひとルミナの4コマ漫画" width="1448" height="1086"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E6%8F%BA%E3%82%8C%E3%82%82%E3%81%AE%E3%82%92%E5%AE%88%E3%82%8B%E3%80%8C%E8%A6%8B%E3%81%88%E3%81%AA%E3%81%84%E5%A3%81%E3%80%8D%E3%82%92%E3%80%81%E3%81%A1%E3%82%83%E3%82%93%E3%81%A8%E6%8C%81%E3%81%A1%E5%B8%B0%E3%82%8B%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-01.html&hashtags=VRAvatarViewer,Unity,DynamicBone" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計期間には<strong>9コミット</strong>が入り、最終HEADは <strong>a69fe61</strong>（「DynamicBone変換とCollider復元を修正」）でした。未コミットの <code>Distribution/</code> は、この日の完了実績へ含めていません。</p>
+
+    <h2>今日の主題：揺れ方だけでなく、ぶつかり方も持ち帰る</h2>
+    <p>アバターの髪や衣装を自然に揺らすには、揺れを計算するDynamicBone本体だけでなく、身体や衣装へ入り込まないようにするColliderの形・向き・大きさ・内外判定も重要です。</p>
+    <p>今回の修正では、UnityPackage由来のDynamicBoneをVABへ変換し、Viewerで再構築する経路を見直しました。特に、大きなInside Colliderが小さく丸められたり、内側を有効領域とする設定が別の形へ変換されたりすると、髪や衣装の形が崩れる原因になります。そこで、元コンポーネントの情報をできるだけ保持し、変換側と復元側の双方で同じ意味になるよう調整しました。</p>
+
+    <h2>DynamicBone変換を専用処理として整理</h2>
+    <p>Legacy DynamicBoneの情報を書き出す処理を専用クラスへ分離し、VAB 4.5生成時にBone、Collider、除外設定などを一貫して扱えるようにしました。</p>
+    <p>単に数値をコピーするだけでなく、外部Converter、アプリ内のUnityPackage取込、ViewerのRuntime復元という複数経路で意味が一致することが重要です。今回の修正では、この三つの経路をまたいで差が出ないよう、共通仕様とテストも追加しています。</p>
+
+    <h2>巨大なInside Colliderを勝手に縮めない</h2>
+    <p>Colliderには、外側へ押し出す一般的な形だけでなく、「この大きな領域の内側に留める」用途のInside Colliderがあります。</p>
+    <p>このColliderを通常の小さな球として近似すると、髪、スカート、アクセサリーなどが本来の範囲から外れたり、不自然な位置へ移動したりします。今回、非常に大きな半径やInside判定を持つColliderを検出し、その意図を維持したままVABへ保存・復元できるようにしました。</p>
+
+    <h2>VAB 4.5生成処理を共通化</h2>
+    <p>外部ConverterとViewer内の変換処理で別々に実装されていたVAB 4.5のBinary生成処理を共通化しました。</p>
+    <p>共通のRuntime Binary Coreへ集約したことで、片方だけが新仕様へ対応し、もう片方に古い挙動が残る危険を減らしています。セキュアなPayload、物理情報、シェーダー関連の互換処理も同じ基盤から扱える構成になりました。</p>
+
+    <h2>アバター化にも姿勢推定を追加</h2>
+    <p>VRで「アバターになる」機能には、HMDの高さや移動量から、立っている・座っている・低い姿勢になっている状態を推定する仕組みを追加しました。</p>
+    <p>自動判定に加え、立位・座位を明示的に切り替える設定も用意しています。Final IKへ渡す腰や脚の基準を姿勢に応じて調整することで、頭だけに全身が引っ張られたり、身体が上下反転したりする問題を抑えるための土台です。</p>
+
+    <h2>指編集の曲げ方向をモデルから判断</h2>
+    <p>右手・左手編集で指の曲げスライダーを動かした際、モデルによって指が軸方向へ回転してしまう問題も修正しました。</p>
+    <p>固定の回転軸を決め打ちせず、実際の指Bone配置とモデル形状から曲げ軸を算出することで、手の向きやアバターごとの差に強い処理へ変更しています。</p>
+
+    <h2>ほかにも進んだこと</h2>
+    <ul>
+      <li>UnitySkillsをv2.4.2へ更新</li>
+      <li>非表示Rendererを扱う非同期テストの待機を安定化</li>
+      <li>ConverterでUnityバージョン差により変化したShader APIへ対応</li>
+      <li>配布用Converterの切り出し途中で混入した不要変更を戻し、正本構成を維持</li>
+      <li>DynamicBone、PhysBone、Collider変換を検証するEditor／Runtimeテストを追加</li>
+    </ul>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は、ろひが「髪の揺れは入っているのに、なぜ形が崩れるの？」と首をかしげるところから始まります。ルミナがアバターの周囲にある透明なColliderを可視化すると、巨大なInside Colliderが変換後に小さくなっていることが判明。最後はDynamicBoneとColliderをセットでVABへ詰め直し、髪や衣装が自然な位置へ戻る流れです。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>2026-08-01の記事対象期間では、DynamicBoneとColliderの変換・復元が大きく改善されました。見えるMeshやMaterialだけでなく、普段は見えない物理領域まで正しく持ち運べることが、アバターの見た目を保つうえで重要です。</p>
+    <p>同時に、VAB 4.5生成処理の共通化、姿勢推定、指の曲げ軸修正も進みました。アバターを変換する・表示する・自分で動かすという三つの領域が、それぞれ一段安定した一日です。</p>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>見えないColliderほど、消えたときの存在感が大きい。</blockquote>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
