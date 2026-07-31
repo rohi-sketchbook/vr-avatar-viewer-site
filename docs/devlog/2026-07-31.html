@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="Unity 6.5とURPを正式な前提へ切り替え、品質プリセット、カメラ別描画、アバター負荷制御、VAB読み込み、物理処理、UI構成までまとめて整備した2026年7月31日のVR Avatar Viewer開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-31.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="Unity 6.5とURPを正式な前提へ切り替え、品質プリセット、カメラ別描画、VAB読み込み高速化、物理処理、UI再編までまとめて進めた一日の記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-31.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-31-comic.png">
+  <meta property="og:image:width" content="1312">
+  <meta property="og:image:height" content="1199">
+  <meta property="og:image:alt" content="Unity 6.5とURP移行後の基盤整備を描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新">
+  <meta name="twitter:description" content="Unity 6.5とURP、品質プリセット、カメラ別描画、VAB読み込み高速化、物理処理、UI再編までまとめて整備した日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-31-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.07.31 / Development Log</div>
+    <h1>Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新</h1>
+    <p class="lead">2026-07-31 の開発日記では、VR Avatar Viewer を Unity 6.5 と URP 前提へ切り替えながら、グラフィックス品質設定、アバター表示負荷、カメラ・ミラー、VAB読み込み、物理処理、UI構成まで広い範囲を一気に整備した一日を振り返ります。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-07-30 03:00:00 JST から 2026-07-31 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-07-31-comic.png" alt="Unity 6.5とURP移行後の基盤整備を描いた、ろひとルミナの4コマ漫画" width="1312" height="1199"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=Unity%206.5%E3%83%BBURP%E6%99%82%E4%BB%A3%E3%81%B8%E3%80%82%E8%A6%8B%E3%81%9F%E7%9B%AE%E3%82%82%E9%80%9F%E5%BA%A6%E3%82%82%E3%80%81%E3%81%BE%E3%81%A8%E3%82%81%E3%81%A6%E5%9C%9F%E5%8F%B0%E3%82%92%E6%9B%B4%E6%96%B0%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-07-31.html&amp;hashtags=VRAvatarViewer%2CUnity%2CURP" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計期間には<strong>15コミット</strong>が入り、最終HEADは <strong>1d5918a</strong>（「URPプロジェクト設定を追加」）でした。作業中の未コミットなアバター姿勢推定関連は、この日の完了実績には含めていません。</p>
+
+    <h2>今日の主題：URP移行を「切り替え」だけで終わらせない</h2>
+    <p>レンダリング方式を URP に移すだけでは、実際の使い勝手や性能は自動的には良くなりません。そこで今回は、URP移行と同時に、Low / Middle / High / Ultra / Custom の品質プリセット、カメラごとの描画品質、負荷に応じた制御、ポストエフェクトの適用範囲までまとめて再設計しました。</p>
+    <p>デスクトップの設定画面も用途別タブへ整理され、利用者が「画質を上げたいのか」「処理を軽くしたいのか」を以前より判断しやすい構成になっています。</p>
+
+    <h2>Unity 6.5・URPを正式な前提へ</h2>
+    <p>プロジェクト設定と開発文書を Unity 6.5 / URP 前提へ更新しました。lilToon を含む既存描画との互換処理、URP用ポストエフェクト経路、Renderer Feature、最終的なURP Project設定まで整備しています。</p>
+    <p>移行作業を単なるパッケージ差し替えで終わらせず、アプリが実際に使う描画経路と設定値まで揃えたことで、今後の機能追加や不具合修正もURPを正本として進められる状態になりました。</p>
+
+    <h2>品質プリセットと性能制御</h2>
+    <p>Low / Middle / High / Ultra / Custom の品質設定を追加し、URP Asset と Renderer を品質別に分離しました。Adaptive Performance の負荷判定も見直し、負荷状況に応じて品質を調整しやすい基盤を作っています。</p>
+    <p>高性能なPCでは画質を引き上げ、VRと配信を同時に使う環境では必要な部分だけを軽くするなど、利用状況に応じた調整を今後積み上げやすくなります。</p>
+
+    <h2>カメラを意識したアバター負荷制御</h2>
+    <p>アバターが HMD、撮影用カメラ、ミラーなど、どのカメラから見えているかを考慮して更新頻度を決める仕組みを追加しました。単純にメインカメラから見えないだけで処理を落とすのではなく、撮影・配信側で必要なアバターは維持できます。</p>
+    <p>撮影用カメラ、ミラー、デスクトップ出力については、FPSと描画品質を個別に制御できるようにしました。VR内のプレビューではポストエフェクトを二重適用せず、デスクトップ出力では配信用の見た目を維持するため、出力経路も分離しています。</p>
+
+    <h2>VAB読み込みと物理処理の高速化</h2>
+    <p>VABアーカイブを何度も開き直さず、1回のセッションでまとめて処理する <code>VabArchiveSession</code> を導入しました。テクスチャ読み込みのコピー削減と一括処理も追加しています。</p>
+    <p>PhysBone と DynamicBone では、個別に Job を完了させる回数を減らし、複数アバター時の待ち時間を抑える方向へ改善しました。多数アバターを扱うための高速化は、描画だけでなく読み込みと物理処理の両面から進めています。</p>
+
+    <h2>UIも大きく再編</h2>
+    <p>BlendShape 操作は、最初に対象パーツを選び、そのパーツに属する表情・体形・その他の項目へ進む構成へ変更しました。複数パーツにまたがる BlendShape では、どのパーツを操作しているか分かるようにしています。</p>
+    <p>また、カメラと鏡は独立した特殊メニューではなく、プリセット機材としてアイテム一覧から扱う方向へ統合しました。デスクトップとVRの双方で、機材を配置・選択する流れを揃えています。</p>
+
+    <h2>VAB 4.5も正式化</h2>
+    <p>VAB 4.5 を現在の正式仕様として統合し、関連する仕様書、配布手順、Converter文書を更新しました。VAB 4.0 は基礎仕様と旧入力互換の位置づけへ整理しています。</p>
+
+    <h2>ほかにも進んだこと</h2>
+    <ul>
+      <li>画像生成リクエストJSONを組み立てるバッチを追加</li>
+      <li>デスクトップ設定画面を用途別タブへ再編</li>
+      <li>ポストエフェクト設定をデスクトップ・VRの両方で調整できるUIを追加</li>
+      <li>HMD表示、撮影用カメラ、ミラー、デスクトップ出力の適用経路を分離</li>
+      <li>Unity 6.5、URP、VAB 4.5 に合わせて各種ドキュメントを更新</li>
+    </ul>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は、Unity 6.5とURPへの移行を喜ぶろひが、画質、互換性、シェーダー、開発環境の調整を一つずつ進めていく構成です。指定台本とは一部異なりますが、ろひの正式デザインとルミナが反映された生成画像を、ユーザー確認のうえで今回の記事へ採用しました。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>この日は単一機能の追加というより、Unity 6.5正式版として今後開発を続けるための基盤をまとめて作り直した日でした。URP移行、品質設定、カメラごとの描画、アバター負荷制御、読み込み高速化、物理処理、UI再編が同じ方向へ揃ったことで、多数アバター・VR・撮影・配信を同時に扱うための土台がかなり強くなっています。</p>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>引っ越し先を変えたら、家具の配置どころか配線まで全部見直すことになった。でも、そのぶん次の改装はずっと楽になるはず。</blockquote>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
