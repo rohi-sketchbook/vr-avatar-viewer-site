@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新 | VR Avatar Viewer 開発日記</title>
-  <meta name="description" content="Unity 6.5とURPを正式な前提へ切り替え、品質プリセット、カメラ別描画、アバター負荷制御、VAB読み込み、物理処理、UI構成までまとめて整備した2026年7月30日のVR Avatar Viewer開発日記です。">
+  <title>Unity 6.5へ、いよいよ本格移行！ | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="Unity 6.5への互換対応、ProjectSettings更新、実データ回帰テスト、VABの物理・マテリアル復元改善を進めた2026年7月30日のVR Avatar Viewer開発日記です。">
   <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-30.html">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="VR Avatar Viewer">
-  <meta property="og:title" content="Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新 | VR Avatar Viewer 開発日記">
-  <meta property="og:description" content="Unity 6.5とURPを正式な前提へ切り替え、品質プリセット、カメラ別描画、アバター負荷制御、VAB読み込み、物理処理、UI構成までまとめて整備した一日の記録です。">
+  <meta property="og:title" content="Unity 6.5へ、いよいよ本格移行！ | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="Unity 6.5への互換対応から実データ回帰テスト、VABの物理・マテリアル復元まで、本格移行を進めた一日の開発日記。">
   <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-07-30.html">
-  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-30-comic-v2.png">
-  <meta property="og:image:width" content="1536">
-  <meta property="og:image:height" content="1280">
-  <meta property="og:image:alt" content="Unity 6.5とURP移行後の基盤整備を描いた、ろひ中心の4コマ漫画">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-30-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="Unity 6.5移行、互換性確認、実データ回帰テスト、VAB復元改善を描いた、ろひとルミナの4コマ漫画">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新">
-  <meta name="twitter:description" content="Unity 6.5とURP、品質プリセット、カメラ別描画、VAB読み込み高速化、物理処理、UI再編までまとめて整備した日の開発日記。">
-  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-30-comic-v2.png">
+  <meta name="twitter:title" content="Unity 6.5へ、いよいよ本格移行！">
+  <meta name="twitter:description" content="Unity 6.5への互換対応、実データ回帰テスト、VABの物理・マテリアル復元を進めた日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-07-30-comic.png">
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
@@ -31,61 +31,59 @@
 <main class="container">
   <article class="article">
     <div class="eyebrow">2026.07.30 / Development Log</div>
-    <h1>Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新</h1>
-    <p class="lead">2026-07-30 の開発では、VR Avatar Viewer の描画基盤を Unity 6.5 と URP 前提へ切り替えながら、グラフィックス品質設定、アバター表示負荷、カメラ・ミラー、VAB読み込み、物理処理、UI構成まで広い範囲を一気に整備しました。</p>
-    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-07-30 00:00:00 JST から 2026-07-30 23:59:59 JST までです。</div>
-    <p><img src="../assets/images/devlog-2026-07-30-comic-v2.png" alt="Unity 6.5とURP移行後の基盤整備を描いた、ろひ中心の4コマ漫画" width="1536" height="1280"></p>
+    <h1>Unity 6.5へ、いよいよ本格移行！</h1>
+    <p class="lead">今日は、VR Avatar Viewerの開発環境をUnity 6.5へ移す作業を本格化。単にEditorを新しくするだけでなく、APIやPackageの互換対応、実際のアバターや背景を使った回帰テスト、VABの物理・マテリアル復元までまとめて確認しました。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は2026-07-29 03:00:00 JSTから2026-07-30 02:59:59 JSTまでです。</div>
+    <p><img src="../assets/images/devlog-2026-07-30-comic.png" alt="Unity 6.5移行、互換性確認、実データ回帰テスト、VAB復元改善を描いた、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
     <div class="share-actions">
-      <a class="button x-share" href="https://x.com/intent/tweet?text=Unity%206.5%E3%83%BBURP%E6%99%82%E4%BB%A3%E3%81%B8%E3%80%82%E8%A6%8B%E3%81%9F%E7%9B%AE%E3%82%82%E9%80%9F%E5%BA%A6%E3%82%82%E3%80%81%E3%81%BE%E3%81%A8%E3%82%81%E3%81%A6%E5%9C%9F%E5%8F%B0%E3%82%92%E6%9B%B4%E6%96%B0%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-07-30.html&amp;hashtags=VRAvatarViewer%2CUnity%2CURP" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+      <a class="button x-share" href="https://x.com/intent/tweet?text=Unity%206.5%E3%81%B8%E3%80%81%E3%81%84%E3%82%88%E3%81%84%E3%82%88%E6%9C%AC%E6%A0%BC%E7%A7%BB%E8%A1%8C%EF%BC%81%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-07-30.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
     </div>
 
-    <p>この記事は、2026-07-30 00:00〜23:59（JST）に <code>vrm-avatar-studio</code> へ記録されたコミットを根拠にまとめています。この期間には 14 コミットが入り、URP移行後の見た目と速度を両立させるための基盤整備が集中的に進みました。</p>
+    <h2>Unityを上げるだけ、では終わらない</h2>
+    <p>中心になったのはコミット <strong>b6b223d</strong> の「Unity 6.5移行の互換対応とプロジェクト設定更新」です。ProjectVersionやPackage構成、GraphicsSettingsなどをUnity 6.5向けへ更新しつつ、API差分でそのままでは通らないコードも調整しました。</p>
+    <p>Unityのメジャー世代をまたぐ移行では、コンパイルエラーを消すだけでは十分ではありません。Editor上で開けても、アバターの読み込み、物理、シェーダー、VR入力、背景復元などが以前と同じように動くかは別問題です。今回は「起動する」より一段先の、実データで使える状態へ近づける作業になりました。</p>
+    <blockquote>ろひ「Unity 6.5へ移行するよ！」<br>ルミナ「互換性チェックからいこう！」</blockquote>
 
-    <h2>今日の主題：URP移行を「切り替え」だけで終わらせない</h2>
-    <p>レンダリング方式を URP に移すだけでは、実際の使い勝手や性能は自動的には良くなりません。そこで今回は、URP移行と同時に、低・中・高・最高・カスタムの品質プリセット、カメラごとの描画品質、GPU負荷に応じた制御、ポストエフェクトの適用範囲までまとめて再設計しました。</p>
-    <p>デスクトップ設定画面も用途別タブへ整理され、利用者が「画質を上げたいのか」「処理を軽くしたいのか」を以前より判断しやすい構成になっています。</p>
+    <h2>実データを使って、移行後の壊れ方を探す</h2>
+    <p>コミット <strong>a4c8129</strong> では、Unity 6系移行向けの実データ回帰テストを追加しました。UnityPackage由来のアバターやVBGを対象に、実際のデータで以前の動作が維持されているかを確かめるテストです。</p>
+    <p>テスト用に単純化したデータだけでは、実際のアバターが持つ複雑なBone、Material、Physics、Prefab参照の組み合わせを拾い切れません。普段使っている実データを回帰テストへ持ち込むことで、「コード上は正しそうなのに、このアバターだけ崩れる」といった移行特有の問題を早めに見つけやすくしています。</p>
 
-    <h2>実装したこと</h2>
+    <h2>VABの物理とマテリアルも、移行を機に詰め直す</h2>
+    <p>コミット <strong>6c34d17</strong> では、VAB復元時の物理とマテリアル互換性を大きく改善しました。RuntimeAvatarBundle周辺にまとまった修正とテストが入り、アバターを保存状態から戻すときのPhysics初期化やMaterial復元をより堅牢にしています。</p>
+    <p>特にアバターでは、髪や衣装の揺れ方、半透明やカットアウトを含むMaterialの見え方が少し違うだけでも印象が大きく変わります。Unity 6.5へ移ったことで表面化した差分を、単なる「新しいUnityだから仕方ない」で済ませず、VAB側の復元処理まで追い込んだ形です。</p>
 
-    <h3>Unity 6.5・URPを正式な前提へ</h3>
-    <p>プロジェクト設定と開発文書を Unity 6.5 / URP 前提へ更新しました。lilToon を含む既存描画との互換処理、URP用ポストエフェクト経路、モザイクやシャープ化などの Renderer Feature も整備しています。</p>
+    <h2>開発環境の正本もUnity 6.5へ</h2>
+    <p>集計期間の最後、コミット <strong>c7cf107</strong> では、プロジェクトのAgentルールとUnity関連ドキュメントを更新し、Unity 6.5を開発環境の正本として明記しました。</p>
+    <p>これは単なる文章の変更ではなく、今後の修正・ビルド・自動化・検証が「どのUnityを基準にするか」を統一するための区切りです。Unity 2022.3時代の前提を引きずったまま作業すると、環境差による再現しない不具合が増えるため、コードと同時に開発ルール側も揃えています。</p>
 
-    <h3>品質プリセットと性能制御</h3>
-    <p>Low / Middle / High / Ultra / Custom の品質設定を追加し、URP Asset と Renderer を品質別に分離しました。Adaptive Performance の負荷判定も見直し、負荷状況に応じて品質を調整しやすい基盤を作っています。</p>
-
-    <h3>カメラを意識したアバター負荷制御</h3>
-    <p>アバターが HMD、撮影用カメラ、ミラーなど、どのカメラから見えているかを考慮して更新頻度を決める仕組みを追加しました。単純にメインカメラから見えないだけで処理を落とすのではなく、撮影・配信側で必要なアバターは維持できます。</p>
-
-    <h3>カメラ・ミラーの独立品質</h3>
-    <p>撮影用カメラ、ミラー、デスクトップ出力について、FPSや描画品質を個別に制御できるようにしました。VR内のプレビューではポストエフェクトを二重適用せず、デスクトップ出力では配信用の見た目を維持するための経路も分離しています。</p>
-
-    <h3>VAB読み込みと物理処理の高速化</h3>
-    <p>VABアーカイブを何度も開き直さず、1回のセッションでまとめて処理する <code>VabArchiveSession</code> を導入しました。テクスチャ読み込みのコピー削減や、一括処理も追加しています。</p>
-    <p>PhysBone と DynamicBone では、個別に Job を完了させる回数を減らし、複数アバター時の待ち時間を抑える方向へ改善しました。</p>
-
-    <h2>UIも大きく再編</h2>
-    <p>BlendShape 操作は、最初に対象パーツを選び、そのパーツに属する表情・体形・その他の項目へ進む構成へ変更しました。複数パーツにまたがる BlendShape では、どのパーツを操作しているか分かるようにしています。</p>
-    <p>また、カメラと鏡は独立した特殊メニューではなく、プリセット機材としてアイテム一覧から扱う方向へ統合しました。デスクトップとVRの双方で、機材を配置・選択する流れを揃えています。</p>
-
-    <h2>VAB 4.5も正式化</h2>
-    <p>VAB 4.5 を現在の正式仕様として統合し、関連する仕様書、配布手順、Converter 文書を更新しました。VAB 4.0 は基礎仕様と旧入力互換の位置づけへ整理しています。</p>
-
-    <h2>ほかにも進んだこと</h2>
+    <h2>同じ集計期間に進んだこと</h2>
+    <p>今回の集計期間には<strong>11コミット</strong>が入り、コミットごとの変更を合計すると<strong>81ファイル、3,115行追加、476行削除</strong>でした。Unity 6.5移行以外にも、VRまわりとファイル復元の改善が並行して進んでいます。</p>
     <ul>
-      <li>ポストエフェクト設定をデスクトップ・VRの両方で調整できるUIを追加</li>
-      <li>HMD表示、撮影用カメラ、ミラー、デスクトップ出力の適用経路を分離</li>
-      <li>画像生成リクエストJSONを組み立てるバッチと固定プロンプト群を追加</li>
-      <li>Unity 6.5、URP、VAB 4.5 に合わせて各種ドキュメントを更新</li>
+      <li><strong>e510625</strong> — FBX座標系復元とufbx v9対応を追加</li>
+      <li><strong>6d90878</strong> — VABランタイム復元と遅延Physicsを堅牢化</li>
+      <li><strong>54b16c8</strong> — VRアバター化の身長判定と自己衝突処理を改善</li>
+      <li><strong>0b6f3ac</strong> — Scene依存解決とVR入力Raycastを改善</li>
+      <li><strong>22df307</strong> — ライブコメントの画像取得保護と処理負荷を改善</li>
+      <li><strong>eb854de</strong> — VRデスクトップ出力解像度とミラー描画を改善</li>
     </ul>
+    <p>集計終了時点の最終HEADは <strong>c7cf1076bb7dfacd2564486f7c608725dd31549d</strong>（「Unity 6.5を正本として開発環境記述を更新」）です。</p>
 
     <h2>4コマの裏話</h2>
-    <p>今回は「URPへ移行したら終わり」と思ったろひの前に、品質設定、ミラー、配信カメラ、アバター負荷、物理、VAB読み込みが次々と並ぶ展開です。ルミナが巨大なチェックリストを広げ、最終的には一つずつ仕組みとして整理していく流れをイメージしました。</p>
+    <p>今回は「Unity 6.5へ移行する」という一言から始めて、APIとPackageの互換対応、実データ回帰テスト、VABの物理・マテリアル確認へ進む構成にしました。実際の移行も、バージョン番号を書き換えるだけではなく、こうして一段ずつ互換性を確認する作業の積み重ねです。</p>
+    <p>4コマのろひは、正式なキャラクター参照画像を生成入力として使い、金〜オレンジの髪、狐耳、赤い眼鏡、赤系の瞳、黄色のノースリーブという基準デザインを維持するようにしています。</p>
 
     <h2>今日のまとめ</h2>
-    <p>2026-07-30 は、単一機能の追加というより、Unity 6.5 正式版として今後開発を続けるための基盤をまとめて作り直した日でした。URP移行、品質設定、カメラごとの描画、アバター負荷制御、読み込み高速化、物理処理、UI再編が同じ方向へ揃ったことで、多数アバター・VR・撮影・配信を同時に扱うための土台がかなり強くなっています。</p>
+    <ul>
+      <li>Unity 6.5向けにAPI・Package・ProjectSettingsの互換対応を実施</li>
+      <li>実アバター・背景データを使ったUnity 6系回帰テストを追加</li>
+      <li>VAB復元時のPhysicsとMaterial互換性を改善</li>
+      <li>FBX座標系、VR入力、アバター化、ライブコメント、ミラー描画も改善</li>
+      <li>今後の開発環境の正本をUnity 6.5へ更新</li>
+    </ul>
 
     <h2>本日のひとこと</h2>
-    <blockquote>引っ越し先を変えたら、家具の配置どころか配線まで全部見直すことになった。でも、そのぶん次の改装はずっと楽になるはず。</blockquote>
+    <blockquote>新しいUnityへ移すなら、アバターがちゃんと帰ってくるところまで。</blockquote>
+    <p>Unity 6.5への移行は大きな節目ですが、目的はバージョン番号を新しくすることではありません。これまで作ってきたアバター表示やVR機能を維持しつつ、次の性能改善へ進める土台を整えること。今回でその基準線がかなりはっきりしました。</p>
   </article>
 </main>
 <footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
