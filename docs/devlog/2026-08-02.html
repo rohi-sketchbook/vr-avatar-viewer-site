@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>布を落として、つかんで、引っぱって。変形をその場で確かめる日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="Lattice衣服変形を専用ウィンドウで視覚的に調整し、回転・落下・細分化・引張・掴み位置をその場で確認可能に。シェーダー設定や取込処理も改善した2026年8月2日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-02.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="布を落として、つかんで、引っぱって。変形をその場で確かめる日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="Lattice衣服変形を専用ウィンドウで視覚的に調整し、回転・落下・細分化・引張・掴み位置をその場で確認できるようにした一日の記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-02.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-02-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="Lattice衣服変形を見ながら調整する仕組みを描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="布を落として、つかんで、引っぱって。変形をその場で確かめる日">
+  <meta name="twitter:description" content="Lattice衣服変形を回転・落下・引張しながら視覚調整できる専用ウィンドウを追加した日の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-02-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.02 / Development Log</div>
+    <h1>布を落として、つかんで、引っぱって。変形をその場で確かめる日</h1>
+    <p class="lead">2026-08-02 の開発日記では、Latticeを使った衣服変形を専用ウィンドウ上で視覚的に調整できる仕組みを中心に、シェーダー設定の統一、Anime Cel Shader URP対応、ドラッグ＆ドロップ取込の終了処理改善などを取り上げます。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-08-01 03:00:00 JST から 2026-08-02 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-02-comic.png" alt="Lattice衣服変形を見ながら調整する仕組みを描いた、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E5%B8%83%E3%82%92%E8%90%BD%E3%81%A8%E3%81%97%E3%81%A6%E3%80%81%E3%81%A4%E3%81%8B%E3%82%93%E3%81%A7%E3%80%81%E5%BC%95%E3%81%A3%E3%81%B1%E3%81%A3%E3%81%A6%E3%80%82%E5%A4%89%E5%BD%A2%E3%82%92%E3%81%9D%E3%81%AE%E5%A0%B4%E3%81%A7%E7%A2%BA%E3%81%8B%E3%82%81%E3%82%8B%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-02.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計期間には<strong>6コミット</strong>が入り、最終HEADは <strong>aab3227</strong>（「Lattice衣服調整画面の構成を整理」）でした。確認時点でViewer側の未コミット差分はありませんでした。</p>
+
+    <h2>今日の主題：変形結果を見ながらLatticeを調整する</h2>
+    <p>衣服をLatticeで変形する機能は、数値だけを編集しても、実際にどの方向へ曲がるのか、落下したときにどこまで潰れるのか、つかんで引っぱったときにどのような形になるのかを把握しにくい問題がありました。</p>
+    <p>そこで、専用の「Lattice衣服調整ウィンドウ」を追加しました。対象Rendererを選び、Latticeの分割数や変形設定を変更しながら、プレビュー上で結果を確認できる構成です。Play Mode中のアバターパーツ選択、オブジェクトの回転、落下方向の確認、掴み位置の調整、引張変形の確認といった作業を、一つの画面へまとめるための基盤になっています。</p>
+
+    <h2>落下・回転・引張を目で確認</h2>
+    <p>調整ウィンドウでは、衣服を異なる角度へ回転させて落下させ、接地時の変形を確認できるようになりました。Latticeメッシュの細かさも調整できるため、大きく柔らかく曲げる場合と、局所的な形状を細かく整える場合を切り替えられます。</p>
+    <p>また、青い操作ラインや交点をマウスでつかんで引っぱり、変形の方向や強さを直接確認する操作も追加されています。数値入力と視覚操作を往復しながら調整できるため、「設定を保存して本編へ戻るまで結果が分からない」という手間を減らせます。</p>
+
+    <h2>調整画面の構成を整理</h2>
+    <p>初回実装後には、情報量が多くなった画面を整理しました。左半分をプレビュー、右半分をRenderer選択や各種設定、下部を再生・スクラブ・JSON保存操作として役割ごとに配置し、操作項目を説明するドキュメントも追加しています。</p>
+    <p>単に機能を増やすだけでなく、どこを操作すれば何が変わるのかを理解しやすくすることも、編集ツールでは重要です。今回の再構成により、今後のリアルタイム操作やPlay Mode連携を追加しやすい土台になりました。</p>
+
+    <h2>アバターのシェーダー設定を一か所へ</h2>
+    <p>アバター表示で使用するシェーダー設定をまとめて管理する共通設定ウィンドウも追加しました。描画プロファイルを共通Assetへ保存し、個々の画面や処理が同じ設定を参照する構成です。</p>
+    <p>これにより、シェーダーごとの品質や描画方式を複数箇所で別々に管理する状態を減らし、Viewer全体で設定を揃えやすくなりました。設定内容を確認するEditorテストも追加されています。</p>
+
+    <h2>Anime Cel Shader URPを表示モードへ追加</h2>
+    <p>Viewerで選択できる描画モードに、Anime Cel Shader URPが追加されました。インポート時の互換処理、Shader GUI互換、ビルド時のShader収録、設定UI、描画プロファイル制御まで含めて整備されています。</p>
+    <p>外部Shaderを導入しただけでは、Unityのバージョン差やURP設定、ビルド時のShader除外などによってエラーや表示崩れが発生する場合があります。今回の対応では、Viewer内で継続して選択・利用できるよう、周辺処理とテストもまとめて追加しました。</p>
+
+    <h2>ドラッグ＆ドロップ取込を安全に終了</h2>
+    <p>PMXなどをウィンドウへドラッグ＆ドロップして読み込む処理には、画面やアプリの終了後も非同期処理が残らないよう、寿命に連動したキャンセル処理を追加しました。</p>
+    <p>取込中に対象画面が閉じられた場合、処理が古いUIへ結果を返したり、終了済みObjectへアクセスしたりしないようにします。EditorとRuntime双方のテストも追加されました。</p>
+
+    <h2>解析用VAB Converterソースを整理</h2>
+    <p>解析用として共有するVAB Converterのスナップショットも、専用のDistributionフォルダへ追加されました。依存関係、ソースマップ、マニフェスト、参照実装をまとめ、Viewer本体の正本コードとは分離してあります。</p>
+    <p>継続的に配布・保守する製品パッケージではなく、VAB 4.5の変換構造を確認するための解析資料という位置づけです。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は、ろひがLattice設定の数値を眺めながら「結局、落としたらどう曲がるの？」と困るところから始まります。ルミナが専用ウィンドウを開き、衣服を回転させて落としたり、青いラインを引っぱったりして、変形結果をその場で確認。最後は、細かさや掴み位置を調整した衣服が自然に変形し、二人で完成を喜ぶ流れです。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>2026-08-02の記事対象期間では、Lattice衣服変形が「設定値を入力する機能」から「結果を見ながら調整する編集環境」へ大きく進みました。</p>
+    <p>同時に、シェーダー設定の共通化、Anime Cel Shader URP対応、ドラッグ＆ドロップ取込のキャンセル処理、解析用Converter資料の整理も進んでいます。アバターの見た目を調整する機能と、それを安全に読み込み・表示する基盤の両方が強化された一日です。</p>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>数字だけでは分からない布の気持ちも、落として引っぱれば少し見えてくる。</blockquote>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
