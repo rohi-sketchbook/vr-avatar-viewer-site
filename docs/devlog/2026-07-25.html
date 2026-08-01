@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UnityPackageをVABに詰め直したら、圧縮まで始まった日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="UnityPackageやFBXをVR Avatar Viewer内でVAB 4.5へ変換する基盤を整え、Runtimeテクスチャ圧縮とBC7高速化、4K撮影設定まで進めた2026年7月25日の開発日記です。">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.07.25 / Development Log</div>
+    <h1>UnityPackageをVABに詰め直したら、圧縮まで始まった日</h1>
+    <p class="lead">今日は「Unityで配られたアバターをViewerへ持ってくる」処理が、一気に実用寄りになった日です。UnityPackageやFBXの中身を読み取り、Viewerの正式なアバター形式VAB 4.5へ詰め直すところから、テクスチャ圧縮の高速化、そして最大4K撮影まで進みました。</p>
+    <div class="notice">2026年7月24日03:00〜7月25日02:59 JSTのコミットを集計しています。会話や一部のトラブル表現には、読み物として分かりやすくするための演出があります。</div>
+    <p><img src="../assets/images/2026-07-25-devlog.webp" alt="UnityPackageからVAB 4.5への変換とBC7テクスチャ圧縮の高速化に取り組む、ろひとルミナの4コマ漫画" width="768" height="512"></p>
+
+    <h2>「UnityPackage、そのままViewerに放り込みたい」</h2>
+    <p>Unity向けアバターは、3Dモデルだけで完結しているとは限りません。FBX、テクスチャ、マテリアル、Prefab、骨の設定、揺れ物など、複数のデータがUnityPackageの中でつながっています。</p>
+    <p>そこで今日の大きな工事では、UnityPackageやFBXを読み取ったあと、その場限りの特殊な読み込み方で表示するのではなく、最終的に<strong>VAB 4.5</strong>へ変換する基盤を追加しました。VABはVR Avatar Viewerがアバターを保存・再生するための正式な内部形式です。</p>
+    <blockquote>ろひ「UnityPackageを読めた！」<br>ルミナ「ではVAB 4.5へ詰め直します」<br>ろひ「そのまま使わないの？」<br>ルミナ「入口が違っても、Viewerの中では同じ形にします」</blockquote>
+
+    <h2>Unityの設定も、名前当てではなく元データから読む</h2>
+    <p>FBX本体の形だけ読めても、Unity上で調整された設定を無視すると再現度は落ちます。そこでUnityのYAMLデータを読む処理が拡張され、Sceneの取り込みやModelImporterの設定など、Unity側が持っている情報を利用する方向へ進みました。</p>
+    <p>3Dモデルの解析には<strong>ufbx</strong>、Unityの構造化データには<strong>VYaml</strong>を使い、ファイル名やオブジェクト名から「たぶんこれ」と推測する範囲を減らしています。見た目だけでは分からない骨・マテリアル・参照関係を、できるだけ元データのつながりから復元するためです。</p>
+
+    <h2>変換できた。次は「待ち時間」が敵になった</h2>
+    <p>VABへ詰め直す処理が動き始めると、次の問題はテクスチャでした。高品質な画像をそのまま大量に持つと、ファイルサイズやGPUメモリの負担が大きくなります。そのためRuntime変換時にも、GPUで扱いやすい圧縮形式へ変換する処理が必要になります。</p>
+    <p>18時台のコミットではRuntimeテクスチャ圧縮の仕組みが追加され、深夜の最終コミットでは<strong>BC7圧縮の高速化</strong>がさらに進みました。圧縮品質は最上位固定ではなくバランス設定を使い、並列処理も有効にして、実用的な速度と見た目の両立を狙っています。</p>
+    <blockquote>ろひ「変換できた！」<br>ルミナ「テクスチャを圧縮します」<br>ろひ「まだ終わってなかった！」<br>ルミナ「保存容量と表示品質のためです」</blockquote>
+
+    <h2>ついでではないけど、撮影は4Kまで</h2>
+    <p>同じ最終コミットでは、撮影解像度を選べる設定も追加されました。上限は<strong>3840×2160</strong>、いわゆる4Kです。</p>
+    <p>VR Avatar Viewerは「読み込んで眺める」だけでなく、ポーズや背景、ライトを組み合わせて撮影するスタジオでもあります。アバターを高い再現度で取り込めるようにする工事と、最後に高解像度で撮れるようにする工事が、同じ一日の中でつながりました。</p>
+
+    <h2>その裏では、入口以外もまとめて整備</h2>
+    <p>この24時間にはほかにも、PMXの描画・Humanoid・Dボーン再現、キャッシュ保存先の <code>UserData/Cache</code> への統合、共通Lit・Toonでの半透明描画、BlenderMCPとChatGPT画像連携ツールなどが入っています。</p>
+    <p>集計期間は9コミット。開始直前の状態から最終HEADまでで<strong>185ファイル、60,041行追加、1,086行削除</strong>でした。外部ライブラリのソース取り込みも含むため行数だけで機能量は測れませんが、「ファイルを開く」機能から「開いたものをViewerの正式形式として運用する」基盤へ大きく進んだ一日です。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、UnityPackageをVABへ入れた瞬間に巨大な「圧縮中」バーが現れる構成にします。実際の実装では、VAB Writer、FBX解析、Unity設定の読み取り、Runtimeテクスチャ圧縮が別々の役割を持っていますが、ユーザーから見ると全部ひとつの「取り込み」です。</p>
+    <p>そこで最後は、圧縮を速くした直後に4K撮影ボタンを見せて、「軽くする作業をしていたはずなのに、最後は画素数を増やす」という開発らしいオチにします。</p>
+
+    <h2>今日のまとめ</h2>
+    <ul>
+      <li>UnityPackageのVYaml解析と背景Scene取り込みを実装</li>
+      <li>UnityPackage・FBXからVAB 4.5へ変換する基盤を追加</li>
+      <li>PMXの描画、Humanoid、Dボーン再現を改善</li>
+      <li>キャッシュ保存先を <code>UserData/Cache</code> へ統合</li>
+      <li>共通Lit・Toonの半透明描画を改善</li>
+      <li>Runtimeテクスチャ圧縮を導入し、BC7圧縮を高速化</li>
+      <li>撮影解像度を最大3840×2160まで選択可能にした</li>
+      <li>集計期間の最終HEADは <strong>2df44fe</strong></li>
+    </ul>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>何でも読み込める入口を作ったら、次は中で荷造りして圧縮する物流センターが必要になった。</blockquote>
+    <p>形式の違うアバターを受け取っても、Viewerの中では同じ仕組みで扱う。そのための変換・保存・圧縮がつながり始め、外部データ取り込みが「実験機能」から日常的に使える機能へ近づいた一日でした。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
