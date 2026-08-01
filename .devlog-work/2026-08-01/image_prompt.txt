@@ -1,0 +1,51 @@
+TITLE: 揺れものを守る「見えない壁」を、ちゃんと持ち帰る日
+
+Panel 1
+Scene: UnityPackageから変換したアバターの髪と衣装が不自然な位置へ動いており、ろひが困惑している。ルミナはタブレットでDynamicBone設定を確認している。背景は明るい開発室とVRプレビュー画面。
+Dialogue:
+- ろひ「揺れは動いてるのに、なんで形が崩れるの？」
+- ルミナ「揺れだけじゃなくて、Colliderも見てみよう」
+Visual tone / Mood: 原因不明の違和感をコミカルに提示する。
+
+Panel 2
+Scene: ルミナがアバター周囲の透明なColliderを可視化する。変換前には大きなInside Colliderがあり、変換後の比較図では小さな球へ縮んでいる。ろひは巨大な透明球を見上げて驚く。
+Dialogue:
+- ルミナ「この大きなInside Colliderが、小さく変換されてたよ」
+- ろひ「見えない壁が引っ越し中に縮んでる！」
+Visual tone / Mood: 技術的な違いを比較図で分かりやすく見せる。Colliderは半透明の青いワイヤーフレーム。
+
+Panel 3
+Scene: DynamicBone、Collider、除外設定の箱が一本のVAB 4.5変換パイプへ流れ、外部Converter、アプリ内取込、Viewer復元の三つの経路へ同じ内容で分岐する図。ルミナが接続を整理し、ろひがチェックを付けている。
+Dialogue:
+- ろひ「変換する場所が違っても、同じ物理情報になるんだね」
+- ルミナ「生成処理を共通化して、テストでも確認したよ」
+Visual tone / Mood: 複雑な処理が整理される爽快感。短い技術ラベルのみ表示。
+
+Panel 4
+Scene: 修正後のアバターの髪と衣装が自然に揺れ、透明な大きなColliderが正しい位置で機能している。ろひとルミナがVRプレビューを見ながら満足げにハイタッチする。背景の小さな補助画面には、姿勢推定と指の曲げ軸改善を示す簡潔なアイコン。
+Dialogue:
+- ろひ「髪も衣装も、ちゃんと元の範囲で揺れてる！」
+- ルミナ「見えない設定まで持ち帰って、変換完了だね」
+Visual tone / Mood: 安心感と達成感のある締め。
+
+FACTUAL DEVELOPMENT THEMES:
+- UnityPackage由来DynamicBoneのVAB 4.5変換とRuntime復元を改善
+- 巨大なInside Colliderの半径と内外判定を保持
+- Legacy DynamicBone書き出し処理を専用化
+- 外部Converter、アプリ内取込、Viewer復元でVAB 4.5生成処理を共通化
+- DynamicBone、PhysBone、Collider変換のEditor／Runtimeテストを追加
+- VRアバター化へ姿勢推定と立位・座位切替を追加
+- 指編集の曲げ軸をモデル形状から算出
+- UnitySkillsをv2.4.2へ更新
+
+TODAY'S EXCLUDED TOPICS:
+- Unity 6.5・URP移行そのものを主題にしない
+- 開発日記の画像生成や公開作業
+- Discord、GitHub、ChatGPTの画面
+- データ消失、重大クラッシュ、アバター破損
+- 未コミットのDistributionフォルダ
+
+ADDITIONAL RESTRICTIONS:
+- Colliderは技術図として半透明ワイヤーフレームで示す
+- 架空の数値や性能倍率は追加しない
+- 主題はDynamicBoneとColliderの変換・復元に統一する

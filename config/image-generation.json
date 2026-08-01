@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "fixed_prompt_path": "H:\\codexapp\\vr-avatar-viewer-site\\DEVLOG_IMAGE_PROMPT_BASE.md",
+  "rohi_reference": "H:\\codexapp\\vrm-avatar-studio\\Docs\\Branding\\rohi.png",
+  "color_temperature": "5500K",
+  "layout": "exactly one 2x2 four-panel comic page",
+  "output": {
+    "content_type": "image/png",
+    "working_path_template": ".devlog-work/{date}/generated.png"
+  },
+  "transfer": {
+    "native_artifact_first": true,
+    "base64_fallback": true,
+    "base64_chunk_characters": 12000,
+    "manifest_schema_version": 2,
+    "receiver": "H:\\codexapp\\AgentTools\\image-bridge\\Receive-ChatGPTImage.bat"
+  },
+  "reference_rules": {
+    "load_with_devspace_read_image": true,
+    "use_actual_image_content": true,
+    "allow_screenshot_crop_substitute": false,
+    "allow_previous_generated_image_substitute": false,
+    "stop_when_reference_is_not_attached": true
+  }
+}

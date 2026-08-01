@@ -1,0 +1,26 @@
+{
+  "date": "2026-07-30",
+  "timezone": "Asia/Tokyo",
+  "source_window_start": "2026-07-30T00:00:00+09:00",
+  "source_window_end": "2026-07-30T23:59:59+09:00",
+  "title": "Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新",
+  "summary": "Unity 6.5とURPを正式な前提へ切り替え、品質プリセット、カメラ別描画、アバター負荷制御、VAB読み込み、物理処理、UI構成までまとめて整備した一日。",
+  "primary_theme": "Unity 6.5・URP移行後の描画・性能基盤整備",
+  "viewer_head_at_period_end": "322500d",
+  "viewer_head_subject": "ポストエフェクト設定とVR出力経路を分離",
+  "viewer_commit_count": 14,
+  "major_changes": [
+    "URP移行と描画互換処理",
+    "グラフィックス品質プリセットと性能制御",
+    "カメラ認識型Avatar Tier",
+    "カメラとミラーの独立描画品質",
+    "VABロードのSession化と高速化",
+    "PhysBoneとDynamicBoneのJob一括化",
+    "BlendShape UI再編",
+    "カメラと鏡のプリセット機材化",
+    "VAB 4.5正式化",
+    "ポストエフェクトとVR出力経路の分離"
+  ],
+  "excluded_uncommitted_change": "Assets/Scripts/Avatar/AvatarFingerPosePreset.cs",
+  "publication_state": "materials_only"
+}

@@ -1,0 +1,69 @@
+{
+  "date": "2026-08-02",
+  "article_ready": true,
+  "prompt_ready": true,
+  "image_ready": true,
+  "published": true,
+  "stage": "published",
+  "error": null,
+  "source_window_start": "2026-08-01T03:00:00+09:00",
+  "source_window_end": "2026-08-02T02:59:59+09:00",
+  "source_observed_at": "2026-08-02T03:33:49+09:00",
+  "viewer_head": "aab3227362c7e1aeb711c18fa6a6a49c73db52d9",
+  "viewer_commit_count": 6,
+  "excluded_uncommitted_changes": [],
+  "image_generation_attempts": 2,
+  "image_qa": {
+    "passed": true,
+    "panel_count": 4,
+    "layout": "2x2",
+    "rohi_reference_match": true,
+    "lumina_reference_match": true,
+    "japanese_legible": true,
+    "speaker_assignment_correct": true,
+    "topic_matches_source": true,
+    "notes": "通算1回目は外見と主題の逸脱で不採用。通算2回目は全必須項目を満たしたため採用。"
+  },
+  "image_transfer_method": "built_in_imagegen_local_copy",
+  "generated_image": ".devlog-work/2026-08-02/generated.png",
+  "published_image": "docs/assets/images/devlog-2026-08-02-comic.png",
+  "published_image_sha256": "c57c17eadd13ccd8c27c967f0b76d26322d3f1eca7a1e5aaa30302fefd1cfb40",
+  "validation": {
+    "html_well_formed": true,
+    "local_links_valid": true,
+    "placeholders_absent": true,
+    "image_dimensions_match": true,
+    "responsive_image_css": true,
+    "ogp_and_x_share_present": true,
+    "git_diff_check": true
+  },
+  "commit": {
+    "attempted": true,
+    "created": true,
+    "hash": "4e1cec0964864e1a4e542990bc6cb79a78019ab9",
+    "message": "2026-08-02の開発日記を追加",
+    "paths": [
+      "docs/devlog/2026-08-02.html",
+      "docs/assets/images/devlog-2026-08-02-comic.png",
+      "docs/devlog/index.html",
+      "docs/index.html"
+    ],
+    "failure": null
+  },
+  "push": {
+    "attempted": true,
+    "succeeded": true,
+    "remote": "origin",
+    "branch": "main",
+    "hash": "4e1cec0964864e1a4e542990bc6cb79a78019ab9"
+  },
+  "publication": {
+    "verified": true,
+    "article_url": "https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-02.html",
+    "image_url": "https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-02-comic.png",
+    "article_http_status": 200,
+    "image_http_status": 200,
+    "verified_at": "2026-08-02T04:43:02+09:00"
+  },
+  "updated_at": "2026-08-02T04:43:02+09:00"
+}

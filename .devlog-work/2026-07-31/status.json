@@ -1,0 +1,13 @@
+{
+  "date": "2026-07-31",
+  "article_ready": true,
+  "prompt_ready": true,
+  "image_ready": true,
+  "published": true,
+  "stage": "published",
+  "error": null,
+  "image_transfer_method": "native",
+  "image_adoption_note": "ユーザー承認により、3枚目の生成画像を採用した。",
+  "site_commit": "253fc0c",
+  "updated_at": "2026-07-31T09:30:00+09:00"
+}

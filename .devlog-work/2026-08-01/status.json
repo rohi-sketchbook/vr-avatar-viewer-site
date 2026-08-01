@@ -1,0 +1,21 @@
+{
+  "date": "2026-08-01",
+  "article_ready": true,
+  "prompt_ready": true,
+  "image_ready": true,
+  "published": true,
+  "stage": "published",
+  "error": null,
+  "source_window_start": "2026-07-31T03:00:00+09:00",
+  "source_window_end": "2026-08-01T02:59:59+09:00",
+  "viewer_head": "a69fe61054bc66c24698284200ef29389e219a99",
+  "viewer_commit_count": 9,
+  "excluded_uncommitted_changes": [
+    "Distribution/"
+  ],
+  "image_transfer_method": "native",
+  "site_commit": "e38653e",
+  "published_article": "docs/devlog/2026-08-01.html",
+  "published_image": "docs/assets/images/devlog-2026-08-01-comic.png",
+  "updated_at": "2026-08-01T04:11:00+09:00"
+}

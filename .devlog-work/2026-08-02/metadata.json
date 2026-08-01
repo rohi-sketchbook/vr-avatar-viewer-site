@@ -1,0 +1,71 @@
+{
+  "date": "2026-08-02",
+  "timezone": "Asia/Tokyo",
+  "source_window_start": "2026-08-01T03:00:00+09:00",
+  "source_window_end": "2026-08-02T02:59:59+09:00",
+  "source_observed_at": "2026-08-02T03:33:49+09:00",
+  "title": "布を落として、つかんで、引っぱって。変形をその場で確かめる日",
+  "summary": "Lattice衣服変形を専用ウィンドウ上で視覚的に調整できるようにし、回転・落下・メッシュ細分化・引張・掴み位置確認を追加。共通シェーダー設定、Anime Cel Shader URP、取込キャンセル処理も改善した一日。",
+  "primary_theme": "Lattice衣服変形の視覚調整ウィンドウ",
+  "viewer_branch": "main",
+  "viewer_head_at_period_end": "aab3227362c7e1aeb711c18fa6a6a49c73db52d9",
+  "viewer_head_subject": "Lattice衣服調整画面の構成を整理",
+  "viewer_commit_count": 6,
+  "viewer_uncommitted_changes_at_observation": [],
+  "site_branch": "main",
+  "site_head_at_period_end": "e38653e570bf95ba365acfeabab5fffc278c2f92",
+  "site_head_subject": "2026-08-01の開発日記を追加",
+  "site_commit_count": 1,
+  "site_uncommitted_paths_at_observation": [
+    ".devlog-work/",
+    "config/"
+  ],
+  "aggregate_diff": {
+    "files_changed": 54,
+    "insertions": 7297,
+    "deletions": 224
+  },
+  "commits": [
+    {
+      "sha": "a09a2c3bb65dccd1eaa08b05469d328eff4d148f",
+      "committed_at": "2026-08-01T04:04:56+09:00",
+      "subject": "VABコンバーター解析用ソースを追加"
+    },
+    {
+      "sha": "457736f1c543cede2dbf7259f6a033f7a12766d1",
+      "committed_at": "2026-08-01T17:26:24+09:00",
+      "subject": "Add lifetime cancellation to drop imports"
+    },
+    {
+      "sha": "4e575012d20523ddd2f266625bf192faa89b98d0",
+      "committed_at": "2026-08-01T20:03:12+09:00",
+      "subject": "Anime Cel Shader URP描画モードを追加"
+    },
+    {
+      "sha": "cc175a23320ac542ea654fa8191eab868aeec6c8",
+      "committed_at": "2026-08-01T22:27:47+09:00",
+      "subject": "共通シェーダー設定ウィンドウを追加"
+    },
+    {
+      "sha": "02db9b1f8fcf54a9693b3462b7299b2b32946ce0",
+      "committed_at": "2026-08-01T23:16:25+09:00",
+      "subject": "Lattice衣服変形の視覚調整ウィンドウを追加"
+    },
+    {
+      "sha": "aab3227362c7e1aeb711c18fa6a6a49c73db52d9",
+      "committed_at": "2026-08-02T01:42:12+09:00",
+      "subject": "Lattice衣服調整画面の構成を整理"
+    }
+  ],
+  "major_changes": [
+    "Lattice衣服変形の専用視覚調整ウィンドウを追加",
+    "対象Renderer選択・回転・落下・引張・掴み位置確認を追加",
+    "Latticeメッシュの分割数を調整可能にし、画面構成と文書を整理",
+    "アバター用共通シェーダー設定ウィンドウを追加",
+    "Anime Cel Shader URP描画モードと互換処理・テストを追加",
+    "ドラッグ＆ドロップ取込へ寿命連動キャンセルを追加",
+    "VAB Converter解析用ソースと依存・構成資料を追加"
+  ],
+  "excluded_uncommitted_changes": [],
+  "publication_state": "materials_only"
+}

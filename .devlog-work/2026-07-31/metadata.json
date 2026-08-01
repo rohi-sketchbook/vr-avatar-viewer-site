@@ -1,0 +1,26 @@
+{
+  "date": "2026-07-31",
+  "timezone": "Asia/Tokyo",
+  "source_window_start": "2026-07-30T03:00:00+09:00",
+  "source_window_end": "2026-07-31T02:59:59+09:00",
+  "title": "Unity 6.5・URP時代へ。見た目も速度も、まとめて土台を更新",
+  "summary": "Unity 6.5とURPを正式な前提へ切り替え、品質プリセット、カメラ別描画、アバター負荷制御、VAB読み込み、物理処理、UI構成までまとめて整備した一日。",
+  "primary_theme": "Unity 6.5・URP移行後の描画・性能基盤整備",
+  "viewer_head_at_period_end": "1d5918a475b40c8aeb907223c92e404ab557517b",
+  "viewer_head_subject": "URPプロジェクト設定を追加",
+  "viewer_commit_count": 15,
+  "excluded_uncommitted_changes": [
+    "Assets/Scripts/UI/VR/VRSettingsView.cs",
+    "Assets/Scripts/Utility/AppSettings.cs",
+    "Assets/Scripts/Utility/AppSettingsLoader.cs",
+    "Assets/Scripts/VR/FinalIkVRIKAvatarEmbodiment.cs",
+    "Assets/Scripts/VR/VRAvatarEmbodimentController.cs",
+    "Packages/packages-lock.json",
+    "Assets/Scripts/VR/AvatarEmbodimentPosture.cs",
+    "Assets/Scripts/VR/VRAvatarPostureEstimator.cs",
+    "Assets/Scripts/VR/VRAvatarPostureEstimatorTests.cs"
+  ],
+  "image_path": "docs/assets/images/devlog-2026-07-31-comic.png",
+  "image_adoption": "user_approved_third_generation",
+  "publication_state": "ready_for_publish"
+}
