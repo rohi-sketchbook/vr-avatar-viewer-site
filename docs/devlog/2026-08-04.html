@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>重いVRを、設定から軽く。描画と揺れものをまとめて整えた日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="VR描画のプリセット・カスタム設定と安全なAPI切替を追加し、複数アバターのNative PhysBoneをシーン全体のJobsバッチで処理するようにした2026年8月4日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-04.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="重いVRを、設定から軽く。描画と揺れものをまとめて整えた日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="VR描画設定とシーン全体のPhysBone Jobs処理で、軽さと自然な揺れを両立するための改善記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-04.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-04-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="VR描画設定とPhysBone一括処理を描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="重いVRを、設定から軽く。描画と揺れものをまとめて整えた日">
+  <meta name="twitter:description" content="VR描画設定とシーン全体のPhysBone Jobs処理で、軽さと自然な揺れを両立した開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-04-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.04 / Development Log</div>
+    <h1>重いVRを、設定から軽く。描画と揺れものをまとめて整えた日</h1>
+    <p class="lead">2026-08-04 の開発日記では、VRの描画品質を利用環境に合わせて選べる設定と、複数アバターの揺れものをシーン全体でまとめて処理する仕組みを中心に取り上げます。見た目を細かく調整したいときも、負荷を抑えたいときも、同じ設定画面から選べる土台が整いました。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-08-03 03:00:00 JST から 2026-08-04 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-04-comic.png" alt="VR描画設定とPhysBone一括処理を描いた、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%87%8D%E3%81%84VR%E3%82%92%E3%80%81%E8%A8%AD%E5%AE%9A%E3%81%8B%E3%82%89%E8%BB%BD%E3%81%8F%E3%80%82%E6%8F%8F%E7%94%BB%E3%81%A8%E6%8F%BA%E3%82%8C%E3%82%82%E3%81%AE%E3%82%92%E3%81%BE%E3%81%A8%E3%82%81%E3%81%A6%E6%95%B4%E3%81%88%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-04.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計期間には<strong>12コミット</strong>が入り、集計終了時点の最終HEADは <strong>3934ac4</strong>（「リップシンクとURPポストエフェクトの回帰テストを追加」）でした。差分は期間直前から終了HEADまでの比較で63ファイル、5,107行追加、512行削除です。確認時点でViewer側の未コミット差分はありませんでした。</p>
+
+    <h2>今日の主題：VRの描画負荷を、自分の環境に合わせる</h2>
+    <p>今回、表示設定へグラフィックスのプリセットとカスタム設定が加わりました。HDR、MSAA、レンダースケール、影、追加ライト、Forward+、GPU Resident Drawer、GPU Occlusion、動的解像度、フォビエートレンダリングなどを、ひとつの画面から調整できる構成です。</p>
+    <p>さらにVR描画モードとして、自動・互換性・性能を選ぶ仕組みも入りました。Windows Playerでは選択に応じてDirect3D 11またはDirect3D 12を使い分け、必要な変更は次回起動へ引き継ぎます。性能側のAPIで起動が成立しなかった場合に互換側へ戻すための状態管理も実装され、単に選択肢を増やすだけでなく、起動時の安全性まで考慮されています。</p>
+
+    <h2>複数アバターの揺れものを、ひとつの流れで処理</h2>
+    <p>髪や服などの揺れを計算するNative PhysBoneは、アバターごとにばらばらに待ち合わせる構成から、シーン内の有効な処理を集めて一括でJobsへ流す構成へ進みました。依存関係を踏まえて準備し、まとめてスケジュールし、最後に結果を反映する流れです。</p>
+    <p>複数アバターを同時に表示する場面では、細かな仕事を個別に開始して待つ回数を減らせます。テストでは2体分、合計8システム・16パーティクルがひとつのシーン全体バッチでJobsを利用することを確認しています。この数値は性能倍率ではなく、テスト用の構成を正しく一括処理できたことを確かめるものです。</p>
+
+    <h2>揺れ方そのものも自然に</h2>
+    <p>同じ期間には、PhysBoneの角度制限と重力減衰も修正されました。PolarやHingeといった制限の扱い、重力方向へ徐々に落ち着く挙動、伸び縮みや移動の影響が、回帰テストと視覚回帰テストを伴って見直されています。</p>
+    <p>高速化だけを優先して揺れ方が変わってしまわないよう、処理のまとめ方と見た目の正しさを同じ日に固めた点が重要です。</p>
+
+    <h2>表情と手首、画面効果も安定化</h2>
+    <p>BlendShapeでは、分類情報をVABへ保存し、無効なデータを除外する処理が加わりました。編集時のキャッシュはすべてを作り直すのではなく、変更された部分だけを更新する方式へ進み、表情調整時の余分な処理を減らしています。</p>
+    <p>VRでは手首の追従とアバター化した手の向きを修正。リップシンクとURPポストエフェクト設定にも修正と回帰テストが入りました。カメラ列挙用バッファの再利用や、描画状態を重ねて管理するOverride Stackの追加・復元修正もあり、表示と操作の土台が広く整えられています。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は、プレビューの重さに困るろひへ、ルミナが「画質を一段落とす」だけでなく、環境に合う描画設定を選べるようになったことを案内します。その裏では、複数アバターの髪や服の計算も一列に集まって一括処理。最後は軽くなったVRスタジオで二人が動きを確認する流れです。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>2026-08-04の記事対象期間では、VRの描画品質を設定画面から選べるようになり、起動時のグラフィックスAPI切替も安全化されました。同時に、複数アバターのNative PhysBoneをシーン全体でまとめて処理し、角度制限や重力による揺れ方もテストで守られています。</p>
+    <p>表情、手首追従、リップシンク、ポストエフェクトにも改善が入り、「軽くする」と「見た目を崩さない」を一緒に進めた一日でした。</p>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>軽さは、削るだけじゃなく、選べて、まとめられることから。</blockquote>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
