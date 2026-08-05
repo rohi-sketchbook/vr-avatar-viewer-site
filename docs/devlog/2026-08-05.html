@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ピンクにしない、迷わせない。URPの画面効果と背景互換を固めた日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="Beautify 3の画面効果をURPへ一本化し、BRP由来の背景材質を色・質感・発光情報を保ちながらURP向けに整えた2026年8月5日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-05.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="ピンクにしない、迷わせない。URPの画面効果と背景互換を固めた日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="Beautify 3のURP専用化と、過去のBRP背景をURPでも自然に表示するための互換対応を進めた開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-05.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-05-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="URPの画面効果とBRP背景互換を描いた、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ピンクにしない、迷わせない。URPの画面効果と背景互換を固めた日">
+  <meta name="twitter:description" content="Beautify 3のURP専用化とBRP背景材質の互換対応を進めた開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-05-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.05 / Development Log</div>
+    <h1>ピンクにしない、迷わせない。URPの画面効果と背景互換を固めた日</h1>
+    <p class="lead">2026-08-05 の開発日記では、画面を美しく整える Beautify 3 を現在の描画基盤である URP 専用へ移し、以前の Built-in Render Pipeline（BRP）向け背景素材も自然に表示できる互換処理を中心に取り上げます。描画方式が違っても、背景や発光表現を崩さず、同じスタジオ体験へつなぐための更新です。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-08-04 03:00:00 JST から 2026-08-05 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-05-comic.png" alt="URPの画面効果とBRP背景互換を描いた、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E3%83%94%E3%83%B3%E3%82%AF%E3%81%AB%E3%81%97%E3%81%AA%E3%81%84%E3%80%81%E8%BF%B7%E3%82%8F%E3%81%9B%E3%81%AA%E3%81%84%E3%80%82URP%E3%81%AE%E7%94%BB%E9%9D%A2%E5%8A%B9%E6%9E%9C%E3%81%A8%E8%83%8C%E6%99%AF%E4%BA%92%E6%8F%9B%E3%82%92%E5%9B%BA%E3%82%81%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-05.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計期間には<strong>7コミット</strong>が入り、集計終了時点の最終HEADは <strong>93b8179</strong>（「デスクトップで物理カメラをマウス操作可能にする」）でした。期間直前のコミットから終了HEADまでの差分は74ファイル、2,859行追加、938行削除です。確認時点でViewer側には未コミット差分がありましたが、今回の記事実績には含めていません。</p>
+
+    <h2>今日の主題：画面効果をURPの仕組みへ一本化</h2>
+    <p>Beautify 3 は、ブルームや被写界深度、色調整などを扱う画面効果です。今回、Viewer内の連携をURP向けコンポーネントへ移し、旧来のBuilt-in向け制御や従来のURPアダプターを整理しました。</p>
+    <p>表示用、VRヘッドセット用、外部表示用、撮影用というカメラの役割を分け、それぞれへ必要な状態を適用できる構成になっています。撮影カメラはVR負荷に応じた軽量化の対象から外し、ユーザーが意図した撮影表現を保つ設計です。</p>
+
+    <h2>5種類の描画設定へ、同じ機能を一度だけ</h2>
+    <p>Viewerには Low、Middle、Ultra、Custom と標準を合わせた5種類のRenderer Dataがあります。BeautifyのRenderer Featureが各設定へちょうど1つずつ入っているかを検査し、不足や重複を見つけられるセットアップとテストが追加されました。</p>
+    <p>有料アセット本体はリポジトリへ含めず、利用環境へ正しく導入されていることだけを検証します。描画設定を切り替えたときに「ある品質だけ効果が出ない」「二重に適用される」といった差を残さないための土台です。</p>
+
+    <h2>BRP向け背景を、URPでも自然に再現</h2>
+    <p>過去のUnity素材には、StandardなどBRP向けシェーダーで作られた背景があります。URPでそのまま使うと、対応しないシェーダーや材質設定によって表示が崩れる可能性があります。</p>
+    <p>今回の互換処理では、元のシェーダー名を診断用の情報として保ちつつ、実行時にはURPで利用できるLitまたはUnlitへ正規化します。メインテクスチャ、色、滑らかさなどのプロパティ名を対応づけ、Opaque・Cutout・Transparentの描画状態もURP向けに整えます。発光テクスチャや発光色、Baked Emissiveの情報も復元し、背景をVBGへ保存して読み直した後まで回帰テストで確認しています。</p>
+
+    <h2>ほかにも進んだこと</h2>
+    <p>VRのBlendShape一覧では検索と分類更新が差分化され、必要な項目だけを更新する構成になりました。姿勢推定には診断状態と再調整APIが追加されています。</p>
+    <p>デスクトップ操作では、物理カメラを左ドラッグで移動、右ドラッグで回転できる経路が有効化され、ライトやアバター操作との入力競合も避けるようになりました。ポストエフェクトの役割名とバックエンド表記、Unity Worktreeの検証手順、Cold Start手順も整理されています。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は、BRPで作られた背景をURPのスタジオへ持ち込む場面から始めます。ルミナが材質をURP向けに整え、画面効果もカメラごとに整理。最後は発光を含む背景と画面効果が同じスタジオで自然にまとまる流れです。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>2026-08-05の記事対象期間では、Beautify 3の連携をURPへ一本化し、5種類の描画設定へ一貫して組み込む検証が加わりました。同時に、BRP由来の背景材質をURP向けに正規化し、元の情報と発光表現を保ったまま保存・再読込できる互換性を固めています。</p>
+    <p>描画基盤の移行は、単に新しい機能へ置き換えるだけでは終わりません。過去の素材と現在の画面効果を同じ景色へつなぐことで、ユーザーが描画方式を意識せずスタジオを使える状態へ一歩進みました。</p>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>パイプラインが変わっても、見せたい景色は変えない。</blockquote>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
