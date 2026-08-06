@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>透け方はひとつ、画像もひとつ。材質変換のものさしをそろえた日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="VAB 4.5の材質変換で透明・切り抜き・不透明の判断を共通化し、同じ最終テクスチャの重複保存も減らした2026年8月7日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-07.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="透け方はひとつ、画像もひとつ。材質変換のものさしをそろえた日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="材質の透過判定を共通のものさしへそろえ、同じ最終テクスチャを一つにまとめた更新記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-07.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-07-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="材質の透明・切り抜き判定の共通化とテクスチャ重複排除を説明する、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="透け方はひとつ、画像もひとつ。材質変換のものさしをそろえた日">
+  <meta name="twitter:description" content="材質の見た目を守りながら、変換規則とテクスチャ保存をすっきり整理した開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-07-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.07 / Development Log</div>
+    <h1>透け方はひとつ、画像もひとつ。材質変換のものさしをそろえた日</h1>
+    <p class="lead">2026-08-07 の開発日記では、VAB 4.5へ材質を書き出すときとViewerで復元するときに、透明・切り抜き・不透明を同じ規則で扱うための更新を取り上げます。同じ結果になるテクスチャの重複も減らし、見た目の再現とデータの整理を一緒に進めた一日です。</p>
+    <div class="notice">実際のコミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-08-06 03:00:00 JST から 2026-08-07 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-07-comic.png" alt="材質の透明・切り抜き判定の共通化とテクスチャ重複排除を説明する、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%80%8F%E3%81%91%E6%96%B9%E3%81%AF%E3%81%B2%E3%81%A8%E3%81%A4%E3%80%81%E7%94%BB%E5%83%8F%E3%82%82%E3%81%B2%E3%81%A8%E3%81%A4%E3%80%82%E6%9D%90%E8%B3%AA%E5%A4%89%E6%8F%9B%E3%81%AE%E3%82%82%E3%81%AE%E3%81%95%E3%81%97%E3%82%92%E3%81%9D%E3%82%8D%E3%81%88%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-07.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計期間には<strong>1コミット</strong>が入り、集計終了時点の最終HEADは <strong>c4bdd53</strong>（「Material変換の共通化とTexture重複排除を実装」）でした。変更規模は12ファイル、1,174行追加、46行削除です。確認時点のViewer作業ツリーはクリーンでした。</p>
+
+    <h2>今日の主題：書き出しと復元で、材質の判断をそろえる</h2>
+    <p>アバターの材質には、不透明、輪郭をくっきり抜く切り抜き、向こう側が透ける透明といった描き方があります。同じ材質でも、シェーダー名、RenderTypeタグ、描画順、ブレンド方法、深度書き込みなど複数の情報が関係するため、変換する場所ごとに判断がずれると見た目も変わってしまいます。</p>
+    <p>今回、これらを一つの共通状態へ正規化する仕組みが追加されました。ConverterでVAB 4.5を書き出すとき、実行時Writerで保存するとき、Viewerで読み戻すときが、同じ規則を使って透明・切り抜き・不透明を扱います。</p>
+
+    <h2>透明、切り抜き、不透明を同じ規則へ</h2>
+    <p>共通化された判定は、材質のRenderTypeだけに頼りません。lilToonの透明モード、描画順、色とアルファのブレンド係数、深度書き込みも合わせて表面の種類を決めます。その結果からRenderType、描画順、ブレンド、深度書き込み、Alpha-to-Coverageを整え、URPで復元するときはSurfaceとAlpha Clip、関連キーワードにも反映します。</p>
+    <p>たとえば透明材質では深度書き込みとAlpha-to-Coverageを無効にし、不透明材質では標準のブレンドと深度書き込みへ戻すことがテストされています。lilToonのシェーダータグが切り抜きを示していても、明示された透明モードを優先するケースも固定されました。</p>
+
+    <h2>同じ最終画像は、重ねて持たない</h2>
+    <p>テクスチャ変換には「どの元画像を、どの用途・色空間・サンプラー設定・加工方法で仕上げるか」という変換レシピのキャッシュが追加されました。同じレシピなら再エンコードを避け、元のMaterial Slotが別でも、最終PNGが同じならSource Imageを共有します。さらに最終画素とSampler・用途の条件まで同じならTexture Viewも一つへまとめます。</p>
+    <p>参照されなくなった画像やTexture Viewは書き出し前に整理されます。アルファマスクは色データではなく値として扱うためLinear色空間かつミップマップなしとし、CPUでリサイズした場合も色の違いとアルファが残ることを回帰テストで確認しています。</p>
+
+    <h2>変換結果を追いやすくする診断情報</h2>
+    <p>材質スロットにはRendererの階層パスが記録され、テクスチャには元画像のハッシュ、変換レシピのハッシュ、加工内容などの診断情報が加わりました。最適化レポートでは、レシピキャッシュのヒット数や重複排除前後のサイズなどを追える土台も整っています。</p>
+    <p>これは画面に直接現れる新機能ではありませんが、「どの材質の、どのテクスチャが、なぜその形で保存されたか」を調べやすくします。変換品質を上げながら、問題が起きたときの手掛かりも残す更新です。</p>
+
+    <h2>ほかにも進んだこと</h2>
+    <p>実行時のVAB 4.5 Writerにも共通判定が導入され、保存された材質をViewerへ適用する経路でも同じ正規状態を再適用するようになりました。Converterだけを直すのではなく、書き出しと読み戻しの両側をそろえたことが今回のポイントです。</p>
+    <p>新しいテストでは、透明・不透明の正規化、アルファマスクの色空間とミップマップ、CPUリサイズ時の画素とアルファ保持、複数Material Slotをまたぐ最終テクスチャの共有を確認しています。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、同じ見た目のはずなのに「透明？ 切り抜き？」と変換経路ごとに判断が揺れる場面から始めます。ルミナが共通のものさしを示し、ろひが重複したテクスチャを一枚へ整理。最後は見た目を守りながら中身もすっきりする流れです。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>2026-08-07の記事対象期間では、VAB 4.5の材質変換に共通の正規化規則が入り、透明・切り抜き・不透明の判断と復元が一貫するようになりました。テクスチャも変換レシピと最終結果を基準に共有され、不要な重複を減らす仕組みが加わっています。</p>
+    <p>見た目の忠実さとファイル内部の効率は、別々の課題に見えて実はつながっています。何を同じものとして扱い、何を違うものとして残すか。その判断を一か所へ集めたことで、変換は分かりやすく、検証しやすくなりました。</p>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>ものさしをそろえると、見た目も中身も迷わない。</blockquote>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
