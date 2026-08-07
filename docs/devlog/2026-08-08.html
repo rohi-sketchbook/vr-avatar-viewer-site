@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>揺れの暴走を、数字と映像で追った日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="上下移動で起きるPhysBoneの不自然な揺れを、前フレームの状態、制限軸、連続画像と数値の回帰検証で追った2026年8月8日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-08.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="揺れの暴走を、数字と映像で追った日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="PhysBoneの揺れを、前フレームの状態、制限軸、連続画像と数値で追う検証記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-08.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-08-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="PhysBoneの揺れを前フレームの状態と連続画像・数値で検証する、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="揺れの暴走を、数字と映像で追った日">
+  <meta name="twitter:description" content="上下移動で起きる揺れを、再現可能な動きと計測で追った開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-08-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.08 / Development Log</div>
+    <h1>揺れの暴走を、数字と映像で追った日</h1>
+    <p class="lead">2026-08-08 の開発日記では、アバターが上下に動いたときのスカートなどの揺れ物を、もっと安定して再現するための検証を取り上げます。見た目だけで判断せず、粒子の動きを数値へ落とし込み、同じ場面を連続画像でも比べられるようにした一日です。</p>
+    <div class="notice">Viewerのローカル作業ツリーで、集計期間内に更新された実差分をもとにしています。対象期間の新規コミットは0件で、内容はまだコミット前の進行中作業です。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-08-07 03:00:00 JST から 2026-08-08 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-08-comic.png" alt="PhysBoneの揺れを前フレームの状態と連続画像・数値で検証する、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E6%8F%BA%E3%82%8C%E3%81%AE%E6%9A%B4%E8%B5%B0%E3%82%92%E3%80%81%E6%95%B0%E5%AD%97%E3%81%A8%E6%98%A0%E5%83%8F%E3%81%A7%E8%BF%BD%E3%81%A3%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-08.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計終了時点の最終HEADは <strong>c4bdd53</strong>（「Material変換の共通化とTexture重複排除を実装」）で、対象コミットは <strong>0件</strong> でした。確認時点の作業ツリーには未コミット差分があり、期間内の更新時刻とコード内容を確認できた変更のうち、今回はPhysBoneの挙動検証を主題にしています。追跡済み差分は8ファイル、1,026行追加、145行削除でした。</p>
+
+    <h2>今日の主題：揺れの原因を、再現できる形にする</h2>
+    <p>揺れ物の不具合は、静止画だけでは原因を切り分けにくいものです。アバターの移動、慣性、骨の向き、角度制限、コライダーが同じ瞬間に影響し、少し条件が違うだけで見え方も変わります。</p>
+    <p>そこで、一定の加速度で上昇し、減速し、下降して着地する動きを決められたフレーム数で再現し、その間の粒子位置を記録する検証コードが追加されています。休止状態、上昇中、頂点、下降中、着地、落ち着くまでを画像として残すため、後から同じ条件を見比べられます。</p>
+
+    <h2>前のフレームを覚えて、次の揺れへつなぐ</h2>
+    <p>PhysBoneの粒子には、前フレームの速度と、親から子へ向かう骨ベクトルを保持する状態が加わっています。移動による慣性を計算するとき、直前の動きを引き継げるようにするための土台です。</p>
+    <p>位置を一度直して終わりではなく、制約や衝突を解いた後の状態も次のステップへ渡します。上下移動のように加速方向が切り替わる場面では、この連続性が不自然な跳ね返りを調べる重要な手掛かりになります。</p>
+
+    <h2>角度制限の「軸」をSDKの考え方へ合わせる</h2>
+    <p>揺れ物には、自由に曲がれる範囲を決めるAngle、Hinge、Polarなどの制限があります。今回の差分では、現在の回転量を単純にEuler角で切る方法から、元の子ボーン方向へ制限回転を合成して基準軸を作る方法へ計算が組み替えられています。</p>
+    <p>さらに、非等方スケールを考慮してローカル方向とワールド方向を変換し、それぞれの制限形式に合わせて円すい、ヒンジ面、Pitch・Yawの範囲へ方向を収めます。動いている最中に制限へ当たったとき、余計なエネルギーを生みにくくする狙いをコードから確認できます。</p>
+
+    <h2>数値と連続画像を同じテストで残す</h2>
+    <p>上下移動の検証では、フレーム番号、移動フェーズ、アバターの高さ・速度・加速度に加え、休止姿勢からの最大・平均偏差、上下方向の変位をTSVへ書き出します。同時に下半身を正面と斜めから撮影し、数値の変化と実際のスカートの形を対応させます。</p>
+    <p>コライダーの有無や制限計算の比較も切り替えられるため、「衝突が原因か」「角度制限が原因か」「慣性の持ち越しが原因か」を同じ動作で調べるための足場になっています。</p>
+
+    <h2>ほかにも進んだこと</h2>
+    <p>同じ作業ツリーでは、指のポーズをアバターの基準姿勢へ合わせて比較する回帰テストや、材質の透明状態を追跡する検証、VAB材質状態の追加テストも確認できました。ただし、これらは未コミットであり、一部には集計終了後の更新も含まれるため、今日の主題には混ぜていません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、上下移動でスカートが大きく揺れる場面から始めます。ルミナが前フレームの速度と骨方向を追う考え方を示し、ろひが制限軸を同じ基準へ整理。最後は感覚だけでなく、連続画像と数値の両方で確かめる流れです。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>2026-08-08の記事対象期間では、新しいコミットはありませんでした。その一方でローカル作業ツリーでは、PhysBoneの時間方向の状態保持、制限軸の計算、上下移動を再現する視覚・数値回帰テストが進んでいました。</p>
+    <p>揺れ物の調整は「なんとなく自然」に見えるだけでは終われません。同じ動きを再現し、どの瞬間にどれだけずれたかを残せるようにすることで、修正の効果も副作用も追いやすくなります。</p>
+
+    <h2>本日のひとこと</h2>
+    <blockquote>揺れは感覚で眺めず、時間ごと測る。</blockquote>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
