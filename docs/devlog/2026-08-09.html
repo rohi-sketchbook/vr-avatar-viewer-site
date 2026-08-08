@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>透け方の矛盾を、ひとつの判定へ | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="lilToon材質の切り抜き・半透明・不透明を複数の保存情報から共通判定し、VABの書き出しと読み戻しでも見た目を守るための2026年8月9日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-09.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="透け方の矛盾を、ひとつの判定へ | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="材質の切り抜き・半透明・不透明を共通判定し、VABの往復でも見た目を守るための進行中作業です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-09.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-09-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="材質の透け方を複数の設定から共通判定し、VABの保存と読込で確認する、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="透け方の矛盾を、ひとつの判定へ">
+  <meta name="twitter:description" content="切り抜きと半透明の矛盾を整理し、保存して戻した後まで確かめる開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-09-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.09 / Development Log</div>
+    <h1>透け方の矛盾を、ひとつの判定へ</h1>
+    <p class="lead">2026-08-09 の開発日記では、アバターの髪や服で使う「切り抜き」と「半透明」を、保存して読み戻した後も同じ見た目へ近づけるための材質判定を取り上げます。シェーダー名だけに頼らず、元データが宣言した表面種別、描画順、ブレンド方式、アルファテストをひとつの判断へまとめる作業です。</p>
+    <div class="notice">Viewerのローカル作業ツリーで、集計期間内に更新された実差分をもとにしています。対象期間の新規コミットは0件で、内容はまだコミット前の進行中作業です。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-08-08 03:00:00 JST から 2026-08-09 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-09-comic.png" alt="材質の透け方を複数の設定から共通判定し、VABの保存と読込で確認する、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%80%8F%E3%81%91%E6%96%B9%E3%81%AE%E7%9F%9B%E7%9B%BE%E3%82%92%E3%80%81%E3%81%B2%E3%81%A8%E3%81%A4%E3%81%AE%E5%88%A4%E5%AE%9A%E3%81%B8%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-09.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計終了時点の最終HEADは <strong>c4bdd53</strong>（「Material変換の共通化とTexture重複排除を実装」）で、対象コミットは <strong>0件</strong> でした。確認時点の作業ツリーには未コミット差分があり、期間内に更新された13ファイルについて時刻とコード内容を確認しました。今回は、その中から材質の表面種別を正規化する処理を主題にしています。</p>
+
+    <h2>今日の主題：材質の「自己申告」と実際の描画設定を照合する</h2>
+    <p>髪の毛先や葉っぱのように、透明か不透明かをはっきり分ける表現は「切り抜き（Cutout）」です。一方、ガラスや薄い布のように向こう側をなめらかに透かすものは「半透明（Transparent）」です。見た目は似ていても、深度の書き込みや色の混ぜ方が違います。</p>
+    <p>lilToonの派生シェーダーでは、シェーダー名にTransparentと含まれていても、保存された表面設定は切り抜きという場合があります。逆に、分類フラグが切り抜きでも、保存済みのブレンド方式が半透明を示す古いデータもあります。ひとつの手掛かりだけで決めると、毛先が薄く透けたり、透ける布が硬い輪郭になったりします。</p>
+
+    <h2>共通の正規化処理へ情報を集める</h2>
+    <p>今回の差分では、材質の共通判定 <code>VabMaterialCanonicalState</code> が、元データの表面種別と「明示的なアルファテストか」という情報も受け取れるようになっています。</p>
+    <p>Editor側のConverterとアプリ内のVAB書き出しは、どちらもlilToon材質について、シェーダー名、RenderType、描画順、透明モード、ブレンド値、深度書き込み、アルファマスクなどを集め、同じ正規化処理へ渡します。入口が違っても、最終的なCutout・Transparent・Opaqueの判断と保存値をそろえる狙いです。</p>
+
+    <h2>切り抜きを守りつつ、古い矛盾も救う</h2>
+    <p>明示的なアルファテストや、切り抜き用の描画順を持つ材質は、保存済みブレンド値が透明寄りでもCutoutとして扱います。そのうえで、アルファテストではないのにブレンド値が半透明を示す古いデータはTransparentへ読み替え、必要な深度書き込みを残す分岐も加わっています。</p>
+    <p>単に一方を常に優先するのではなく、「切り抜きである根拠が強いか」「保存された実際の描画式と矛盾していないか」を順に確かめる構成です。</p>
+
+    <h2>書き出して、読み戻すところまで検証する</h2>
+    <p>テストには、透明モードが0でも宣言済みのTransparentやCutoutを維持する例、切り抜き用の描画順を守る例、アルファマスクを使うCutoutを守る例が追加されています。</p>
+    <p>さらにアプリ内書き出しでは、lilToonの切り抜き材質をVABへ保存して読み戻し、RenderType、描画順、深度書き込み、ブレンド値が期待どおりになるかを確かめる往復テストも加わっています。まだ未コミットの進行中作業ですが、判定だけでなく保存と復元の接続までコード上で確認できます。</p>
+
+    <h2>ほかにも進んだこと</h2>
+    <p>同じ集計期間には、PhysBoneのカーブ評価位置をBone比率とTransform比率へ分ける変更、Gravity Falloffや制限軸の互換性調整、指姿勢の比較処理なども更新されています。前日の主題だった上下移動の視覚回帰テストは期間前の更新だったため、今日の新しい実績には含めていません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、同じ髪材質なのに保存経路で透け方が変わる違和感から始めます。ルミナが名前だけで決めないよう提案し、ろひが表面種別、描画順、ブレンド、アルファテストを同じ判定へ集合。最後はVABへ書き出して読み戻す往復確認で締めます。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>2026-08-09の記事対象期間では、新しいコミットはありませんでした。その一方でローカル作業ツリーでは、lilToon材質のCutout・Transparent・Opaque判定を、Editor変換とアプリ内書き出しで共通化する作業が進んでいました。</p>
+    <p>見た目を守るには、シェーダー名、分類フラグ、描画順、ブレンド値のどれかひとつを正解にするだけでは足りません。複数の手掛かりをひとつの規則へ集め、保存して戻した後まで確かめることが、互換性の土台になります。</p>
+
+    <p><strong>本日のひとこと：</strong> 透け方の正解は、名前より中身にある。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
