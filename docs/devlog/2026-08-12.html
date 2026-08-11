@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>濡れを描いて、汗を流して、元データは濡らさない | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="Surface Wetness / Surface Paint基盤を実装し、安全なPaint UV、汗の段階制御、重力Flow、非破壊Preset保存までを整えた2026年8月12日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-12.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="濡れを描いて、汗を流して、元データは濡らさない | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="安全なPaint UV、汗の段階制御、重力Flow、元データと分離したPreset保存を実装した一日です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-12.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-12-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="表面の濡れと汗を安全なUVへ描き、効果だけをPresetへ保存する、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="濡れを描いて、汗を流して、元データは濡らさない">
+  <meta name="twitter:description" content="Surface Wetnessを安全なUVと非破壊Presetで扱う開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-12-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.12 / Development Log</div>
+    <h1>濡れを描いて、汗を流して、元データは濡らさない</h1>
+    <p class="lead">2026-08-12 の開発日記では、アバターや背景の表面へ濡れ・汗・流れを重ねる Surface Wetness / Surface Paint 基盤を取り上げます。見た目を変えるだけでなく、安全な専用UVの選択、必要になった時だけのGPUリソース確保、VAB／VBG本体から分離したPreset保存までをひとつの仕組みとして実装しました。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチで、集計期間内に記録された3コミットをもとにしています。4コマ内の会話や見せ方には、読み物として分かりやすくするための演出があります。集計期間は 2026-08-11 03:00:00 JST から 2026-08-12 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-12-comic.png" alt="表面の濡れと汗を安全なUVへ描き、効果だけをPresetへ保存する、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E6%BF%A1%E3%82%8C%E3%82%92%E6%8F%8F%E3%81%84%E3%81%A6%E3%80%81%E6%B1%97%E3%82%92%E6%B5%81%E3%81%97%E3%81%A6%E3%80%81%E5%85%83%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AF%E6%BF%A1%E3%82%89%E3%81%95%E3%81%AA%E3%81%84%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-12.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計終了時点の最終HEADは <strong>b6403ee</strong>（「残存するシーン設定とネイティブプラグインを追加」）で、対象コミットは <strong>3件</strong> でした。期間全体では151ファイル、20,354行追加・831行削除です。確認時点に未コミット差分が3ファイルありますが、集計期間内の実装と確定できないため、この記事の実績には含めていません。</p>
+
+    <h2>今日の主題：表面効果を、元の見た目へ重ねる</h2>
+    <p>今回の基盤は、VABアバターの肌・髪・衣装と、VBG背景の床・壁・小物へ、濡れ、水膜、汗、水滴、流れ跡、乾燥をRuntimeで重ねるためのものです。共通Lit／Toon ShaderとlilToon向けAdapterを用意し、元Materialの色、透過、輪郭、発光などを正本として保ったまま、必要なMaterial Slotだけへ派生Materialを割り当てます。</p>
+    <p>機能を使っていないRendererではWetness用Keywordを無効にし、追加RenderTextureやFluid Simulationを作りません。局所Paintが初めて要求された時だけCanvasとTextureを遅延生成するため、対応機能があるだけで全モデルのGPU負荷が増える構造を避けています。</p>
+
+    <h2>既存UVを、濡れ表現のために壊さない</h2>
+    <p>表面へ正確に描くには、三角形が重ならないPaint用UVが必要です。しかし、アバターのUV0は本来のTexture、ほかのUV ChannelもlilToon表現やLightmapなどに使われていることがあります。</p>
+    <p>そこでConverter共通のAnalyzerがUV0〜UV7を検査し、範囲外、面積ゼロ、鏡像や三角形の重複をFail-closedで判定します。使える既存Channelだけを再利用し、安全なChannelがなければ局所Paintを無効にして元UVを守ります。VBG 2.1とVAB 4.6では、検証済みPaint UVをBackend非依存のSidecarとして保存し、GLBや元Meshへ無理な上書きをしません。</p>
+
+    <h2>汗量から、光沢・水滴・流れへ</h2>
+    <p><code>SurfaceSweatRuntimeController</code> は、0〜1の汗量を全体の肌光沢、局所汗の発生量、水滴、Gravity／Flow、乾燥バランスへ分配します。低い汗量では全体光沢だけを変え、局所Textureを確保しません。汗量が上がると安全なPaint UVを持つ肌へ局所汗を生成し、さらに高い段階で重力方向の流れを有効にします。</p>
+    <p>流れの方向はUV画像の上下をそのまま使わず、Mesh表面上の実際の座標変化からWorld GravityをUV移動量へ変換します。肩のようにUVが歪んだ場所でも、汗が横へ帯状に逃げにくくするためです。安全な局所UVがないモデルは、危険なUVへ強制Fallbackせず、全体光沢だけを使うGlobal-only表示へ切り替えます。</p>
+
+    <h2>保存するのは効果、元ファイルはそのまま</h2>
+    <p>Runtimeで描いた濡れや汗は、VAB／VBG本体へ自動で書き戻しません。明示的に保存した時だけ、Viewer内部の <code>UserData/Presets/SurfacePaint</code> へAtlas PNGとGlobal Wetness／Sweat状態を保存します。</p>
+    <p>読込時には、対象ID、Content Revision、Renderer・UV Channel・Layout Hashなどから作るLayout Signatureの完全一致を要求します。内容やMesh配置が変わったPresetは、Fluid Groupを初期化する前に拒否します。Global-onlyモデルはPNGを1枚も作らず、全体状態だけを保存・復元できます。</p>
+
+    <h2>テストで境界を固める</h2>
+    <p>Surface Paint／Wetness基盤には、Brush、Decal、Clear、Seam Padding、任意UV Channel、Gravity／Flow、乾燥、VAB／VBGのSidecar往復、lilToon Adapter、UI、Preset復元を確認するEditorテストとVisual Regressionが追加されました。続くコミットではSurface SweatのRuntimeテストが8件追加され、汗量の段階制御、Global-only fallback、局所汗、Flow、遅延初期化などを検証しています。</p>
+    <p>最後のコミットではMainSceneの残存設定とネイティブプラグインが追加されました。記事の主題は、3コミットの大部分を占めるSurface Wetness／Surface Paint実装と、そのRuntime検証に絞っています。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、ろひがアバターへ汗を描こうとしたところから始まり、ルミナが「使っているUVは上書きしない」と安全策を示します。続いて汗が重力に沿って流れる様子を確認し、最後は効果をPresetへ保存しても元のVABは乾いたまま、という非破壊設計で締めます。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>今回の実装は、濡れのShaderを追加しただけではありません。安全なUV選択、Backend非依存の保存形式、必要時だけのGPU確保、局所表現が使えない時のGlobal-only fallback、元ファイルと分離したPresetまでを一つの境界として整えました。</p>
+    <p>見た目はしっかり濡らす。でも、モデルのUVも元ファイルも勝手に濡らさない。Surface Wetnessを安心して使うための土台が、実装とテストの両方で形になった一日です。</p>
+
+    <p><strong>本日のひとこと：</strong> 汗は流しても、元データは流さない。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
+
