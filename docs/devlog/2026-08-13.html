@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>重なったUVをほどいて、濡れのキャンバスを自動でつくる | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="安全な既存Paint UVがないモデルへ、元Meshを変えずに専用UVを自動生成し、Sidecarで運ぶ進行中改善を紹介する2026年8月13日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-13.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="重なったUVをほどいて、濡れのキャンバスを自動でつくる | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="重なるUV島を非破壊で並べ直し、専用Paint UVとしてSidecarへ保存する進行中改善です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-13.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-13-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="重なるUV島を空きチャンネルへ並べ直し、元Meshを変えずに専用Paint UVを作る、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="重なったUVをほどいて、濡れのキャンバスを自動でつくる">
+  <meta name="twitter:description" content="元Meshを変えずに専用Paint UVを自動生成する進行中改善の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-13-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.13 / Development Log</div>
+    <h1>重なったUVをほどいて、濡れのキャンバスを自動でつくる</h1>
+    <p class="lead">2026-08-13 の開発日記では、Surface Paint用に安全な既存UVが見つからないモデルへ、専用UVを自動生成する進行中の改善を取り上げます。左右対称のために同じ場所へ重ねたUV島などを、元Meshや既存UVへ書き込まず、空いているUV Channelへ収まる別データとして組み立てる仕組みです。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内のコミットは0件でした。一方、期間内の更新時刻を持つ未コミット差分について、実装ソースと追加テストから内容を確認できたため、この記事では「進行中の実装」として扱います。4コマ内の会話や見せ方には読み物としての演出があります。集計期間は 2026-08-12 03:00:00 JST から 2026-08-13 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-13-comic.png" alt="重なるUV島を空きチャンネルへ並べ直し、元Meshを変えずに専用Paint UVを作る、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%87%8D%E3%81%AA%E3%81%A3%E3%81%9FUV%E3%82%92%E3%81%BB%E3%81%A9%E3%81%84%E3%81%A6%E3%80%81%E6%BF%A1%E3%82%8C%E3%81%AE%E3%82%AD%E3%83%A3%E3%83%B3%E3%83%90%E3%82%B9%E3%82%92%E8%87%AA%E5%8B%95%E3%81%A7%E3%81%A4%E3%81%8F%E3%82%8B%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-13.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計終了時点の最終HEADは <strong>b6403ee</strong>（「残存するシーン設定とネイティブプラグインを追加」）で、対象コミットは <strong>0件</strong> でした。確認時点のViewer作業ツリーにはSurface Wetness／Surface Paint関連を中心とする未コミット差分があり、主要ファイルの更新時刻は集計期間内の 2026-08-12 10:06〜17:45 JST です。この記事は、その中からソースで確認できた自動Paint UV生成に主題を限定しています。</p>
+
+    <h2>今日の主題：安全なUVがなければ、専用のキャンバスをつくる</h2>
+    <p>前日の実装では、UV0〜UV7を調べ、表面へのPaintに安全な既存Channelだけを選ぶ基盤を整えました。ただし、一般的なアバターでは左右のパーツが同じTexture領域を共有するため、UV島が鏡写しで重なっていることがあります。その状態で片側へ水滴を描くと、反対側にも同じ模様が出るため、局所的な濡れ表現には使えません。</p>
+    <p>今回追加された <code>SurfacePaintUvGenerator</code> は、入力Meshの頂点とTriangle構造を変えず、すでに分離されているUV島を重ならない領域へ再配置します。格納先には未使用のUV Channelだけを選び、元のUVやほかの用途で使われているChannelを上書きしません。</p>
+
+    <h2>元Meshへ書かず、Sidecarとして運ぶ</h2>
+    <p>生成したUVは元Meshへ直接設定せず、Surface Paint用のSidecarデータとして構築します。<code>SurfacePaintDocumentBuilder</code> は安全な既存UVを優先し、見つからない場合だけ生成Fallbackへ進みます。生成元、Generator ID、Version、頂点数などの情報もBindingへ記録されるため、読込側は空いているRuntime UV Channelへ復元できます。</p>
+    <p>テストには、鏡像UV島を分離できること、生成前後で元UVが変わらないこと、使用中Channelを上書きしないこと、安全な既存UVがある場合はそちらを優先すること、SidecarからRuntime Meshへ復元できることが追加されています。</p>
+
+    <h2>頂点分割が必要なMeshにも、外部Converterで対応する</h2>
+    <p>既存の頂点構造を保ったままでは重なりを解消できない肌Mesh向けには、外部VAB Converter専用のもう一段のFallbackも追加されています。入力Meshを複製し、複製側だけでUnity EditorのSecondary UV unwrapを実行して、VABを書き出している間だけRendererへ一時的に割り当てます。</p>
+    <p>処理後は必ず元Meshへ戻す設計で、入力Prefab、Scene、Mesh Assetを変更しません。VAB 4.6の検証テストには、生成UV7をSidecarへ保存するケースと、頂点分割を伴うTopology Cloneを使っても元Meshを復元するケースが加わっています。</p>
+
+    <h2>同じ期間に進んだこと</h2>
+    <p>同じ未コミット差分では、Surface WetnessのRuntime制御、汗表現、Preset、UI、Play Mode検証メニュー、Visual Regressionテストも更新されています。ただし、コミットとして確定した実績ではないため、この記事では詳細を広げず、自動Paint UV生成と非破壊な書き出し経路に焦点を当てました。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、ろひが左右で重なったUVに気づき、ルミナが空きChannelへUV島を並べ直します。元Meshが変わっていないことを確認したあと、専用UVなら片側だけへ安全に濡れを描ける、という順で実装の狙いを表しました。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>安全な既存UVがないモデルをすぐGlobal-onlyへ退避させるだけでなく、元データを傷つけない条件を守りながら、局所Paintのための専用UVを用意する道ができました。既存UV優先、空きChannel限定、Sidecar保存、必要時だけのTopology Cloneという段階的なFallbackです。</p>
+    <p>まだ未コミットの進行中実装ですが、対応できるモデルを広げるための境界と、その非破壊性を確かめるテストが具体化した一日でした。</p>
+
+    <p><strong>本日のひとこと：</strong> 重なりはほどく。元データには触れない。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
+
