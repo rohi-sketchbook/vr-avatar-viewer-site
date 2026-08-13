@@ -2,7 +2,7 @@
 
 この文書は、開発日記4コマ画像生成時に毎回共通で使用する固定プロンプトである。
 
-- 当日のタイトル、各コマの内容・台詞・演出、当日の実装事実はこの文書へ書かない。
+- 当日のタイトル、各コマの内容・台詞・演出、通常回の当日実装事実、閑話休題回の紹介機能事実はこの文書へ書かない。
 - 画像生成時は、この固定プロンプト全文の後ろへ、その日専用の可変プロンプトを連結して1本の完成プロンプトを作る。
 - 完成プロンプト以外の過去会話、過去の日記、過去の生成画像から生成内容を補完しない。
 
@@ -144,8 +144,9 @@ Before finalizing the image, verify all of the following:
 9. No development topic absent from TODAY'S DEVLOG CONTENT has been inserted from previous context.
 10. No unrelated Discord, GitHub, publishing, automation, report, or chat UI appears.
 11. There is no fifth panel or extra comic strip.
-12. The four panels tell one coherent development-day story.
+12. The four panels tell one coherent development-diary story, either a development-progress story or a feature-spotlight story as specified by TODAY'S DEVLOG CONTENT.
 13. Technical claims and numbers match TODAY'S DEVLOG CONTENT.
+14. If DEVLOG TYPE is feature-spotlight, the comic does not imply that the featured capability was implemented or completed today unless TODAY'S DEVLOG CONTENT explicitly says so.
 
 Generate ONLY the completed Japanese four-panel comic page.
 
