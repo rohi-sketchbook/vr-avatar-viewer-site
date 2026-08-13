@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>パーツを選んで、濡れの見え方をその場で追い込む | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="任意のアバター・パーツを一時的な濡れ検証対象へ切り替え、表示・カメラ・汗密度を調整する2026年8月14日の開発日記です。">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-14.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="パーツを選んで、濡れの見え方をその場で追い込む | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="任意パーツへ濡れ検証を絞り、表示・カメラ・汗密度をその場で調整しやすくする進行中改善です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-14.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-14-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="濡れ表現の検証対象を任意パーツへ切り替え、表示・カメラ・汗密度を調整する、ろひとルミナの4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="パーツを選んで、濡れの見え方をその場で追い込む">
+  <meta name="twitter:description" content="任意パーツへ濡れ検証を絞って見た目を追い込む進行中改善の開発日記。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-14-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.14 / Development Log</div>
+    <h1>パーツを選んで、濡れの見え方をその場で追い込む</h1>
+    <p class="lead">2026-08-14 の開発日記では、Surface Wetness（アバター表面の濡れ表現）を任意のアバター・パーツへ絞って確認しやすくする、進行中の検証環境改善を取り上げます。全身だけでなくRenderer単位で対象を選び、ほかのパーツを隠し、カメラを寄せ、汗の発生密度まで調整できる経路がViewer側の検証メニューへ組み込まれました。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内のコミットは0件でした。一方、期間内の更新時刻を持つ未コミット差分について、実装ソースから内容を確認できたため、この記事では「進行中の実装」として扱います。4コマ内の会話や見せ方には読み物としての演出があります。集計期間は 2026-08-13 03:00:00 JST から 2026-08-14 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-14-comic.png" alt="濡れ表現の検証対象を任意パーツへ切り替え、表示・カメラ・汗密度を調整する、ろひとルミナの4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E3%83%91%E3%83%BC%E3%83%84%E3%82%92%E9%81%B8%E3%82%93%E3%81%A7%E3%80%81%E6%BF%A1%E3%82%8C%E3%81%AE%E8%A6%8B%E3%81%88%E6%96%B9%E3%82%92%E3%81%9D%E3%81%AE%E5%A0%B4%E3%81%A7%E8%BF%BD%E3%81%84%E8%BE%BC%E3%82%80%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-14.html&amp;hashtags=VRAvatarViewer,Unity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <p>集計終了時点の最終HEADは <strong>b6403ee</strong>（「残存するシーン設定とネイティブプラグインを追加」）で、対象コミットは <strong>0件</strong> でした。期間内に更新されたことを確認できた未コミット差分は、Surface WetnessのPlay Mode検証メニューとlilToon向け濡れシェーダーの2ファイルです。現在HEADとの差分規模は合計254行追加・21行削除でした。</p>
+
+    <h2>今日の主題：見たいパーツだけを、すぐ検証対象へ</h2>
+    <p>濡れ表現は、顔・肌・衣装など、材質や形が違う場所で見え方も変わります。全身表示のままでは、小さな水滴の輪郭やハイライトを追うたびに、対象を探してカメラを合わせる手間がかかります。</p>
+    <p>更新された検証ハーネスは、アバター内のRendererパスを列挙し、指定したRendererだけを一時的なWetness対象として準備できるようになっています。選択対象以外の表示をまとめて隠す操作や、全パーツを再表示する操作も加わり、確認したい場所へ視線を絞りやすくなりました。</p>
+
+    <h2>元データを変えず、検証中だけ対象を切り替える</h2>
+    <p>パーツ指定は検証中の一時状態です。対象Rendererのパスや一時的なSurface分類をハーネスへ渡し、VAB本体、Prefab、Material、元の分類結果を書き換えずにWetness用のデータを組み立て直します。検証の都合で衣装やアクセサリを対象にしても、保存データへその判定が残る仕組みではありません。</p>
+    <p>カメラ側にも、中ボタンドラッグでの平行移動、ホイールでのズーム、選択Renderer全体を収めるフォーカス処理が追加されています。Water Film調整パネル上ではカメラ操作を始めないよう入力範囲を分け、UI操作と画角調整がぶつからないようにしています。</p>
+
+    <h2>汗の数と、全身の薄い水膜を分けて見る</h2>
+    <p>調整パネルには汗の発生密度倍率も接続されました。全身に広がる薄い汗膜、局所的な水滴、発生数を別々に動かしながら、狙ったパーツを近距離で比較できます。</p>
+    <p>同じ期間に更新されたlilToon向けシェーダーでは、全身の水膜に対する反応を、主光源方向へ追従するハイライトと、視線方向で見える反射・わずかな暗化へ分離しています。局所水滴のFresnelや縁の反応とは別に計算することで、全身が一様に光るだけではない薄い水膜感を狙う調整です。</p>
+
+    <h2>同じ期間に進んだこと</h2>
+    <p>集計期間内に更新時刻を確認できた未コミット差分は上記2ファイルだけでした。作業ツリーには前期間から続くSurface Paintの自動UV生成、Preset、UI、テストなどの差分も残っていますが、当日の実装事実とは確定できないため、この記事の実績には含めていません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、ろひが衣装の一部分だけを詳しく見たいと頼み、ルミナがパーツを一時対象へ切り替えます。ほかのパーツを隠してカメラを寄せ、汗の数まで調整したあと、元のVABは書き換えていないことを確認する流れで、検証導線の狙いをまとめました。</p>
+
+    <h2>今日のまとめ</h2>
+    <p>濡れ表現の調整は、シェーダーの数値だけでなく「見たい場所へすぐ到達できること」も大切です。任意パーツの選択、表示の切替、対象へのフォーカス、汗密度の調整をひとつの検証経路へつなぎ、全身の水膜と局所水滴を見比べやすくする作業が進みました。</p>
+    <p>まだ未コミットの進行中実装ですが、元データを変えずに試行錯誤できる境界を保ちながら、見た目を追い込むための操作が具体化しています。</p>
+
+    <p><strong>本日のひとこと：</strong> 見たい場所だけ、濡らして、寄って、確かめる。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
