@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PNGを貼るだけじゃない。体表を流れるステッカーを実装 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="PNGをアバター表面へ貼り付け、サイズ・回転・解像度・Flow時間・消える時間まで調整できるFluid Flow 2ステッカー機能を実装しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-16.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="PNGを貼るだけじゃない。体表を流れるステッカーを実装 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="PNGをクリック位置へ貼り、Fluid Flow 2で体表に沿って流せるステッカー機能の開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-16.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-16-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひが星形PNGをアバターへ貼り、ルミナが体表を流れるステッカー機能を紹介する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PNGを貼るだけじゃない。体表を流れるステッカーを実装">
+  <meta name="twitter:description" content="PNGの投影からFlow時間・消える時間まで、体表を流れるステッカー機能を実装しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-16-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.16 / Development Log</div>
+    <h1>PNGを貼るだけじゃない。体表を流れるステッカーを実装</h1>
+    <p class="lead">PNG画像をアバターへ貼り付け、その画像を体表に沿って流せる「Fluid Flow 2ステッカー機能」を実装しました。貼る場所をクリックし、サイズ・回転・解像度・流れる時間・消える時間まで一つのパネルで調整できます。</p>
+    <div class="notice">集計終了時点のHEADは <code>a7b37c5</code>（「Fluid Flow 2ステッカー機能を実装」）。対象コミットは3件、集計差分は68ファイル、28,600行追加、5,548行削除でした。Viewer作業ツリーの未コミット差分は、集計期間内の実装と確認できないため実績へ含めていません。集計期間は 2026-08-15 03:00:00 JST から 2026-08-16 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-16-comic.png" alt="ろひが星形PNGをアバターへ貼り、ルミナが体表を流れるステッカー機能を紹介する4コマ漫画" width="1254" height="1254"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=PNG%E3%82%92%E8%B2%BC%E3%82%8B%E3%81%A0%E3%81%91%E3%81%98%E3%82%83%E3%81%AA%E3%81%84%E3%80%82%E4%BD%93%E8%A1%A8%E3%82%92%E6%B5%81%E3%82%8C%E3%82%8B%E3%82%B9%E3%83%86%E3%83%83%E3%82%AB%E3%83%BC%E3%82%92%E5%AE%9F%E8%A3%85%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-16.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>PNGを選び、アバターをクリックして貼る</h2>
+    <p>デスクトップUIへ新しい「ステッカー」パネルを追加しました。PNGを選択して「貼り付けモード」を有効にすると、アバターの貼り付け可能な表面をクリックして画像を投影できます。</p>
+    <p>クリック位置の判定はRendererの見た目だけに頼りません。SkinnedMeshRendererをその時点の形状でベイクし、レイと三角形の交差から最も手前の表面を選びます。ポーズやBlendShapeで形が変わったアバターでも、今見えている場所へステッカーを置くための土台です。</p>
+
+    <h2>サイズも向きも、貼る前に調整</h2>
+    <p>ステッカーUIでは、画像のサイズと回転をスライダーで調整できます。画像本来の縦横比を保ったまま、クリックした面の法線とカメラ方向から投影の向きを組み立てます。テストでは、カメラ基準の投影で画像が左右反転しないことも確認しています。</p>
+    <p>描画用テクスチャの解像度は256、512、1024、2048 pxから選択できます。解像度を途中で変えても、すでに貼った内容を消さずにリサイズし、その後もFlowが動作する経路を検証しました。</p>
+
+    <h2>貼った絵が、体表を流れて消えていく</h2>
+    <p>今回のステッカーは、静止したデカールだけではありません。「体表面を流す」を有効にすると、Fluid Flow 2のシミュレーションを使って画像が表面に沿って移動します。「流れる時間」と「消える時間」を別々に指定でき、一定時間だけ流す、流れたあと徐々に消す、消さずに残す、といった見せ方を選べます。</p>
+    <p>色付きステッカーは濡れ表現とは独立したテクスチャへ保持します。そのため、ステッカーを貼ったからといって濡れの強さを書き換える設計にはなっていません。「ステッカーを全部消す」で、貼った画像だけをまとめてクリアできます。</p>
+
+    <h2>専用Paint UVがない衣装にも届く</h2>
+    <p>ステッカー対象は肌だけに限定していません。厳密なSurface Paint設定を持たない従来のVABでも、利用できるUV0を使い、肌はもちろん衣装などの非肌Rendererをステッカー専用の表面として扱える経路を追加しました。その場合もWetness用テクスチャを不要に確保せず、ステッカー機能だけを利用します。</p>
+    <p>同じ集計期間には、Surface Wetness設定UIと描画順の改善、MainSceneのUI配置保存も入りました。設定の整理と描画基盤の強化を先に積み上げたうえで、画像を貼り、流し、消すところまでを一つの操作としてつなげています。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、ろひが星形PNGを選ぶところから始めます。ルミナが貼り付けモードを案内し、ろひがアバターの腕へステッカーを配置。最後は星が体表をするりと流れ、流れる時間と消える時間まで設定できることに二人で驚く流れです。</p>
+
+    <h2>まとめ</h2>
+    <p>画像を表面へ重ねるだけだったステッカーを、Fluid Flow 2の流体シミュレーションへ接続しました。クリック位置、投影方向、解像度変更、従来モデルのUV0フォールバックを固めたことで、アバターの見た目を遊びながら変化させられる機能になっています。</p>
+    <p><strong>本日のひとこと：</strong> 貼った星まで、アバターの上を旅しはじめた。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
