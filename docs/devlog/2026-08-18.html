@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>触る対象はひとつだけ。3つの編集モードをつないだ日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="ポーズ・揺れもの・布の直接操作を排他的に切り替え、デスクトップとVRで同じ選択状態を共有する編集導線を実装しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-18.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="触る対象はひとつだけ。3つの編集モードをつないだ日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="ポーズ・揺れもの・布を排他的に切り替え、デスクトップとVRの直接操作を迷わせない編集モードの開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-18.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-18-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがポーズ・揺れもの・布の3編集モードと排他操作を説明する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="触る対象はひとつだけ。3つの編集モードをつないだ日">
+  <meta name="twitter:description" content="デスクトップとVRで共有する、ポーズ・揺れもの・布の排他的な編集モードを実装しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-18-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.18 / Development Log</div>
+    <h1>触る対象はひとつだけ。3つの編集モードをつないだ日</h1>
+    <p class="lead">アバターへ直接触れる操作を「ポーズ」「揺れもの」「布」の3モードへ整理し、デスクトップとVRのUIから排他的に切り替えられるようにしました。</p>
+    <div class="notice">集計終了時点のHEADは <code>e7d25cb</code>（「アバター可視Boundsとエフェクト処理を最適化」）。対象コミットは4件、集計差分は122ファイル、88,247行追加、67,124行削除でした。行数の多くはUnity Prefabのシリアライズ差分です。Viewer作業ツリーの未コミット差分は、集計期間内の実装と確認できないため実績へ含めていません。集計期間は 2026-08-17 03:00:00 JST から 2026-08-18 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-18-comic.png" alt="ろひとルミナがポーズ・揺れもの・布の3編集モードと排他操作を説明する4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E8%A7%A6%E3%82%8B%E5%AF%BE%E8%B1%A1%E3%81%AF%E3%81%B2%E3%81%A8%E3%81%A4%E3%81%A0%E3%81%91%E3%80%823%E3%81%A4%E3%81%AE%E7%B7%A8%E9%9B%86%E3%83%A2%E3%83%BC%E3%83%89%E3%82%92%E3%81%A4%E3%81%AA%E3%81%84%E3%81%A0%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-18.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>同じクリックやGripに、役割をひとつだけ</h2>
+    <p>アバターへ直接触れる操作が増えると、同じポインターやコントローラー入力が複数の編集機能へ届きやすくなります。骨を動かしたいのか、髪などの揺れものをつかみたいのか、布を引きたいのか。対象が近いほど、意図しない機能が反応しないための整理が重要になります。</p>
+    <p>そこで今回、直接操作の共通状態として <code>AvatarManipulationMode</code> を追加しました。選べるのは「ポーズ」「揺れもの」「布」の3つです。選択中のモードだけが直接操作を受け持ち、対象が見つからなくても別モードの操作へ勝手にフォールバックしない構成になりました。</p>
+
+    <h2>デスクトップとVRで同じモードを共有</h2>
+    <p>デスクトップのInspectorとVRのミニUIには、3モードを切り替えるトグルが追加されました。どちらも同じ状態を参照するため、操作する場所が変わっても、現在どの編集対象を選んでいるかが分かれません。</p>
+    <p>モードを切り替えた時は、進行中のドラッグや直接操作を解除します。ポーズ以外では骨の範囲表示やIKターゲットを隠し、選択中でない編集の目印まで残さないようにしています。画面上の案内と実際に入力を受ける機能を同じ状態へそろえるのがポイントです。</p>
+
+    <h2>デスクトップでも揺れものと布へ直接触れる</h2>
+    <p>今回の変更では、デスクトップ用の物理操作インタラクターも追加されました。「揺れもの」モードではポインターの射線から対象をつかみ、「布」モードでは布パーツを選んで引っ張るプレビューへ接続します。マウスホイールによる奥行き調整も、既存のドラッグ操作と同じ入力の流れへ組み込まれています。</p>
+    <p>VR側も同じ3モードで分岐します。ポーズならBoneまたはIK、揺れものなら揺れもの操作、布なら衣服操作だけを開始します。モード変更時には左右の手が保持している直接操作を解除し、切り替え前の状態を引きずらないようにしました。</p>
+
+    <h2>同じ期間に進んだこと</h2>
+    <p>同じ集計期間には、VRコントローラー対応と非推奨APIからの移行、手モデルのPalm Pose追従と指入力の改善、アバターの可視Boundsとエフェクト処理の最適化もコミットされています。4件を合わせた差分は122ファイル、88,247行追加、67,124行削除で、行数の多くはUnity Prefabのシリアライズ差分です。</p>
+    <p>Viewerの作業ツリーには集計終了後も未コミット差分がありますが、期間内に実装された事実を確定できないため、この記事の実績には含めていません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、ろひが「今は何を触るモード？」と迷うところから始まります。ルミナが3つの切り替えを示し、ろひが揺れものだけをつかめたことを確認。最後は、ひとつのモードだけを有効にすることで誤操作を防ぐ仕組みを、すっきり締めてもらいます。</p>
+
+    <h2>まとめ</h2>
+    <p>ポーズ、揺れもの、布という近接した直接操作を、共通の3モードへ整理しました。デスクトップとVRで同じ選択状態を共有し、表示・入力・操作解除を連動させることで、「いま何を触っているのか」がぶれにくい編集導線になっています。</p>
+    <p><strong>本日のひとこと：</strong> 触れる機能が増えたら、迷わない境界も育てよう。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
