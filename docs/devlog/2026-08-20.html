@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VRでもきれいが標準。描画品質の既定をそろえた日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="VRだけ画質を自動的に抑える既定を見直し、デスクトップと同じURP描画品質を標準にしました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-20.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="VRでもきれいが標準。描画品質の既定をそろえた日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="VRとデスクトップの既定画質をそろえ、影・反射・SSAO・撮影品質を改善した開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-20.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-20-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがVRとデスクトップの描画品質統一を説明する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VRでもきれいが標準。描画品質の既定をそろえた日">
+  <meta name="twitter:description" content="VRとデスクトップで同じURP描画品質を標準にしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-20-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.20 / Development Log</div>
+    <h1>VRでもきれいが標準。描画品質の既定をそろえた日</h1>
+    <p class="lead">VR時だけ画質を自動的に抑える従来の既定を見直し、デスクトップと同じ描画品質を標準にしました。</p>
+    <div class="notice">集計終了時点のHEADは <code>8154ee2</code>（「アバター編集初期状態と水鉄砲の単一配置を統一」）。対象コミットは9件、集計差分は63ファイル、2,610行追加、434行削除でした。Viewer作業ツリーは確認時点でクリーンです。集計期間は 2026-08-19 03:00:00 JST から 2026-08-20 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-20-comic.png" alt="ろひとルミナがVRとデスクトップの描画品質統一を説明する4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=VR%E3%81%A7%E3%82%82%E3%81%8D%E3%82%8C%E3%81%84%E3%81%8C%E6%A8%99%E6%BA%96%E3%80%82%E6%8F%8F%E7%94%BB%E5%93%81%E8%B3%AA%E3%81%AE%E6%97%A2%E5%AE%9A%E3%82%92%E3%81%9D%E3%82%8D%E3%81%88%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-20.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>VRだから、最初から軽量化しない</h2>
+    <p>これまではVRが有効だと、対応GPUであってもForward+をForwardへフォールバックする経路がありました。今回、その判定を「VRかどうか」ではなく、必要なGPU機能を利用できるかどうかに整理しました。</p>
+    <p>さらに、VR向けのライト・影制限と軽量ポストエフェクト上書きを既定で無効にしました。VRとデスクトップで同じ見た目を出発点にし、負荷を下げたい場合だけ利用者が軽量化を選べる方針です。</p>
+
+    <h2>影・反射・奥行き感をプリセットへ反映</h2>
+    <p>描画プリセットの適用範囲も広げました。Low以外ではソフトシャドウ、Reflection Probeのブレンディングとボックス投影を有効化し、VR軽量化が明示されていない場合はSSAOも利用します。Ultraではメインライトのシャドウマップ解像度を4096へ設定します。</p>
+    <p>スタジオ内に有効なReflection Probeがなく、Skybox反射も使えない場合は、環境反射用のフォールバックを用意する処理も追加しました。影だけでなく、材質の光沢や空間の奥行きが自然に伝わるよう、複数の描画要素を同じ品質方針へそろえています。</p>
+
+    <h2>撮影時の品質も一時的に引き上げる</h2>
+    <p>スクリーンショット撮影では、現在のURP設定を複製した撮影専用パイプラインを一時的に使うようにしました。撮影中はポストプロセスを有効にし、シャドウ距離を必要範囲へ絞りながら、メインライトのシャドウマップを最低4096に保ちます。</p>
+    <p>撮影後は元のパイプラインとカメラ設定へ戻すため、普段の表示設定を恒久的に書き換えません。「操作中の負荷」と「残す一枚の品質」を分けて扱える構成です。</p>
+
+    <h2>同じ期間に進んだこと</h2>
+    <p>同じ集計期間には、lilToon半透明材質のSurface復元、Surface Paintとテクスチャ処理の高速化、Player向けLight Bake復元、VRTXのZIP圧縮高速化、VRC cloneの一括VAB再変換、内部VBGコンバータのReflection Probe保存、アバター編集の初期状態と水鉄砲の単一配置も改善されています。</p>
+    <p>9件をまとめた集計差分は63ファイル、2,610行追加、434行削除でした。Viewerの作業ツリーは確認時点でクリーンで、未コミット差分を実績には含めていません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマでは、VRでも影と質感をきれいに見たいろひに、ルミナがデスクトップと同じ既定画質へそろえたことを説明します。柔らかい影と自然な反射を確かめ、最後は「軽量化は必要な時だけ選ぶ」という新しい方針で締めます。</p>
+
+    <h2>まとめ</h2>
+    <p>VRを理由に一律で画質を落とさず、デスクトップと同じ描画品質を標準にしました。Forward+、ソフトシャドウ、反射、SSAO、撮影専用設定を一つの方針へそろえ、きれいな見た目から必要に応じて軽量化できるようにしています。</p>
+    <p><strong>本日のひとこと：</strong> きれいを標準に、軽さは選択肢に。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
+
