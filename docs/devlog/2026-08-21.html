@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>「あ」に口が追いつく。声から五つの母音を動かした日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="マイク音声を五つの母音へ解析し、VAB・VRMの口形状へ反映するリアルタイムリップシンクを追加しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-21.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="「あ」に口が追いつく。声から五つの母音を動かした日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="uLipSyncの音声解析をViewer共通の五母音リップシンクへつないだ開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-21.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-21-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひが五つの母音を発声し、ルミナとアバターのリアルタイムリップシンクを試す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="「あ」に口が追いつく。声から五つの母音を動かした日">
+  <meta name="twitter:description" content="声を五つの母音へ分け、選択中のアバターの口へリアルタイムに反映できるようにしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-21-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.21 / Development Log</div>
+    <h1>「あ」に口が追いつく。声から五つの母音を動かした日</h1>
+    <p class="lead">マイク音声を五つの母音へ解析し、VAB・VRMの口形状へ反映するリアルタイムリップシンクを追加しました。</p>
+    <div class="notice">集計終了時点のHEADは <code>6140dfa</code>（「uLipSyncリップシンクと対話診断を追加」）。対象コミットは12件、集計差分は155ファイル、149,839行追加、131,503行削除でした。Viewer作業ツリーには未コミット差分が2ファイルありますが、期間内に実装済みと確認できないため実績には含めていません。集計期間は 2026-08-20 03:00:00 JST から 2026-08-21 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-21-comic.png" alt="ろひが五つの母音を発声し、ルミナとアバターのリアルタイムリップシンクを試す4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E3%80%8C%E3%81%82%E3%80%8D%E3%81%AB%E5%8F%A3%E3%81%8C%E8%BF%BD%E3%81%84%E3%81%A4%E3%81%8F%E3%80%82%E5%A3%B0%E3%81%8B%E3%82%89%E4%BA%94%E3%81%A4%E3%81%AE%E6%AF%8D%E9%9F%B3%E3%82%92%E5%8B%95%E3%81%8B%E3%81%97%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-21.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>声を、そのまま口の形へつなぐ</h2>
+    <p>マイク入力の音声解析にはuLipSyncを導入しました。解析結果から五つの母音成分と音量を受け取り、選択中のアバターへリアルタイムに反映します。デスクトップとVRで別々の仕組みを持たず、同じコントローラー、同じ母音マッピング、同じ補間経路を共有する構成です。</p>
+    <p>マイクの音をスピーカーへ返す必要はないため、音声解析は続けながらループバック出力をミュートしています。発話していない時の小さな入力を除くしきい値、口の開き量、動き始めと戻りの応答速度もコントローラー側で扱い、口が細かく震えたり不自然に止まったりしにくいよう整えました。</p>
+
+    <h2>モデルごとに違う「母音の名前」を探す</h2>
+    <p>難しいのは、アバターによって口のBlendShape名や表情データの持ち方が違うことです。VABではコンバーターが保存した意味付きの表情データを最優先し、VRM 0.xではA・I・U・E・Oのプリセットを使います。それでも見つからない場合は、<code>vrc.v_aa</code>、<code>Fcl_MTH_A</code>、<code>Mouth_A</code>など既知の名前を照合して対象を探します。</p>
+    <p>意味付きデータを名前推測より優先することで、唇だけでなく歯や舌を含む複数のBlendShapeが一つの母音表情を構成するモデルにも対応できます。また、別の表情システムやアニメーションが同じ口形状を書き換えた場合は、その新しい値をむやみに上書きしない所有ルールも入れました。</p>
+
+    <h2>目と耳で追える診断を追加</h2>
+    <p>リップシンクは「音が取れない」「母音を認識できない」「BlendShapeへ届かない」のどこで止まったかを見分けにくい機能です。そこで、マイク入力、解析更新、認識した音素、五母音ターゲットを段階ごとに確認できる開発用診断を追加しました。母音を一つずつ強制適用する経路とターゲット解決のテストも用意し、モデル差を追いやすくしています。</p>
+
+    <h2>同じ期間に進んだこと</h2>
+    <p>同じ集計期間には、光源管理とVBG照明復元、鏡・撮影カメラの描画基盤統合、環境・撮影エフェクトの描画経路分離、撮影用画面エフェクトと組み合わせプリセット、VCIアイテムの直接ランタイム読込、歩行スタイルとKinema Motion Matching基盤、Editorメニュー整理も進みました。</p>
+    <p>12件をまとめた集計差分は155ファイル、149,839行追加、131,503行削除でした。大きなPrefab更新を含むため行数は膨らんでいます。Viewer作業ツリーには <code>KinemaKawaiiMotionSetup.cs</code> と <code>KinemaKawaiiMotionSmokeTests.cs</code> の未コミット差分がありますが、期間内に実装済みと確認できないため今回の実績には含めていません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>4コマは、説明から始めず、ろひの「あ」にアバターの口がすぐ反応する成功状態から始めます。五母音を試してからルミナが仕組みを一言だけ明かし、最後はろひが早口言葉へ挑戦しようとして、アバターが少し身構える流れです。</p>
+
+    <h2>まとめ</h2>
+    <p>uLipSyncの音声解析をViewer共通の口形状制御へつなぎ、VABの意味付き表情、VRM 0.xプリセット、既知のBlendShape名という順で五母音を解決できるようにしました。デスクトップとVRの両方で、選択したアバターが声に合わせて口を動かす土台が整いました。</p>
+    <p><strong>本日のひとこと：</strong> 声が届くと、アバターとの距離がひとつ縮まる。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
