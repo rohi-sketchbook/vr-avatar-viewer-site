@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：時間軸に並べて、ひとつのショーをつくる | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="背景、アバター、カメラ、音や画面効果を時間軸へ並べ、ひとつのショーとして検証・プレビュー・保存できるVAS編集機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="vas-show-timeline-authoring">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-24.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="閑話休題：時間軸に並べて、ひとつのショーをつくる | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="背景・アバター・カメラなどを時間軸へ並べ、演出の順番を作品として残すVASショー編集機能を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-24.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-24-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが時間軸へ背景・アバター・カメラのクリップを並べてショーを再生する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：時間軸に並べて、ひとつのショーをつくる">
+  <meta name="twitter:description" content="背景・アバター・カメラなどを時間軸へ並べるVASショー編集機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-24-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.24 / Development Log</div>
+    <h1>閑話休題：時間軸に並べて、ひとつのショーをつくる</h1>
+    <p class="lead">背景、アバター、カメラ、音や画面効果を時間軸へ並べ、ひとつのショーとして検証・プレビュー・保存できるVAS編集機能を紹介します。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内のコミットが0件で、前日から有意な開発進展を確認できなかったため、今回は閑話休題の機能紹介です。内容は集計終了時点のHEAD <code>cbc84d9</code>（「歩行経路編集UIの状態更新を修正」）にある現行実装を確認したもので、今日実装した機能ではありません。未コミット差分は実装日を確定できないため含めていません。集計期間は 2026-08-23 03:00:00 JST から 2026-08-24 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-24-comic.png" alt="ろひとルミナが時間軸へ背景・アバター・カメラのクリップを並べてショーを再生する4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E6%99%82%E9%96%93%E8%BB%B8%E3%81%AB%E4%B8%A6%E3%81%B9%E3%81%A6%E3%80%81%E3%81%B2%E3%81%A8%E3%81%A4%E3%81%AE%E3%82%B7%E3%83%A7%E3%83%BC%E3%82%92%E3%81%A4%E3%81%8F%E3%82%8B%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-24.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>操作を順番に並べて、ショーにする</h2>
+    <p>撮影や配信の演出では、背景を変え、アバターを登場させ、動きを再生し、カメラを切り替える、といった複数の操作が続きます。VASのショー編集では、それぞれを「クリップ」として時間軸へ配置し、役割ごとのトラックへ整理できます。</p>
+    <p>現行実装で扱えるのは、背景やスタジオプリセット、アバターの読込・配置・表示、アニメーションやポーズ、カメラ、ポストエフェクト、フェード、音声、通知などです。必要な素材を先に準備しながら、指定した時刻に沿って再生する仕組みも備えています。</p>
+
+    <h2>かんたん作成と詳細タイムライン</h2>
+    <p>デスクトップのショー管理画面には、ライブラリ、かんたん作成、詳細タイムライン、起動設定の入口があります。新規作成では、起動ショー、1人用、複数人用、ポーズ、背景・照明、空のショーという6種類のテンプレートから始められます。</p>
+    <p>詳細タイムラインではクリップの移動や複製、長さの調整、キーフレーム編集などを行い、プレビューで流れを確認できます。作業中の内容は下書きとして保存され、正式保存の前には不足した参照やクリップの矛盾を検証できます。</p>
+
+    <h2>起動時の演出にも使える</h2>
+    <p>検証を通過したショーは、次回起動時に再生する演出として指定できます。起動用ショーではスキップや安全モード、失敗時に通常起動へ戻る方針も持ち、演出がアプリ起動そのものを塞がないように設計されています。</p>
+    <p>公式ショーは直接上書きせず、複製して編集します。ユーザーが作ったショーは別名保存やプレビューができ、素材や演出の組み合わせを自分の作品として残せます。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>背景・アバター・アニメーション・ポーズ・カメラ・音声などをトラックとクリップで管理</li>
+      <li>6種類のテンプレートと、かんたん作成・詳細タイムラインの両方を用意</li>
+      <li>クリップ、キーフレーム、再生位置を編集し、その場でプレビュー</li>
+      <li>不足した参照や矛盾を保存・起動設定の前に検証</li>
+      <li>起動ショーにはスキップ、安全モード、通常起動へのフォールバック方針を設定</li>
+    </ul>
+
+    <h2>補足</h2>
+    <p>VASは単一の動画ファイルではなく、使う素材と「いつ何をするか」を記録するシーケンス形式です。再生時に必要な背景やアバターを解決して準備するため、素材が見つからない場合や必須条件を満たさない場合は検証結果で確認できます。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は完成したショーから始め、誰も操作していないことにルミナが気づく構成にしました。3コマ目で時間軸を種明かしし、最後は二人とも「見守る係」になる、静かな成功オチです。</p>
+
+    <h2>まとめ</h2>
+    <p>VASは、背景・アバター・カメラ・音・画面効果などを時間軸へ並べ、ひとつのショーとして検証、プレビュー、保存、再生するための仕組みです。個別の操作をその場で繰り返すのではなく、演出の順番そのものを作品として残せます。</p>
+    <p><strong>本日のひとこと：</strong> 手を離しても進むのは、先に順番をきちんと決めたから。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
