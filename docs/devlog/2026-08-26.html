@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>迷わず、はみ出さず。DesktopとVRのUIをGraphiteへ刷新した日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="DesktopとVRのUIをGraphiteデザインへ刷新し、狭い表示領域でも列・文字・Scroll・レーザー操作が崩れにくい構成へ更新しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-26.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="迷わず、はみ出さず。DesktopとVRのUIをGraphiteへ刷新した日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="DesktopとVRのGraphite UIを、幅・文字・Scroll・レーザー操作まで含めてレスポンシブに整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-26.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-26-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがGraphite UIの幅、レーザー入力、スクロールを検査する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="迷わず、はみ出さず。DesktopとVRのUIをGraphiteへ刷新した日">
+  <meta name="twitter:description" content="DesktopとVRのUIをGraphiteへ刷新し、狭い表示領域でも崩れにくい構成へ更新しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-26-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.26 / Development Log</div>
+    <h1>迷わず、はみ出さず。DesktopとVRのUIをGraphiteへ刷新した日</h1>
+    <p class="lead">DesktopとVRのUIをGraphiteデザインへ刷新し、狭い表示領域でも列・文字・Scroll・レーザー操作が崩れにくい構成へ更新しました。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内に12件のコミットがありました。集計終了時点のHEADは <code>9937ec5</code>（「Fix responsive VR and desktop UI layouts」）です。Viewer作業ツリーの未コミット差分は実装日を確定できないため、本日の実績に含めていません。集計期間は 2026-08-25 03:00:00 JST から 2026-08-26 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-26-comic.png" alt="ろひとルミナがGraphite UIの幅、レーザー入力、スクロールを検査する4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E8%BF%B7%E3%82%8F%E3%81%9A%E3%80%81%E3%81%AF%E3%81%BF%E5%87%BA%E3%81%95%E3%81%9A%E3%80%82Desktop%E3%81%A8VR%E3%81%AEUI%E3%82%92Graphite%E3%81%B8%E5%88%B7%E6%96%B0%E3%81%97%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-26.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>操作の入口を、ひとつのデザインへ</h2>
+    <p>DesktopとVRのUIを、暗いGraphite調の共通デザインへ大きく刷新しました。色をそろえるだけではなく、よく使う機能から詳細設定へ進める階層を組み直し、選択・Hover・Activeなどの状態も同じ考え方で読めるようにしています。</p>
+    <p>VR側では、世界空間に浮かぶパネルのページ構成やタブ、クイックメニューを整理しました。Desktop側でもナビゲーション、設定、ポーズ、素材、撮影などの導線を同じ設計へ寄せています。場所が変わっても「次にどこを触るか」を見失いにくいUIが目標です。</p>
+
+    <h2>狭くなったら、きちんと並び替える</h2>
+    <p>見た目を整えた後は、表示領域が狭いとボタンや文字が外へはみ出す問題も詰めました。アクションのGridは、親の幅から入る列数を計算し、足りなければ列数を減らします。最後の1列でもセルを親幅へ必ず収めるため、最小幅の指定が逆にはみ出しを生む状態を避けています。</p>
+    <p>長いDesktopラベルにはAuto Sizeを使い、VRでは可変内容をScroll領域へ移し、最後の項目まで操作できるようにしました。Scrollbarは操作できる幅を保ちながら表示を細くし、本文へ使える幅を広げています。</p>
+
+    <h2>VRレーザーは、見えている場所だけを狙う</h2>
+    <p>VRのSlider行には、<code>－</code>、<code>＋</code>、<code>戻る</code>といった子ボタンが並びます。行全体をSliderの当たり判定にすると、レーザーが隣のボタンを狙ってもSlider側が先に反応することがありました。</p>
+    <p>そこでPhysics ColliderとUI Raycastの対象を、実際のTrackとHandleへ限定しました。Scrollbarも細い表示領域に合わせて当たり判定をそろえ、使っていない縦Scrollでは不要なScrollbarを残さない方針です。見た目と操作対象が一致することで、狭いパネルでも意図した場所を選びやすくなります。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li><code>ResponsiveActionGrid</code> が利用可能幅と最小セル幅から列数を決め、1列時も親幅内へ収める</li>
+      <li>VRページは固定領域と可変Scroll領域を分け、可変領域へ残りの高さを割り当てる</li>
+      <li>長いDesktopテキストはAuto Sizeと省略表示を組み合わせる</li>
+      <li>VRのSliderはTrack / HandleだけをRaycastとColliderの対象にし、同じ行の子ボタンとの競合を防ぐ</li>
+      <li>Scrollbarの予約幅を小さくし、World Space UIのMaskとレイアウトを統一する</li>
+    </ul>
+
+    <h2>ほかにも進んだこと</h2>
+    <p>同じ集計期間には、AIアニメーション生成の正式機能化、VACモーション編集とキーフレーム操作、指制御とAI Hand Layerの連携、UniVCI Runtimeと両手スケーリング、VR関節操作、テキスト入力中のDesktopショートカット抑制も進みました。</p>
+
+    <h2>補足</h2>
+    <p>期間内のコミット差分は2,033ファイル、295,211行追加、144,914行削除です。UnityのPrefab更新やUniVCI関連パッケージの追加が大きな割合を占めるため、行数だけを機能規模としては扱っていません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は、完成したパネルをろひがだんだん狭くして「健康診断」する構成です。狭くなるほど列が減り、最後にレーザーとScrollまで確かめることで、見た目の刷新だけではなく、幅が変わっても操作できるところまでを一つの流れにしました。</p>
+
+    <h2>まとめ</h2>
+    <p>DesktopとVRのUIをGraphiteデザインへそろえ、画面幅、文字量、Scroll、レーザー操作まで含めて崩れにくい構成へ更新しました。きれいに見えるだけでなく、狭い場所でも最後の項目へ届き、見えている操作へ正しく反応するUIに近づいています。</p>
+    <p><strong>本日のひとこと：</strong> UIも、狭い場所では上手に整列。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
