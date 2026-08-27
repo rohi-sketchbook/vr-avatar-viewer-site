@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="現在のHumanoidポーズを保存し、DesktopとVRで共有するライブラリから別の対応モデルへも適用できる既存機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="humanoid-pose-preset-library">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-28.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="固定スロットのないポーズプリセットライブラリと、Humanoid骨の回転差分による再利用を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-28.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-28-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが決めポーズを保存し、別体格のHumanoidへ呼び戻す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す">
+  <meta name="twitter:description" content="DesktopとVRで共有できる、固定スロットのないHumanoidポーズプリセット機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-28-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.28 / Feature Spotlight</div>
+    <h1>閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す</h1>
+    <p class="lead">その場で作った決めポーズを保存し、DesktopとVRで共有する一覧からあとで呼び戻す。今回は、現行Viewerですでに使えるポーズプリセット機能を紹介します。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内のコミットが0件で、前日から有意な開発進展を確認できなかったため、今回は既存機能の紹介回です。紹介内容は集計終了時点の現行実装で確認できた機能に基づきます。終了時点のHEADは <code>63855cc</code>（<code>Add AI motion category hints</code>）です。現在のViewer作業ツリーには未コミット差分がありますが、実装日を確定できないため本日の実績には含めていません。集計期間は 2026-08-27 03:00:00 JST から 2026-08-28 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-28-comic.png" alt="ろひとルミナが決めポーズを保存し、別体格のHumanoidへ呼び戻す4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E6%B1%BA%E3%82%81%E3%83%9D%E3%83%BC%E3%82%BA%E3%82%92%E4%BF%9D%E5%AD%98%E3%81%97%E3%81%A6%E3%80%81%E5%88%A5%E3%81%AEHumanoid%E3%81%A7%E3%82%82%E5%91%BC%E3%81%B3%E6%88%BB%E3%81%99%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-28.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>その場のポーズを、名前付きのプリセットへ</h2>
+    <p>DesktopとVRのポーズ画面から、現在選択しているアバターの姿勢を保存できます。保存先は <code>UserData/Presets/Poses</code>。固定スロット方式ではなく、保存されたJSONファイルを動的に列挙するため、決められた枠へ上書きしていく設計ではありません。</p>
+    <p>一覧は更新日時の新しいものから並びます。Desktopでは名前と更新日時を見ながら選択・適用でき、VRでは保存件数に応じてページを切り替えて読み込めます。</p>
+
+    <h2>Humanoidの「骨の意味」で覚える</h2>
+    <p>保存するのは、個別モデル固有のTransform名をそのまま並べたものではありません。操作対象にできるUnity Humanoid骨ごとに、初期姿勢からの回転差分をルート空間で記録します。</p>
+    <p>読み戻す側でも対応するHumanoid骨へ差分を適用します。そのため、必要なHumanoid骨が対応していれば、体格やモデルの異なるアバターへ同じポーズを移せます。</p>
+
+    <h2>合わないデータを無理に適用しない</h2>
+    <p>ポーズデータはschema version 4と座標系 <code>VRM-Unity-YUp-ZForward-v1</code> を確認してから読み込みます。対象アバターが操作ロック中、データ形式や座標系が合わない、対応骨がないといった場合は、無理に不正なTransformを作りません。</p>
+    <p>保存ファイルも検証を通ったものだけを一覧へ載せます。同じIDが複数の互換保存領域で見つかった場合は重複表示を避け、現在の正式保存先を優先します。</p>
+
+    <h2>DesktopとVRで同じライブラリを使う</h2>
+    <p>DesktopとVRは、どちらも同じ <code>AvatarPoseLibrary</code> を通じて保存済みポーズを列挙・保存・読込します。Desktop側で作ったプリセットをVR側の一覧から選ぶ、といった使い方も同じ保存領域の上で成立します。</p>
+    <p>Desktopで保存したポーズは、静止ポーズのモーションカードとしても追加されます。撮影用に作った一瞬の姿勢を保存するだけでなく、再利用できる動きの素材へつなげる導線も用意されています。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>保存先は <code>UserData/Presets/Poses</code>、固定スロット上限なしで動的に列挙</li>
+      <li>DesktopとVRで同じポーズライブラリを共有</li>
+      <li>Unity Humanoid骨ごとに、初期姿勢からのルート空間回転差分を保存</li>
+      <li>schema versionと座標系を検証し、対応しないデータは適用しない</li>
+      <li>更新日時の新しいプリセットから表示し、互換保存先の重複IDを除外</li>
+      <li>Desktop保存時は静止ポーズをモーションカードにも追加</li>
+    </ul>
+
+    <h2>補足</h2>
+    <p>今回の紹介内容は、集計終了時点のコミットツリーにあるポーズ制御、ポーズライブラリ、Desktop／VRのポーズUI、および現行仕様書を突き合わせて確認しました。未コミット差分は機能根拠にも本日の実績にも使用していません。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>完成した決めポーズから始め、保存カードが棚へ入り、体格の違うHumanoidへ同じ姿勢が渡る様子を「貸し出しカード」のように描きました。最後は固定枠がないと知ったろひが、次々とポーズを増やそうとするオチです。</p>
+
+    <h2>まとめ</h2>
+    <p>ポーズプリセットは、その場で作ったHumanoidの姿勢を保存し、一覧から選んであとで呼び戻せる機能です。モデル固有の骨名ではなくHumanoid骨と初期姿勢からの回転差分で記録し、DesktopとVRで同じ動的ライブラリを共有します。</p>
+    <p><strong>本日のひとこと：</strong> 決めポーズは、一度きりにしない。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
