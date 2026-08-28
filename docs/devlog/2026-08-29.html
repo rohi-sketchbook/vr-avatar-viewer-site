@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>飛んでいる途中もステッカー。水鉄砲の弾を見えるようにした日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="水鉄砲から選んだPNGを可視弾として飛ばし、命中時には同じ絵柄をアバター表面へ貼り付ける改善を紹介します。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-29.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="飛んでいる途中もステッカー。水鉄砲の弾を見えるようにした日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="選んだPNGを銃口から可視弾として飛ばし、同じ絵柄をアバター表面へ貼り付ける水鉄砲の改善です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-29.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-29-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが水鉄砲から見えるステッカー弾を飛ばし、同じ絵柄をアバターへ貼る4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="飛んでいる途中もステッカー。水鉄砲の弾を見えるようにした日">
+  <meta name="twitter:description" content="選んだPNGが見える弾として飛び、そのままアバターへ貼り付く水鉄砲の改善です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-29-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.29 / Development Log</div>
+    <h1>飛んでいる途中もステッカー。水鉄砲の弾を見えるようにした日</h1>
+    <p class="lead">水鉄砲から選んだPNGを、命中後だけでなく飛んでいる途中から見えるようにしました。同じ絵柄が銃口を飛び出し、そのままアバター表面へ貼り付きます。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内に8件のコミットがありました。終了時点のHEADは <code>b2d10c7</code>（<code>Androidインストール設定を更新</code>）、期間全体では17ファイル、2,082行追加、507行削除です。現在のViewer作業ツリーには未コミット差分がありますが、実装日を確定できないため本日の実績には含めていません。集計期間は 2026-08-28 03:00:00 JST から 2026-08-29 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-29-comic.png" alt="ろひとルミナが水鉄砲から見えるステッカー弾を飛ばし、同じ絵柄をアバターへ貼る4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%A3%9B%E3%82%93%E3%81%A7%E3%81%84%E3%82%8B%E9%80%94%E4%B8%AD%E3%82%82%E3%82%B9%E3%83%86%E3%83%83%E3%82%AB%E3%83%BC%E3%80%82%E6%B0%B4%E9%89%84%E7%A0%B2%E3%81%AE%E5%BC%BE%E3%82%92%E8%A6%8B%E3%81%88%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%97%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-29.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>弾がどこへ飛んだかを目で追える</h2>
+    <p>従来の水鉄砲は銃口からRayを飛ばし、命中したアバター表面へステッカーを投射していました。今回の変更では、カテゴリから選ばれたステッカー画像を透明対応のQuadへ載せ、銃口から命中点まで補間して動かします。</p>
+    <p>飛行時間は距離と速度から求め、短すぎたり長すぎたりしない設定範囲へ収めます。弾はカメラへ向くため、薄い画像でも飛行中の絵柄を視認できます。</p>
+
+    <h2>飛んだ絵と、貼り付く絵が同じ</h2>
+    <p>発射時にカテゴリからPNGを1枚選び、そのTextureを可視弾へ使います。命中時には同じTextureを <code>SurfaceStickerDecalRequest</code> へ渡すため、飛んでいた絵柄がそのままアバター表面へ貼り付きます。</p>
+    <p>命中点は飛行中に対象が動いても追従できるよう、対象Transformのローカル座標とローカル法線で保持し、貼り付け時にワールド座標へ戻します。</p>
+
+    <h2>外れた弾も、すぐには消えない</h2>
+    <p>アバターへ命中しなかった場合も、弾は銃口で即座に消えず、遮蔽物または設定された可視距離まで飛びます。その後は命中しなかった状態を通知し、生成したQuad、Material、Textureを解放します。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>選択したPNGを透明対応の可視Quadへ設定</li>
+      <li>距離と設定速度から飛行時間を求め、銃口から到達点まで補間</li>
+      <li>カメラへ向けて絵柄を飛行中も見やすく表示</li>
+      <li>命中時は可視弾と同じTextureをアバター表面へ投射</li>
+      <li>ミス時も短い可視距離を飛ばし、完了後に一時リソースを解放</li>
+    </ul>
+
+    <h2>ほかにも進んだこと</h2>
+    <ul>
+      <li>AIポーズモデルの読込タイムアウト修正</li>
+      <li>UIテーマ調整ツールの改善</li>
+      <li>VRコントローラーの手モデルとコライダー補正の同期</li>
+      <li>VR UI Prefabの操作判定とClear Blue操作状態仕様の更新</li>
+      <li>Meta XR RuntimeとAndroidインストール設定の更新</li>
+    </ul>
+
+    <h2>4コマの裏話</h2>
+    <p>ステッカー弾の視点に寄せ、棚から選ばれた一枚が銃口を飛び出し、同じ絵柄のままアバターへ着地する旅として描きました。最後は外れた一枚までちゃんと飛んでいく様子を、ろひが慌てて見送るオチです。</p>
+
+    <h2>まとめ</h2>
+    <p>水鉄砲のステッカーは、発射結果だけでなく飛行経路も見えるようになりました。選ばれたPNGを可視弾と貼り付けの両方へ使い、命中時もミス時も弾の動きを追える実装です。</p>
+    <p><strong>本日のひとこと：</strong> 貼り付く前から、もうステッカー。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
