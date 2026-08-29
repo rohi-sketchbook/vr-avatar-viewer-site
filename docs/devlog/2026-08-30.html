@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>色だけじゃない。アイコンも角丸も、UIテーマを全身調整した日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="UIテーマ調整を配色からアイコン色、角丸・枠形状、操作状態へ広げ、カバレッジ監査で適用漏れを追いやすくした改善を紹介します。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-30.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="色だけじゃない。アイコンも角丸も、UIテーマを全身調整した日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="アイコン、角丸、操作状態まで一つのUIテーマとして整え、適用状況も監査できるようにした改善です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-30.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-30-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがUI部品の色・アイコン・角丸・操作状態を全身コーデに見立てて整える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="色だけじゃない。アイコンも角丸も、UIテーマを全身調整した日">
+  <meta name="twitter:description" content="配色だけでなくアイコン、角丸、操作状態まで整え、テーマの適用漏れも追いやすくしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-30-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.30 / Development Log</div>
+    <h1>色だけじゃない。アイコンも角丸も、UIテーマを全身調整した日</h1>
+    <p class="lead">UIテーマ調整を色だけの変更から一段広げ、アイコン、角丸や枠形状、操作時の見た目まで同じテーマ資産から整えられるようにしました。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内に2件のコミットがありました。終了時点のHEADは <code>4206d9b</code>（<code>編集モードの見切れを修正</code>）、期間全体では58ファイル、1,810行追加、256行削除です。現在のViewer作業ツリーには未コミット差分がありますが、実装日を確定できないため本日の実績には含めていません。集計期間は 2026-08-29 03:00:00 JST から 2026-08-30 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-30-comic.png" alt="ろひとルミナがUI部品の色・アイコン・角丸・操作状態を全身コーデに見立てて整える4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E8%89%B2%E3%81%A0%E3%81%91%E3%81%98%E3%82%83%E3%81%AA%E3%81%84%E3%80%82%E3%82%A2%E3%82%A4%E3%82%B3%E3%83%B3%E3%82%82%E8%A7%92%E4%B8%B8%E3%82%82%E3%80%81UI%E3%83%86%E3%83%BC%E3%83%9E%E3%82%92%E5%85%A8%E8%BA%AB%E8%AA%BF%E6%95%B4%E3%81%97%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-30.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>アイコンを本文の色から独立して調整</h2>
+    <p>これまでナビゲーションアイコンは、本文の控えめな文字色やアクセント色に寄せて表示される部分がありました。今回、通常・選択・無効のアイコン色をテーマの専用パレットとして持たせ、ナビゲーション用画像の生成と実行時の色付けが同じ設定を参照するようになりました。</p>
+    <p>文字とアイコンを別々に調整できるため、本文の読みやすさを変えずに、選択中のアイコンだけをはっきり見せるといった調整がしやすくなります。</p>
+
+    <h2>角丸・枠・操作状態もテーマの一部へ</h2>
+    <p>テーマ調整画面には、文字・背景・状態の色に加えて、アイコン色、角丸・枠形状、操作時の見た目、動き・フェードなどの区分が並ぶようになりました。Inspector上の名称も日本語で整理され、どこを変える設定なのかを追いやすくしています。</p>
+    <p>角丸画像やナビゲーション画像の割り当てもテーマ資産から扱えるようになり、色だけでなくUI部品の輪郭や反応まで一つのテーマとして調整できる範囲が広がりました。</p>
+
+    <h2>変更が届いていない場所を監査</h2>
+    <p>テーマ項目を増やすだけでは、実際のUIが古い固定値を使い続けていても気づきにくい問題があります。そこで調整画面にカバレッジ監査を加え、シーン内のUIがテーマの参照へつながっているかを確認できるようにしました。</p>
+    <p>プレビューと監査を同じ調整画面から行えるため、「設定は変えたのに、この部品だけ見た目が変わらない」という取りこぼしを探しやすくなります。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>通常・選択・無効を分けた専用のアイコン色パレット</li>
+      <li>ナビゲーション画像と角丸部品画像をテーマ資産から生成・参照</li>
+      <li>本文・アイコン・背景の実行時カラー変換を分離</li>
+      <li>角丸・枠形状、操作時の見た目、動き・フェードを日本語の区分で整理</li>
+      <li>テーマ参照が届いていないUIを探すカバレッジ監査</li>
+    </ul>
+
+    <h2>ほかにも進んだこと</h2>
+    <ul>
+      <li>Desktop Inspectorで編集モード選択欄の分だけ本文領域を確保し、項目の見切れを修正</li>
+      <li>Graphite Studioのナビゲーション画像と角丸部品画像をテーマ設定から生成・参照できるよう改善</li>
+      <li>UIテーマを実行時へ適用する際、本文・アイコン・背景の色変換を分離</li>
+    </ul>
+
+    <h2>4コマの裏話</h2>
+    <p>今回はUI部品の「衣装合わせ」に見立てました。ろひが配色だけで完成だと思った直後、アイコンや角丸が古い格好のまま並んでいることにルミナが気づきます。最後は色・形・操作時の反応まで揃い、テーマは全身コーデだった、と納得する逆転型です。</p>
+
+    <h2>まとめ</h2>
+    <p>UIテーマ調整は、配色だけでなくアイコン、角丸や枠形状、操作状態、アニメーション設定まで扱いやすい構成になりました。専用のアイコン色とカバレッジ監査を加え、設定を作るところから実際のUIへ届けるところまで確認しやすくした改善です。</p>
+    <p><strong>本日のひとこと：</strong> テーマは、色替えではなく全身コーデ。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
