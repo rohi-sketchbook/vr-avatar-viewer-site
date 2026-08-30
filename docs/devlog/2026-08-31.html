@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>空も雨も、水面も。背景を撮影スタジオへ変えた日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="元のVBG背景を守りながら、撮影向けの空・天候・時刻へ切り替え、既存背景メッシュの形を保った水面化まで扱える環境操作を実装しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-31.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="空も雨も、水面も。背景を撮影スタジオへ変えた日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="元背景を守りながら、撮影向けの物理天候と形状を保つ水面Material Overrideを追加した開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-31.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-31-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが同じ撮影セットで空・雨・水面を切り替え、元の景色へ戻す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="空も雨も、水面も。背景を撮影スタジオへ変えた日">
+  <meta name="twitter:description" content="元背景を守りながら、撮影向けの空・天候・水面を操作できるようにしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-31-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.08.31 / Development Log</div>
+    <h1>空も雨も、水面も。背景を撮影スタジオへ変えた日</h1>
+    <p class="lead">背景が持つ元の空や霧を守りながら、撮影時だけ物理的な空・天候へ切り替え、既存背景の形を保ったまま水面も調整できる環境操作を実装しました。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内に7件のコミットがありました。終了時点のHEADは <code>dd364d9</code>（<code>VR環境UIの表示と水面操作を修正</code>）、期間全体では142ファイル、84,582行追加、71,352行削除です。現在のViewer作業ツリーには未コミット差分がありますが、実装日を確定できないため本日の実績には含めていません。集計期間は 2026-08-30 03:00:00 JST から 2026-08-31 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-08-31-comic.png" alt="ろひとルミナが同じ撮影セットで空・雨・水面を切り替え、元の景色へ戻す4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E7%A9%BA%E3%82%82%E9%9B%A8%E3%82%82%E3%80%81%E6%B0%B4%E9%9D%A2%E3%82%82%E3%80%82%E8%83%8C%E6%99%AF%E3%82%92%E6%92%AE%E5%BD%B1%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%AA%E3%81%B8%E5%A4%89%E3%81%88%E3%81%9F%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-31.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>元の背景を基準に、撮影用の空へ切り替える</h2>
+    <p>VBG背景を読み込んだ直後は、変換元が持つ空、霧、ライトを再現する「オリジナル」が既定です。今回、その基準を壊さず、必要なときだけ「物理的な空・天候」へ切り替えられる環境コントローラーを追加しました。</p>
+    <p>撮影向けには快晴、やわらかな昼、夕焼け、夜、霧、雨、嵐、雪の8プリセットを用意しました。Desktopでは時刻、雨雪の強さ、雲量・雲密度、霧、風、雷を連続調整でき、VRからも主要な環境項目を簡単に操作できます。</p>
+
+    <h2>特定アセットをVBGへ閉じ込めない</h2>
+    <p>難しかったのは、Weather Makerの表現力を使いながら、VBG自体をWeather Maker固有の形式にしないことでした。VBGには元背景と、空・天候・水面を再構成するための意味情報を保存し、Viewer側のBackend Adapterが実行時に物理天候へ変換します。</p>
+    <p>物理天候を選ぶまでWeather Maker Runtimeを止めておく遅延起動とし、既存のURP Rendererへ必要な機能だけを接続しました。雨、雪、風、雷などの音も別系統にせず、Viewerのマスター音量と環境音音量へ同期します。</p>
+
+    <h2>川やプールは、形を変えずに水面へ</h2>
+    <p>広いOcean相当の水面と、背景に元からある川・プール・水槽は同じ扱いにしていません。Ocean候補は大域水面として扱えますが、一般の背景パーツは選択したMeshの形を保ち、Materialだけを実行時の水面へ差し替えます。</p>
+    <p>水面のON/OFF、波、反射を調整でき、解除時は同じRendererとMaterial Slotへ元のMaterialを戻します。Overrideは元の <code>materials/materials.json</code> を変更せず、任意の <code>materials/overrides.json</code> としてVBGへ保存できます。名前に「water」があるだけで自動変換しないことも、安全側の重要な制約です。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>オリジナル、物理天候、Skyboxを分離した環境ソース</li>
+      <li>撮影向け8プリセットと、Desktop・VRそれぞれの調整UI</li>
+      <li>VBGをBackend非依存に保つSemantic EnvironmentとAdapter構成</li>
+      <li>選択した背景Meshの形状を保つ水面Material Override</li>
+      <li>元Materialの復元と、別ファイルへ保存する非破壊設計</li>
+      <li>描画品質と環境音設定へ連動するRuntime制御</li>
+    </ul>
+
+    <h2>ほかにも進んだこと</h2>
+    <ul>
+      <li>VRの3点歩行とIdleポーズ編集を改善</li>
+      <li>移動スタイルとアバターIdle連携を追加</li>
+      <li>UIテーマ、撮影ポーズ、XR設定を更新</li>
+      <li>VRモードのOpenXR初期化と終了処理を修正</li>
+      <li>VR環境UIの表示と水面操作を修正</li>
+    </ul>
+
+    <h2>4コマの裏話</h2>
+    <p>今回は同じ撮影セットを繰り返し映す「天候リハーサル」にしました。基準の景色、夕焼けの雨、形を保った水面、そして元の景色への復帰を同じ構図で比べることで、環境を置き換える機能ではなく、戻せる選択肢を増やした実装だと伝えています。</p>
+
+    <h2>まとめ</h2>
+    <p>VBG背景のオリジナル表現を既定として守りつつ、撮影用の空・時刻・天候へ切り替え、背景パーツの形を保った水面表現まで扱えるようになりました。元データと特定Backendを切り離したことで、見た目を大胆に試しても基準へ戻れる環境操作です。</p>
+    <p><strong>本日のひとこと：</strong> 元へ戻せるから、空模様を大胆に試せる。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
