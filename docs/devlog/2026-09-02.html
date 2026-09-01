@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>模様だけが走り出す。VCIのUVスクロールをURPへつないだ日 | VR Avatar Viewer 開発日記</title>
+  <meta name="description" content="URPが実際に描画へ使うテクスチャを優先し、VCIのUVスクロールが止まって見える問題を修正しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-02.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VR Avatar Viewer">
+  <meta property="og:title" content="模様だけが走り出す。VCIのUVスクロールをURPへつないだ日 | VR Avatar Viewer 開発日記">
+  <meta property="og:description" content="VCIのテクスチャオフセットを、URPが実際に描画へ使う入口へ届ける修正の開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-02.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-02-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがVCIのUVスクロール命令をURPの描画先へつなぎ直す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="模様だけが走り出す。VCIのUVスクロールをURPへつないだ日">
+  <meta name="twitter:description" content="URP環境で止まって見えたVCIのUVスクロールを、描画先の選択順から修正しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-02-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VR Avatar Viewer</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.09.02 / Development Log</div>
+    <h1>模様だけが走り出す。VCIのUVスクロールをURPへつないだ日</h1>
+    <p class="lead">VCIアイテムの「表面の模様を流す」アニメーションが、URP環境では止まって見える問題を修正しました。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内に6件のコミットがありました。終了時点のHEADは <code>7b9e170</code>（<code>AI画像ポーズ推定を改善</code>）、期間全体では61ファイル、5,392行追加、1,016行削除です。現在のViewer作業ツリーには13パスの未コミット変更がありますが、実装日を確定できないため本日の実績には含めていません。集計期間は 2026-09-01 03:00:00 JST から 2026-09-02 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-09-02-comic.png" alt="ろひとルミナがVCIのUVスクロール命令をURPの描画先へつなぎ直す4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E6%A8%A1%E6%A7%98%E3%81%A0%E3%81%91%E3%81%8C%E8%B5%B0%E3%82%8A%E5%87%BA%E3%81%99%E3%80%82VCI%E3%81%AEUV%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%E3%82%92URP%E3%81%B8%E3%81%A4%E3%81%AA%E3%81%84%E3%81%A0%E6%97%A5%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-02.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>止まっていたのは、命令の届き先</h2>
+    <p>VCIはテクスチャの表示位置を少しずつずらすことで、ベルトや光の筋などの模様が表面を流れているように見せられます。ところがURPへ復元されたマテリアルでは、互換用の <code>_MainTex</code> が存在していても、実際の描画は <code>_BaseMap</code> を参照する場合があります。</p>
+    <p>従来処理は <code>_MainTex</code> を先に選んでいたため、値そのものは更新されても、画面で使われない入口へ命令が届いていました。その結果、UVスクロールが止まって見えていたのです。</p>
+
+    <h2>URPが読むテクスチャを優先</h2>
+    <p>修正では、URPのメインテクスチャである <code>_BaseMap</code> を先に選び、存在しない場合だけVCI互換用の <code>_MainTex</code> へ戻る順序にしました。物体そのものを動かすのではなく、表面の模様だけが意図どおり流れます。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>VCIのUVスクロールをテクスチャオフセットとして反映</li>
+      <li>URPマテリアルでは <code>_BaseMap</code> を優先</li>
+      <li><code>_MainTex</code> は従来形式向けのフォールバックとして維持</li>
+      <li>変更範囲を <code>VciLuaRuntime</code> のプロパティ解決順へ限定</li>
+    </ul>
+
+    <h2>ほかにも進んだこと</h2>
+    <ul>
+      <li>最近の改修で増えた一時停止感を減らすため、実行時リソースの解放やキャッシュ処理を改善</li>
+      <li>VR UIに戻り導線とパーツ一覧への遷移を追加</li>
+      <li>AI画像ポーズで顔向き、横向きの体幹、重なった手足の前後推定を改善</li>
+      <li>VAB/VBGの保存・読込を安定化し、VAB 4.6への表記更新とVSP経路の整理を実施</li>
+    </ul>
+
+    <h2>補足</h2>
+    <p>今回の主修正はコミット <code>501ee214</code> の5行で、マテリアルの種類を増やしたのではなく、すでにあるプロパティの優先順位を直したものです。小さな差分でも、動く素材の見た目へ直接効く改善になりました。</p>
+
+    <h2>4コマの裏話</h2>
+    <p>スクロール命令が「使われていない入口」へ届いていた状況を、配達先の勘違いとして描きました。最後は小物が走り出したように見えてろひが慌てますが、実際に動いているのは表面の模様だけ、という知覚ギャグです。</p>
+
+    <h2>まとめ</h2>
+    <p>URPで実際に描画へ使われる <code>_BaseMap</code> を優先することで、VCIのUVスクロールが画面へ正しく反映されるようになりました。互換用 <code>_MainTex</code> へのフォールバックも残し、描画経路に合わせて安全に更新先を選びます。</p>
+    <p><strong>本日のひとこと：</strong> 走ったのは物体じゃなくて、模様でした。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+</body>
+</html>
