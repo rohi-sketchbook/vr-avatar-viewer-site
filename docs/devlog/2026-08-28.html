@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す | VR Avatar Viewer 開発日記</title>
+  <title>閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す | VRAS 開発日記</title>
   <meta name="description" content="現在のHumanoidポーズを保存し、DesktopとVRで共有するライブラリから別の対応モデルへも適用できる既存機能を紹介します。">
   <meta name="devlog:type" content="feature-spotlight">
   <meta name="devlog:feature" content="humanoid-pose-preset-library">
   <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-28.html">
   <meta property="og:type" content="article">
-  <meta property="og:site_name" content="VR Avatar Viewer">
-  <meta property="og:title" content="閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す | VR Avatar Viewer 開発日記">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：決めポーズを保存して、別のHumanoidでも呼び戻す | VRAS 開発日記">
   <meta property="og:description" content="固定スロットのないポーズプリセットライブラリと、Humanoid骨の回転差分による再利用を紹介します。">
   <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-08-28.html">
   <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-08-28-comic.png">
@@ -26,7 +26,7 @@
 <body>
 <header class="site-header">
   <div class="container nav">
-    <a class="brand" href="../">VR Avatar Viewer</a>
+    <a class="brand" href="../">VRAS</a>
     <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
   </div>
 </header>
@@ -38,7 +38,7 @@
     <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内のコミットが0件で、前日から有意な開発進展を確認できなかったため、今回は既存機能の紹介回です。紹介内容は集計終了時点の現行実装で確認できた機能に基づきます。終了時点のHEADは <code>63855cc</code>（<code>Add AI motion category hints</code>）です。現在のViewer作業ツリーには未コミット差分がありますが、実装日を確定できないため本日の実績には含めていません。集計期間は 2026-08-27 03:00:00 JST から 2026-08-28 02:59:59 JST までです。</div>
     <p><img src="../assets/images/devlog-2026-08-28-comic.png" alt="ろひとルミナが決めポーズを保存し、別体格のHumanoidへ呼び戻す4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
     <div class="share-actions">
-      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E6%B1%BA%E3%82%81%E3%83%9D%E3%83%BC%E3%82%BA%E3%82%92%E4%BF%9D%E5%AD%98%E3%81%97%E3%81%A6%E3%80%81%E5%88%A5%E3%81%AEHumanoid%E3%81%A7%E3%82%82%E5%91%BC%E3%81%B3%E6%88%BB%E3%81%99%20%7C%20VR%20Avatar%20Viewer%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-28.html&amp;hashtags=VRAvatarViewer%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E6%B1%BA%E3%82%81%E3%83%9D%E3%83%BC%E3%82%BA%E3%82%92%E4%BF%9D%E5%AD%98%E3%81%97%E3%81%A6%E3%80%81%E5%88%A5%E3%81%AEHumanoid%E3%81%A7%E3%82%82%E5%91%BC%E3%81%B3%E6%88%BB%E3%81%99%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-08-28.html&amp;hashtags=VRAS%2CUnity" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
     </div>
 
     <h2>その場のポーズを、名前付きのプリセットへ</h2>
@@ -78,6 +78,6 @@
     <p><strong>本日のひとこと：</strong> 決めポーズは、一度きりにしない。</p>
   </article>
 </main>
-<footer class="site-footer"><div class="container">© 2026 VR Avatar Viewer / いもけんぴ工房</div></footer>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
 </body>
 </html>
