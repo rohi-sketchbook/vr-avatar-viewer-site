@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>撮った一枚を、そのままXへ。投稿準備をつないだ日 | VRAS 開発日記</title>
+  <meta name="description" content="撮影履歴から写真を選び、ロゴやフレームを合成し、利用者の最終確認を残したままX投稿画面まで準備できる導線を実装しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-04.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="撮った一枚を、そのままXへ。投稿準備をつないだ日 | VRAS 開発日記">
+  <meta property="og:description" content="撮影履歴、投稿画像のおめかし、X投稿準備をひとつにつないだ開発記録です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-04.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-04-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが撮影写真へロゴとフレームを重ね、X投稿前に最終確認する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="撮った一枚を、そのままXへ。投稿準備をつないだ日">
+  <meta name="twitter:description" content="撮影履歴から画像を選び、飾り付けとX投稿画面の準備まで進められるようにしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-04-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VRAS</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.09.04 / Development Log</div>
+    <h1>撮った一枚を、そのままXへ。投稿準備をつないだ日</h1>
+    <p class="lead">撮影履歴から写真を選び、ロゴやカメラフレームを重ね、Xの投稿画面へ渡すところまでをひとつの導線にまとめました。</p>
+    <div class="notice">Viewerの <code>main</code> ブランチでは集計期間内に8件のコミットがありました。終了時点のHEADは <code>f16f804</code>（<code>設計書を棚卸ししてアーカイブ整理</code>）、期間全体では135ファイル、160,581行追加、167,979行削除です。現在のViewer作業ツリーには16パスの未コミット変更がありますが、実装日を確定できないため本日の実績には含めていません。集計期間は 2026-09-03 03:00:00 JST から 2026-09-04 02:59:59 JST までです。</div>
+    <p><img src="../assets/images/devlog-2026-09-04-comic.png" alt="ろひとルミナが撮影写真へロゴとフレームを重ね、X投稿前に最終確認する4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions">
+      <a class="button x-share" href="https://x.com/intent/tweet?text=%E6%92%AE%E3%81%A3%E3%81%9F%E4%B8%80%E6%9E%9A%E3%82%92%E3%80%81%E3%81%9D%E3%81%AE%E3%81%BE%E3%81%BEX%E3%81%B8%E3%80%82%E6%8A%95%E7%A8%BF%E6%BA%96%E5%82%99%E3%82%92%E3%81%A4%E3%81%AA%E3%81%84%E3%81%A0%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-04.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a>
+    </div>
+
+    <h2>撮影履歴から、見せたい一枚を選ぶ</h2>
+    <p>撮影画面に「撮影履歴 / X投稿」の入口を追加しました。保存済みのPNG・JPEGを新しい順に確認でき、デスクトップとVRのどちらからでも同じダイアログを開けます。撮った直後だけでなく、少し前の写真へ戻って選び直せる導線です。</p>
+
+    <h2>投稿用の一枚へ、おめかしする</h2>
+    <p>投稿設定では本文とハッシュタグに加え、写真へ重ねるロゴとカメラフレームを選べます。標準のVRASロゴと4種類のフレームを同梱し、利用者が用意した透過PNGも追加可能です。合成順を「元写真 → フレーム → ロゴ」に固定し、ブランドロゴが前面へ出るようにしました。</p>
+
+    <h2>Xの投稿画面まで、安全につなぐ</h2>
+    <p>投稿準備ではX APIや認証情報をアプリへ持たせません。合成した画像をWindowsのクリップボードへ置き、設定済みの本文とハッシュタグをX Web Intentへ渡します。Xの投稿画面が前面に来たことを確認できた場合だけ画像の貼り付けを補助し、最後の投稿ボタンは利用者が内容を確認して押します。</p>
+
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>デスクトップとVRで共通の撮影履歴ダイアログを利用</li>
+      <li>PNG・JPEGの撮影履歴を更新日時順に表示</li>
+      <li>標準VRASロゴ、4種類のカメラフレーム、利用者追加の透過PNGに対応</li>
+      <li>元写真、フレーム、ロゴの順で投稿用PNGへ合成</li>
+      <li>X APIを使わず、WindowsクリップボードとX Web Intentで投稿準備</li>
+      <li>投稿の確定はブラウザ上で利用者が行い、認証情報やAPIキーを保持しない</li>
+    </ul>
+
+    <h2>ほかにも進んだこと</h2>
+    <ul>
+      <li>天候描画と高速切替の安定性を改善</li>
+      <li>環境・撮影・鏡の描画ルーティングを統一</li>
+      <li>VBG水面へ透明プールプリセットを追加</li>
+      <li>デスクトップとVRのUI構成をそろえて操作性を改善</li>
+      <li>流星群、ボリュームフォグ、フィルム粒子、創作ぼかしなど撮影・環境エフェクトを拡充</li>
+      <li>現行設計書と過去資料を棚卸しし、アーカイブを整理</li>
+    </ul>
+
+    <h2>4コマの裏話</h2>
+    <p>写真そのものを「投稿前のおめかし」に連れていくリレー型の構成です。履歴から選ばれた一枚がロゴとフレームをまとい、Xの入口まで勢いよく進みますが、最後のひと押しだけはろひへ戻ってきます。</p>
+
+    <h2>まとめ</h2>
+    <p>写真を撮ったあとに保存先を探し、別のツールで飾り、投稿画面へ持っていく手間を、VRASの撮影画面から続くひとつの流れへまとめました。自動化するのは投稿準備まで。公開する内容を本人が確認して決める境界は残しています。</p>
+    <p><strong>本日のひとこと：</strong> 最後のひと押しは、ちゃんと人の手で。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
