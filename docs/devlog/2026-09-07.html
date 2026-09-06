@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>元の背景はそのままに。静的背景VCIビルダーを加えた日 | VRAS 開発日記</title>
+  <meta name="description" content="背景の元データを保ちながら、配布用の静的背景VCIを派生生成するUnity Editorツールを追加しました。容量を事前に確認し、必要ならFBX単位で複数のVCIへ振り分けられます。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-07.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="元の背景はそのままに。静的背景VCIビルダーを加えた日 | VRAS 開発日記">
+  <meta property="og:description" content="背景の元データを保ちながら、配布用の静的背景VCIを派生生成するUnity Editorツールを追加しました。容量を事前に確認し、必要ならFBX単位で複数のVCIへ振り分けられます。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-07.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-07-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが元の背景模型を残してVCIの箱へ仕分け、大きな一個は分割できないと気づく4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="元の背景はそのままに。静的背景VCIビルダーを加えた日">
+  <meta name="twitter:description" content="背景の元データを保ちながら、配布用の静的背景VCIを派生生成するUnity Editorツールを追加しました。容量を事前に確認し、必要ならFBX単位で複数のVCIへ振り分けられます。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-07-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VRAS</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.09.07 / Development Log</div>
+    <h1>元の背景はそのままに。静的背景VCIビルダーを加えた日</h1>
+    <p class="lead">背景の元データを保ちながら、配布用の静的背景VCIを派生生成するUnity Editorツールを追加しました。容量を事前に確認し、必要ならFBX単位で複数のVCIへ振り分けられます。</p>
+    <div class="notice">記事種別はdevelopment。集計期間は2026-09-06 03:00:00 JST〜2026-09-07 02:59:59 JST。参照ブランチはmain、終了時点のHEADはb1e20c138f0b79012a96860f63d0b1d98870f0c0（Add static VCI background builder）。対象は1コミット、4ファイル、1,800行追加・0行削除です。未コミット変更は期間内の実績と確認できないため除外しました。</div>
+    <p><img src="../assets/images/devlog-2026-09-07-comic.png" alt="ろひとルミナが元の背景模型を残してVCIの箱へ仕分け、大きな一個は分割できないと気づく4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E5%85%83%E3%81%AE%E8%83%8C%E6%99%AF%E3%81%AF%E3%81%9D%E3%81%AE%E3%81%BE%E3%81%BE%E3%81%AB%E3%80%82%E9%9D%99%E7%9A%84%E8%83%8C%E6%99%AFVCI%E3%83%93%E3%83%AB%E3%83%80%E3%83%BC%E3%82%92%E5%8A%A0%E3%81%88%E3%81%9F%E6%97%A5+%7C+VRAS+%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-07.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+    <h2>元の背景を、変換のために変えたくない</h2>
+    <p>背景を組み立てたPrefabは、あとから編集を続けるための正本です。配布形式に合わせるたびに元のマテリアルや画像の読み込み設定まで変わると、元の見た目や作業環境へ影響が出かねません。今回追加した「静的背景VCIビルダー」は、元を保持したまま書き出し用のデータを別に作る構成です。</p>
+    <h2>Prefabから、配布用のVCIへ</h2>
+    <p>入力するのはProject内のPrefabアセットです。シーン上のインスタンスやFBXファイルそのものを直接入力する画面ではありません。解析後、作業用フォルダーへVCI用のMaterial・Prefab・main.luaを生成し、完成した.vciは指定した最終出力先へ書き出します。作者名やバージョン、モデルとスクリプトのライセンスも設定できます。</p>
+    <h2>容量は、箱詰めしてから確かめる</h2>
+    <p>ビルダーは一度VCIへ書き出したデータのサイズを調べ、100,000,000 bytesを超えるか判定します。超過した場合は、FBX単位などのまとまりを複数のグループへ振り分ける案を作れます。各単位の割当は手動でも変更でき、グループごとの事前書き出しで実際のサイズを再確認します。</p>
+    <p>自動分割案は、必ず上限以内に収まる保証ではありません。分割できる単位がひとつしかなく、それだけで上限を超える場合、FBX単位の振り分けだけでは解決できません。ひとつのメッシュを自動で細切れにしたり、画像を自動圧縮して収める機能としては扱っていません。</p>
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>元のPrefab・FBX・Material・TextureImporterへ書き戻さず、派生データを生成する構成です。</li>
+      <li>通常のEditor側エクスポートが画像の読み込み設定を変える経路を避け、RuntimeTextureSerializerを使って画像を読み出します。</li>
+      <li>FBX単位に加え、必要に応じてPrefab内の非FBX要素も分割単位として扱います。</li>
+      <li>生成するmainスクリプトにはvci.ResetRootTransform()を組み込みます。</li>
+      <li>100,000,000 bytesちょうどは許容し、それを超えた場合を超過とする判定です。</li>
+    </ul>
+    <h2>ほかにも進んだこと・補足</h2>
+    <p>同じコミットには、容量境界、グループ割当、マテリアル変換、mainスクリプトを含む書き出しなどを確認するEditorテストも追加されました。この日記ではコミット済みソースとテスト定義を確認しています。Unityでのテスト実行や、生成した背景の実機表示検証は行っていません。あらゆるシェーダーの見た目が完全に再現されるという保証でもありません。</p>
+    <p>期間内のコミットはこのビルダーとテストの追加のみです。作業ツリーにある背景制作・照明などの未コミット変更は、今回の完成実績には含めていません。</p>
+    <h2>4コマの裏話</h2>
+    <p>模型を箱へ仕分ける様子で、元を残すこととFBX単位の分割を表しました。小さな模型なら分けられても、大きな一個の中までは分けられない。最後にルミナが抱える城は、ビルダーの対応範囲を示す比喩です。実際に起きた書き出し事故や実測結果を描いたものではありません。</p>
+    <h2>まとめ</h2>
+    <p>静的背景を配布用VCIへ変換する入口が増えました。元の素材を守り、容量を確認し、必要な単位で分ける。背景制作を続けながら、配布用データを用意するためのEditorツールです。</p>
+    <p><strong>本日のひとこと：</strong> 箱を増やしても、大物ひとつは大物のまま。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
