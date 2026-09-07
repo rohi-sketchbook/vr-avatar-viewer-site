@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>まぶしさの正体は環境光。Viewerの白飛びを見直した日 | VRAS 開発日記</title>
+  <meta name="description" content="Viewerの画面が白っぽくまぶしくなる問題に対し、メインシーンの環境光の色設定を修正しました。空・水平線・地面に対応する3つの色を見直した、小さくても表示に関わる変更です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-08.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="まぶしさの正体は環境光。Viewerの白飛びを見直した日 | VRAS 開発日記">
+  <meta property="og:description" content="Viewerの画面が白っぽくまぶしくなる問題に対し、メインシーンの環境光の色設定を修正しました。空・水平線・地面に対応する3つの色を見直した、小さくても表示に関わる変更です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-08.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-08-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="画面のまぶしさを眼鏡のせいだと思ったろひが、ルミナと環境光の色を見直し、眼鏡に謝る4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="まぶしさの正体は環境光。Viewerの白飛びを見直した日">
+  <meta name="twitter:description" content="Viewerの画面が白っぽくまぶしくなる問題に対し、メインシーンの環境光の色設定を修正しました。空・水平線・地面に対応する3つの色を見直した、小さくても表示に関わる変更です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-08-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VRAS</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.09.08 / Development Log</div>
+    <h1>まぶしさの正体は環境光。Viewerの白飛びを見直した日</h1>
+    <p class="lead">Viewerの画面が白っぽくまぶしくなる問題に対し、メインシーンの環境光の色設定を修正しました。空・水平線・地面に対応する3つの色を見直した、小さくても表示に関わる変更です。</p>
+    <div class="notice">記事種別はdevelopment。集計期間は2026-09-07 03:00:00 JST〜2026-09-08 02:59:59 JST。参照ブランチはmain、終了時点のHEADは5b43d2e3388ba9e5e32ad4dcdd86d537e8b3c4d9（ViewerのAmbient白飛びを修正）。対象は1コミット、1ファイル、3行追加・3行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+    <p><img src="../assets/images/devlog-2026-09-08-comic.png" alt="画面のまぶしさを眼鏡のせいだと思ったろひが、ルミナと環境光の色を見直し、眼鏡に謝る4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E3%81%BE%E3%81%B6%E3%81%97%E3%81%95%E3%81%AE%E6%AD%A3%E4%BD%93%E3%81%AF%E7%92%B0%E5%A2%83%E5%85%89%E3%80%82Viewer%E3%81%AE%E7%99%BD%E9%A3%9B%E3%81%B3%E3%82%92%E8%A6%8B%E7%9B%B4%E3%81%97%E3%81%9F%E6%97%A5+%7C+VRAS+%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-08.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+    <h2>まぶしい画面、どこを見直す？</h2>
+    <p>アバターの見た目を確認する画面で、明るさが強すぎると服の色や陰影が分かりにくくなります。今回の修正対象は、アバター個別の素材ではなく、メインシーンに保存された環境光の色でした。コミットの説明も「ViewerのAmbient白飛びを修正」となっています。</p>
+    <h2>環境光の色を3か所修正</h2>
+    <p>変更されたのはMainSceneのRenderSettingsにある、空・水平線・地面に対応する3つの色です。空側のRGB値は約（2.640, 2.843, 3.249）から（0.212, 0.227, 0.259）へ、水平線側は約（0.354, 0.366, 0.377）から（0.114, 0.125, 0.133）へ、地面側は約（0.198, 0.193, 0.184）から（0.047, 0.043, 0.035）へ変更されました。</p>
+    <p>これらは保存された色の成分値であり、画面全体の明るさの測定値ではありません。「何倍暗くなった」といった性能・見え方の数値には置き換えず、修正した設定として記録します。</p>
+    <h2>なぜ色だけでなく、設定の範囲も確認するのか</h2>
+    <p>白っぽい表示を見ただけでは、どの設定を直したのかまでは分かりません。今回は差分を確認することで、環境光の強さの値（m_AmbientIntensity）は0.25、モード（m_AmbientMode）は0のままで、変更は3つの色だけだったと切り分けられます。露出の自動補正や新しい調整画面を追加した変更ではありません。</p>
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>変更ファイルはAssets/Scenes/MainScene.unityの1つです。</li>
+      <li>更新された項目はm_AmbientSkyColor、m_AmbientEquatorColor、m_AmbientGroundColorです。</li>
+      <li>3項目ともRGBを変更し、アルファ値は1を維持しています。</li>
+      <li>環境光の強さとモードは、このコミットでは変更していません。</li>
+    </ul>
+    <h2>ほかにも進んだこと・補足</h2>
+    <p>期間内のコミットはこの修正のみです。UIや背景制作などの未コミット変更はありますが、この期間に完成したと確認できないため、今回の実績には含めていません。前日の静的背景VCIビルダーとは別の、Viewerの表示設定を扱う回です。</p>
+    <p>この記事で確認したのはコミット済みの設定差分です。Unityや実機を起動して修正前後の画面を比較する検証は行っていません。すべての背景やアバターで白飛びが解消したという保証ではありません。</p>
+    <h2>4コマの裏話</h2>
+    <p>まぶしさを眼鏡のせいだと思ったろひが、ルミナと画面を確かめ、最後に眼鏡へ謝ります。二人の会話は修正内容を伝えるための創作です。画面内のアバターの濃淡も説明用のイメージで、実際の比較キャプチャではありません。今回は要望から成功報告へ進む形ではなく、小さな勘違いを回収する展開にしました。</p>
+    <h2>まとめ</h2>
+    <p>今回の変更は、メインシーンの環境光の色3項目です。設定の差分を小さく絞り、Viewerの白飛びを修正する意図を明確に残しました。</p>
+    <p><strong>本日のひとこと：</strong> まぶしさを疑う前に、眼鏡を疑ってしまった。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
