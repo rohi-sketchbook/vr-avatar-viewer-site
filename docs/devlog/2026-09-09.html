@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>読み込む前に、下ごしらえ。VBG 2.2で背景ロードを見直した日 | VRAS 開発日記</title>
+  <meta name="description" content="背景を開くたびに行っていた画像の準備を、保存・変換するときへ。VBG 2.2では、描画に渡しやすいテクスチャ形式と、必要なリソースを順に読む仕組みを組み合わせ、背景の読み込み処理を見直しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-09.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="読み込む前に、下ごしらえ。VBG 2.2で背景ロードを見直した日 | VRAS 開発日記">
+  <meta property="og:description" content="背景を開くたびに行っていた画像の準備を、保存・変換するときへ。VBG 2.2では、描画に渡しやすいテクスチャ形式と、必要なリソースを順に読む仕組みを組み合わせ、背景の読み込み処理を見直しました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-09.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-09-comic.png">
+  <meta property="og:image:width" content="1225">
+  <meta property="og:image:height" content="1284">
+  <meta property="og:image:alt" content="画像の下ごしらえを変換時へ移し、必要なカードを順に渡すとルミナのハサミが出番を失う4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="読み込む前に、下ごしらえ。VBG 2.2で背景ロードを見直した日">
+  <meta name="twitter:description" content="背景を開くたびに行っていた画像の準備を、保存・変換するときへ。VBG 2.2では、描画に渡しやすいテクスチャ形式と、必要なリソースを順に読む仕組みを組み合わせ、背景の読み込み処理を見直しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-09-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VRAS</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.09.09 / Development Log</div>
+    <h1>読み込む前に、下ごしらえ。VBG 2.2で背景ロードを見直した日</h1>
+    <p class="lead">背景を開くたびに行っていた画像の準備を、保存・変換するときへ。VBG 2.2では、描画に渡しやすいテクスチャ形式と、必要なリソースを順に読む仕組みを組み合わせ、背景の読み込み処理を見直しました。</p>
+    <div class="notice">記事種別はdevelopment。集計期間は2026-09-08 03:00:00 JST〜2026-09-09 02:59:59 JST。参照ブランチはmain、終了時点のHEADは352855644e706e805d39ab0f1ee89de0c694c0dc（VBG 2.2読み込み高速化を実装）。対象は1コミット、35ファイル、3,146行追加・616行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+    <p><img src="../assets/images/devlog-2026-09-09-comic.png" alt="画像の下ごしらえを変換時へ移し、必要なカードを順に渡すとルミナのハサミが出番を失う4コマ漫画" width="1225" height="1284" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%82%80%E5%89%8D%E3%81%AB%E3%80%81%E4%B8%8B%E3%81%94%E3%81%97%E3%82%89%E3%81%88%E3%80%82VBG+2.2%E3%81%A7%E8%83%8C%E6%99%AF%E3%83%AD%E3%83%BC%E3%83%89%E3%82%92%E8%A6%8B%E7%9B%B4%E3%81%97%E3%81%9F%E6%97%A5+%7C+VRAS+%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-09.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+    <h2>背景を開く前に、できる準備がある</h2>
+    <p>背景データには、形だけでなく、表面の画像や焼き込まれた光なども含まれます。保存された画像を、そのまま描画へ渡せるとは限りません。今回の主題は、その準備を毎回のロードへ集中させず、変換時に済ませられる処理を前へ移すことです。</p>
+    <h2>テクスチャを、描画に渡しやすい形で保存</h2>
+    <p>VBG 2.2は、GPUへ転送するためのテクスチャ容器「VRTX」を使います。材質用画像では、色空間や法線マップとしての用途、縮小表示用画像の有無に合わせて変換します。これにより、生成したデータを読むときにPNGやJPEGを毎回復号して、縮小表示用画像を作り直す処理を避ける構成になりました。</p>
+    <p>焼き込まれた光の画像（ライトマップ）もVRTXへそろえます。Windows側の書き出しでは、条件が合えば光の色にBC6H、方向や影のマスクにBC7というGPU向け圧縮を使います。圧縮できない場合も、非圧縮のデータをVRTXへ収めます。すべての環境で同じ圧縮率になるという意味ではありません。</p>
+    <h2>全部を抱えず、必要なリソースから読む</h2>
+    <p>読み込み側には、VBG内の必要な項目を取り出す共通Readerを追加しました。ファイルを読む処理と、内容が想定どおりか調べるSHA-256の計算を同じ読み取りで進めます。大型リソースを一式まとめて保持する方式から、必要に応じて読み出す方式へ整理した点が重要です。</p>
+    <p>一方で、メモリ使用量がゼロになるわけではありません。読み出す項目ごとのバイト配列は確保し、小さな項目は再利用用キャッシュにも保持します。コード上のキャッシュ対象は1項目32 MiB以下、全体上限は128 MiBです。これは実行時の総メモリ上限や測定結果ではなく、このReaderのキャッシュ設定値です。</p>
+    <h2>なぜ形式も一緒に変えるのか</h2>
+    <p>保存側だけが新しい形式を出しても、読み込み側が理解できなければ使えません。今回の変更ではViewer側のReader、Writerと外部Unity Editor用Converterをrevision 2へそろえています。現行Readerは旧revision 0/1を入力対象にしないため、古いVBGは元のUnity SceneやPrefabからVBG 2.2へ再変換する必要があります。</p>
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>VBGの版数はvbgVersion=2、vbgRevision=2。拡張子は.vbgのままです。</li>
+      <li>VRTXは寸法、形式、ミップ数などの情報と、GPUへ渡す画像データをまとめます。</li>
+      <li>共通Readerは必要なZIP項目を読み出し、その読み取りと同時にハッシュを検証します。</li>
+      <li>全リソースの一括保持を避ける設計と、上限付きキャッシュによる再利用を組み合わせています。</li>
+      <li>圧縮の可否や入力内容によって処理量は変わります。今回の記事では何秒・何倍といった高速化の実測値は示しません。</li>
+    </ul>
+    <h2>ほかにも進んだこと・補足</h2>
+    <p>同じコミットでは、ライトマップを直接適用できない場合の間接光の色を変換時に事前計算する経路や、内部Cubemapの保存形式、関連する検証コードも更新されています。読み込み時の仕事を減らす方向で、背景に付随する処理も見直した変更です。</p>
+    <p>この記事は集計終了時点のコミット済みソースと仕様書に基づきます。この日記制作中にUnityの実行、性能計測、追加されたテストの実行は行っていません。未コミットのシーン、アセット、UIなどは今回の実績に含めていません。</p>
+    <h2>4コマの裏話</h2>
+    <p>ルミナが読み込みのたびに画像を切りそろえようとするところへ、ろひが準備済みのカードを差し出します。必要なカードから描画側へ渡し、最後はルミナのハサミが出番を失う寸劇です。カードやハサミは処理の役割を伝える比喩で、実際の操作画面や速度比較ではありません。今回は原因探しではなく、仕事を前の工程へ移したことで小道具が余る展開にしました。</p>
+    <h2>まとめ</h2>
+    <p>VBG 2.2では、変換時のテクスチャ準備と、必要に応じたリソース読み出しを組み合わせました。読み込みだけで頑張るのではなく、保存側から仕事の配分を変える高速化です。</p>
+    <p><strong>本日のひとこと：</strong> 下ごしらえが済んでいたら、ハサミはお留守番。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
