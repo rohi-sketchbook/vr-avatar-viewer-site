@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>好みは別に、背景はそのまま。材質設定の保存先を見直した日 | VRAS 開発日記</title>
+  <meta name="description" content="背景パーツを水面にしたときの調整内容を、元のVBGを書き換えずに保存するよう変更しました。同じ背景IDと内容の版に結び付けて、ユーザー設定として読み戻します。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-10.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="好みは別に、背景はそのまま。材質設定の保存先を見直した日 | VRAS 開発日記">
+  <meta property="og:description" content="背景パーツを水面にしたときの調整内容を、元のVBGを書き換えずに保存するよう変更しました。同じ背景IDと内容の版に結び付けて、ユーザー設定として読み戻します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-10.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-10-comic.png">
+  <meta property="og:image:width" content="1230">
+  <meta property="og:image:height" content="1278">
+  <meta property="og:image:alt" content="保存後も元のVBGが変わらず首をかしげるルミナに、ろひが別保存の設定メモを示し、変わらないことこそ成功だと納得する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="好みは別に、背景はそのまま。材質設定の保存先を見直した日">
+  <meta name="twitter:description" content="背景パーツを水面にしたときの調整内容を、元のVBGを書き換えずに保存するよう変更しました。同じ背景IDと内容の版に結び付けて、ユーザー設定として読み戻します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-10-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VRAS</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.09.10 / Development Log</div>
+    <h1>好みは別に、背景はそのまま。材質設定の保存先を見直した日</h1>
+    <p class="lead">背景パーツを水面にしたときの調整内容を、元のVBGを書き換えずに保存するよう変更しました。同じ背景IDと内容の版に結び付けて、ユーザー設定として読み戻します。</p>
+    <div class="notice">記事種別はdevelopment。集計期間は2026-09-09 03:00:00 JST〜2026-09-10 02:59:59 JST。参照ブランチはmain、終了時点のHEADはad9a56cac7442530f0bca2393091720bdc7238d4（VRAS Runtime APIとMCP操作仕様を拡張）。対象は14コミット。期間の始点と終点の差分は174ファイル、4,703行追加・2,587行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+    <p><img src="../assets/images/devlog-2026-09-10-comic.png" alt="保存後も元のVBGが変わらず首をかしげるルミナに、ろひが別保存の設定メモを示し、変わらないことこそ成功だと納得する4コマ漫画" width="1230" height="1278" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E5%A5%BD%E3%81%BF%E3%81%AF%E5%88%A5%E3%81%AB%E3%80%81%E8%83%8C%E6%99%AF%E3%81%AF%E3%81%9D%E3%81%AE%E3%81%BE%E3%81%BE%E3%80%82%E6%9D%90%E8%B3%AA%E8%A8%AD%E5%AE%9A%E3%81%AE%E4%BF%9D%E5%AD%98%E5%85%88%E3%82%92%E8%A6%8B%E7%9B%B4%E3%81%97%E3%81%9F%E6%97%A5+%7C+VRAS+%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-10.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+    <h2>見た目を調整しても、元の背景は保ちたい</h2>
+    <p>背景の一部を水面にして、波の強さや透明度を自分の撮影に合わせる。こうした調整には、背景そのものと、使う人の好みという二つの情報があります。今回の主題は、この二つの保存先を分けたことです。水面化自体を新しく加えたのではなく、調整内容を残す仕組みを変更しました。</p>
+    <h2>VBGの中を書き換える保存から、ユーザー設定へ</h2>
+    <p>これまでの保存処理は、背景ファイルであるVBGの中へ材質設定を書き込み、ファイルを置き換えていました。今回の変更では、設定をアプリのユーザー設定フォルダーへJSON形式で保存します。元のVBGを組み直す処理は、この保存経路から取り除きました。</p>
+    <p>この分離は、内蔵ライブラリから展開した背景にも関わります。展開先は作り直せるキャッシュなので、そこへ利用者の調整を直接書き込むと、元データと個人設定の境界が曖昧になります。背景は背景のまま保ち、好みの設定を別に残す構成へそろえました。</p>
+    <h2>同じ背景の、同じ版にだけ読み戻す</h2>
+    <p>保存した設定には、背景を識別するIDと、その内容の版を記録します。背景を読み込むときは、この組み合わせに対応するユーザー設定を探し、見つかればVBG内の既定設定より優先して使います。</p>
+    <p>一方、背景を更新して内容の版が変わった場合は、以前の設定を自動では引き継ぎません。更新前後で対象パーツの対応が同じとは限らないためです。保存ファイルの識別情報が一致しない場合や読み出せない場合も、VBG内の既定設定へ戻る経路を用意しています。版をまたいだ設定移行は、今回の実装には含まれません。</p>
+    <h2>「全部解除した」も、保存する情報</h2>
+    <p>設定が一つもない状態と、設定ファイルがない状態は、意味が異なります。ユーザーがすべての上書きを解除して保存した場合は、空の設定を優先します。これにより、次に開いたときにVBG側の材質上書きが復活するのを抑えます。何も指定しないという選択も、きちんと残す変更です。</p>
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li>保存先は <code>UserData/Settings/BackgroundMaterialOverrides/</code>。VBG本体や内蔵ライブラリの展開キャッシュへは書き戻しません。</li>
+      <li>設定を結び付けるキーは <code>vbgId</code> と <code>contentRevision</code>。ファイル名はこの組み合わせのハッシュから作ります。</li>
+      <li>JSONには識別情報と材質設定を収め、既存の <code>AtomicFileStore</code> 経由で書き込みます。</li>
+      <li>読み込み側も変更し、外部設定を解決してから材質上書きの実行処理へ渡します。</li>
+      <li>回帰テストには、保存前後のVBGのバイト列が変わらないこと、設定の読み戻し、空の設定が既定値に優先することを確認する処理を追加しました。</li>
+    </ul>
+    <h2>ほかにも進んだこと・補足</h2>
+    <p>同じ期間には、アイテム・機材一覧のファイル探索の非同期化、背景読み込みを中断する際の後始末、Unityのテーマプレビューをシーン保存前に戻す処理も入りました。VRC Constraintの参照先がUnity特有の「見かけ上のnull」になったときの代替先選択も修正しています。</p>
+    <p>前回取り上げたVBG読み込み・出力の追加最適化や、EditorメニューのVRASへの統一も進みました。Runtime API／MCPについて、今回のコミットから確認できるのは仕様書の追加・拡張です。未コミットの関連コードを、完成済みの操作機能としては扱っていません。</p>
+    <p>この記事は集計終了時点のコミット済みソースと仕様書に基づきます。この日記制作中にUnityの実行、実機確認、性能計測、回帰テストの実行は行っていません。テストについて述べた箇所は、追加された検査内容の紹介です。</p>
+    <h2>4コマの裏話</h2>
+    <p>保存できたと喜ぶろひの横で、ルミナが「元のVBGが変わっていない」と気づきます。けれど、それこそが今回の狙い。設定は別に保存されていて、最後は「変わらないのが成功」と納得する寸劇にしました。封筒とメモは保存先の違いを表す比喩で、実際の操作画面や検証の実録ではありません。</p>
+    <h2>まとめ</h2>
+    <p>背景の材質設定を、VBGの書き換えからユーザー設定への保存に変更しました。元の背景を保ち、調整は同じ背景・同じ版へ読み戻す。見た目の自由と、保存するデータの境界を両立させるための見直しです。</p>
+    <p><strong>本日のひとこと：</strong> 変わっていないことが、成功のしるしになる日もある。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
