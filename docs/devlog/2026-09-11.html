@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>足切れを、失敗と決めつけない。AIの構図チェックを広げた日 | VRAS 開発日記</title>
+  <meta name="description" content="AIへ撮影を頼むためのMCP操作に、画面内の位置や欠け、遮蔽物を調べる手がかりを加えました。バストアップなら足が写らないのは自然なこと。構図の意図を考えながら、次の調整を判断できるようにする変更です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-11.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="足切れを、失敗と決めつけない。AIの構図チェックを広げた日 | VRAS 開発日記">
+  <meta property="og:description" content="AIへ撮影を頼むためのMCP操作に、画面内の位置や欠け、遮蔽物を調べる手がかりを加えました。バストアップなら足が写らないのは自然なこと。構図の意図を考えながら、次の調整を判断できるようにする変更です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-11.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-11-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="足が画面外にあると心配するルミナに、ろひがバストアップの撮影意図を示し、足切れを一律に減点しないと納得した後、顔で勝負と張り切る4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="足切れを、失敗と決めつけない。AIの構図チェックを広げた日">
+  <meta name="twitter:description" content="AIへ撮影を頼むためのMCP操作に、画面内の位置や欠け、遮蔽物を調べる手がかりを加えました。バストアップなら足が写らないのは自然なこと。構図の意図を考えながら、次の調整を判断できるようにする変更です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-11-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../">VRAS</a>
+    <nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav>
+  </div>
+</header>
+<main class="container">
+  <article class="article">
+    <div class="eyebrow">2026.09.11 / Development Log</div>
+    <h1>足切れを、失敗と決めつけない。AIの構図チェックを広げた日</h1>
+    <p class="lead">AIへ撮影を頼むためのMCP操作に、画面内の位置や欠け、遮蔽物を調べる手がかりを加えました。バストアップなら足が写らないのは自然なこと。構図の意図を考えながら、次の調整を判断できるようにする変更です。</p>
+    <div class="notice">記事種別はdevelopment。集計期間は2026-09-10 03:00:00 JST〜2026-09-11 02:59:59 JST。参照ブランチはmain、終了時点のHEADはa87372d6be7fb6e6b1834c4a4f518b8121a35701（VRAS MCPに自律観測機能を追加）。対象は8コミット。期間の始点と終点の差分は62ファイル、13,647行追加・107行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+    <p><img src="../assets/images/devlog-2026-09-11-comic.png" alt="足が画面外にあると心配するルミナに、ろひがバストアップの撮影意図を示し、足切れを一律に減点しないと納得した後、顔で勝負と張り切る4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+    <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E8%B6%B3%E5%88%87%E3%82%8C%E3%82%92%E3%80%81%E5%A4%B1%E6%95%97%E3%81%A8%E6%B1%BA%E3%82%81%E3%81%A4%E3%81%91%E3%81%AA%E3%81%84%E3%80%82AI%E3%81%AE%E6%A7%8B%E5%9B%B3%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E3%82%92%E5%BA%83%E3%81%92%E3%81%9F%E6%97%A5+%7C+VRAS+%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-11.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+    <h2>「画面からはみ出た」だけでは決められない</h2>
+    <p>全身を撮るつもりなら、足先まで入っているかを確かめたい。一方、胸から上を写すバストアップでは、足が画面外にあるのが普通です。同じ「足が写っていない」という状態でも、撮りたい写真によって意味が変わります。</p>
+    <p>今回の主題は、AIが撮影を操作するときに、こうした違いを判断する材料を返せるようにしたことです。前回は仕様書段階として紹介したRuntime API／MCPに、期間内のコミットで操作コードと撮影支援が入りました。さらに、構図を観測する入口と返却情報を広げています。</p>
+    <h2>操作を頼む入口に、確かめる入口も</h2>
+    <p>MCPは、AI側からアプリの機能を呼び出すための窓口です。VRASの内部状態を直接書き換えさせるのではなく、アプリが用意した操作を通してアバターや撮影用カメラを扱います。</p>
+    <p>撮影では、カメラを動かした後に「主役はどこにいるか」「頭が欠けていないか」「何かに遮られていないか」を確かめる必要があります。新しい構図解析の入口は、画面上でアバターが占める範囲、中心からのずれ、頭や足の欠け、顔の位置に関する情報などを返します。操作した結果を確認して、次の調整へつなげるための材料です。</p>
+    <h2>足切れの情報は残し、一律の減点には使わない</h2>
+    <p>構図解析には、主役が画面に収まっているかを大まかに評価するスコアもあります。ただし、その共通スコアでは、足や体が切れていること自体を減点に使いません。バストアップや顔のアップまで、すべて全身写真の基準で評価してしまうのを避けるためです。</p>
+    <p>足が切れているかを示す情報は、結果から消していません。全身撮影を指示したAI側なら、その情報を見て撮り直しを判断できます。アプリが撮影意図を自動で理解する仕組みではなく、共通の評価と、撮影意図に応じた判断を分けた設計です。高いスコアだけで、希望どおりの写真と決まるわけでもありません。</p>
+    <h2>遮られ方を調べるにも、得意不得意がある</h2>
+    <p>今回追加した遮蔽物の確認は、カメラから顔・胸・腰などの代表点へ線を飛ばし、途中に衝突判定用の形状があるかを調べます。アバター自身やカメラ自身の形状を除き、調べた点のうち何点が遮られているかを返します。</p>
+    <p>これは画像を見て意味を理解する処理ではありません。透明な物体は見た目と判定が一致しないことがあり、衝突判定のない物体や、髪で目が隠れるような細かい見え方も、この結果だけでは確認できません。構図の数値を手がかりにしつつ、必要ならプレビュー画像でも確かめる、という使い方を想定しています。</p>
+    <h2>技術的なポイント</h2>
+    <ul>
+      <li><code>camera.check_frame</code> の返却情報を拡張し、同じ評価処理を呼ぶ <code>camera.get_frame_analysis</code> を追加しました。観測用ツールとして読取専用に登録しています。</li>
+      <li>追加した主な情報は、画面内の矩形 <code>subjectScreenRect</code>、中心からのずれ <code>centerOffset</code>、遮蔽の目安 <code>physicsOcclusion</code>、共通スコア <code>safeFrameScore</code> です。既存の <code>headClipped</code> や <code>feetClipped</code> も残ります。</li>
+      <li>共通スコアは、カメラ前方にいるか、顔の位置、頭の欠け、占有率、中心からのずれ、遮蔽を組み合わせます。意図的に下半身を切る構図を考慮し、足・体の欠けそのものは減点しません。</li>
+      <li>遮蔽の確認はPhysicsのRaycastを使う近似です。透明度や画像の意味を判定する機能とは分けています。</li>
+      <li>新しい観測ツールが登録され、読取専用・状態を変更しない操作として宣言されていることを確かめるテストコードも追加されました。</li>
+    </ul>
+    <h2>ほかにも進んだこと・補足</h2>
+    <p>同じ観測機能の追加では、現在のアプリが対応する機能の取得、管理対象の一覧や範囲、床の高さや配置候補の照会、現在のHumanoidポーズの評価も入りました。いずれも、AIが操作前後の判断材料を得るための入口です。ポーズ評価も近似的な診断で、人体の安定性やすべての形状の交差を保証するものではありません。</p>
+    <p>期間内には、MCPによるポーズ・撮影操作と動画制作の基盤、VASでHumanoidの骨を動かすモーションも追加されています。また、VRメニューの表示数やアバターの選択判定、VR環境エフェクトのHMD適用に関する修正もありました。</p>
+    <p>この記事は集計終了時点のコミット済みソースと仕様書に基づきます。日記制作中にUnityの実行、実機確認、動画撮影や性能計測は行っていません。追加されたテストコードの内容と、この実行でテストが成功したことは区別しています。未コミットのシーンや撮影処理の変更も、今回の成果には含めていません。</p>
+    <h2>4コマの裏話</h2>
+    <p>今回の4コマは、「足が画面の外」と心配するルミナへ、ろひが「今日はバストアップ」と返す短い撮影寸劇です。足切れを一律の減点にしない設計を会話にして、最後はろひの「じゃ、顔で勝負！」で締めました。撮影意図によって同じ観測結果の意味が変わるところが題材です。</p>
+    <p>会話や表情、画面の見本は説明のための創作です。実際の撮影記録、アプリの画面そのもの、自動調整に成功した証拠として描いたものではありません。</p>
+    <h2>まとめ</h2>
+    <p>撮影を任せるには、動かせることに加えて、動かした結果を確かめる手段が必要です。今回は構図の観測情報を増やし、意図的な切り取りを一律の失敗にしない評価へ広げました。AIが目的に合う写真へ近づけるための、判断材料を整えた一日です。</p>
+    <h2>本日のひとこと</h2>
+    <p>写っていないことにも、ちゃんと意図がある。</p>
+  </article>
+</main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
