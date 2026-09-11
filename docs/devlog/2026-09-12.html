@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>秒を数えず、準備がそろったら始める。AIディレクターの段取りを整えた日 | VRAS 開発日記</title>
+  <meta name="description" content="VRAS MCPに、固定秒数ではなくアバター・背景・シーケンスなどの状態を待つ入口と、撮影・シーケンスを扱うAIディレクター向けの観測・操作を加えました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-12.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="秒を数えず、準備がそろったら始める。AIディレクターの段取りを整えた日 | VRAS 開発日記">
+  <meta property="og:description" content="VRAS MCPに、固定秒数ではなくアバター・背景・シーケンスなどの状態を待つ入口と、撮影・シーケンスを扱うAIディレクター向けの観測・操作を加えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-12.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-12-comic.png">
+  <meta property="og:image:width" content="1230">
+  <meta property="og:image:height" content="1278">
+  <meta property="og:image:alt" content="ストップウォッチを持つルミナに、ろひが準備できた状態を待とうと伝え、アバター・背景・シーケンスの準備OKを確認して撮影開始する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="秒を数えず、準備がそろったら始める。AIディレクターの段取りを整えた日">
+  <meta name="twitter:description" content="VRAS MCPに、固定秒数ではなくアバター・背景・シーケンスなどの状態を待つ入口と、撮影・シーケンスを扱うAIディレクター向けの観測・操作を加えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-12-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.12 / Development Log</div>
+  <h1>秒を数えず、準備がそろったら始める。AIディレクターの段取りを整えた日</h1>
+  <p class="lead">AIが撮影を進めるとき、「3秒待つ」より「準備ができたら次へ」が確かです。VRAS MCPに、アバター・背景・シーケンスなどの状態を待つ入口と、撮影の段取りを組み立てるための観測・操作を加えました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-11 03:00:00 JST〜2026-09-12 02:59:59 JST。参照ブランチはmain、終了時点のHEADはdb4939022ef71e856375cd653a7460755fba971a（refactor: move AI pose models to local assets）。対象は7コミットです。集計開始直前のa87372d6be7fb6e6b1834c4a4f518b8121a35701からの差分は31ファイル、6,328行追加・227行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+  <p><img src="../assets/images/devlog-2026-09-12-comic.png" alt="ストップウォッチを持つルミナに、ろひが準備できた状態を待とうと伝え、アバター・背景・シーケンスの準備OKを確認して撮影開始する4コマ漫画" width="1230" height="1278" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E7%A7%92%E3%82%92%E6%95%B0%E3%81%88%E3%81%9A%E3%80%81%E6%BA%96%E5%82%99%E3%81%8C%E3%81%9D%E3%82%8D%E3%81%A3%E3%81%9F%E3%82%89%E5%A7%8B%E3%82%81%E3%82%8B%E3%80%82AI%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%82%BF%E3%83%BC%E3%81%AE%E6%AE%B5%E5%8F%96%E3%82%8A%E3%82%92%E6%95%B4%E3%81%88%E3%81%9F%E6%97%A5+%7C+VRAS+%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-12.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>待つ相手は、時計ではなく状態</h2>
+  <p>アバターや背景を読み込んだ直後、あるいはシーケンスや録画の準備中には、処理に必要な時間が毎回同じとは限りません。固定の秒数を置けば一見単純ですが、早すぎれば次の操作が受け付けられず、余裕を多く取りすぎれば待ち時間が積み重なります。</p>
+  <p>今回の拡張では、AIエージェントが固定のsleepを使う代わりに、<code>wait.until</code> と <code>operation.get_status</code> でRuntimeの状態を待てるようにしました。<code>avatar.ready</code>、<code>background.ready</code>、<code>sequence.prepared</code>、<code>sequence.ended</code>、<code>recording.stopped</code>、<code>scene.stable</code> といった条件を、次の操作へ進む合図として扱います。</p>
+  <h2>まず今のスタジオを見て、まとめて段取りを渡す</h2>
+  <p><code>scene.inspect</code> は、Runtimeの状態、アバターと背景、Photo Camera、管理対象ライト、エフェクト、VAS再生、Runtime動画、描画・サブシステムの診断を一度に観測する入口です。AIが内部の任意GameObjectやComponentを直接扱うのではなく、VRASが用意した範囲の情報から次の作業を判断します。</p>
+  <p>複数の独立した設定を順に送るために、<code>batch.execute</code> も追加しました。登録済みのVRAS操作を1〜32件順番に送れます。ただし、これはロールバック付きのトランザクションではありません。完了を待つ必要がある操作は、バッチを分けて状態待機を挟む設計です。</p>
+  <h2>撮影・ポーズ・シーケンスを、同じ段取りで扱う</h2>
+  <p>カメラには、複数アバターをまとめて収める <code>camera.frame_group</code>、構図を確かめる <code>camera.get_frame_analysis</code> や <code>shot.evaluate</code> などの入口があります。ポーズでは左右反転、IKターゲット、重心移動、視線、背骨曲線などの高水準操作を組み合わせます。</p>
+  <p>VASシーケンス側では、ドキュメント・トラック・キーの取得に加え、キーの追加・移動・削除・イージング設定、範囲の複製・時間スケール、検証、準備・再生・停止・録画という流れを扱えるようにしました。カメラを毎フレームMCPで動かすのではなく、生成した経路やキー列をシーケンスへ入れて再生する前提です。</p>
+  <h2>技術的なポイント</h2>
+  <ul>
+    <li><code>vras.get_capabilities</code> と <code>tools/list</code> で利用可能な操作を確認し、<code>scene.inspect</code> で現在のスタジオ状態を観測します。</li>
+    <li>非同期の準備・終了は <code>wait.until</code> と <code>operation.get_status</code> で追います。固定秒数は成功の根拠にしません。</li>
+    <li><code>batch.execute</code> は登録済み操作だけを対象にし、再帰実行や自動待機、ロールバックは行いません。</li>
+    <li>VASはキーと範囲の編集、検証、準備・再生・録画を分け、依存する完了は状態として確認します。</li>
+    <li>MCPはlocalhostに限定し、任意ファイルパス、任意Unity Object／Component／field、HMDカメラTransformを公開しない安全境界を保ちます。</li>
+  </ul>
+  <h2>ほかにも進んだこと・補足</h2>
+  <p>同じ期間には、VABの一括更新自動化の拡張と、AI画像ポーズ用モデルをビルド入力・ローカル資産として扱う整理も入りました。この記事の主題は、最も変更規模が大きく、読者に一つの流れとして伝えやすいAIディレクター向けの段取りです。</p>
+  <p>この記事は集計終了時点のコミット済みソースとコマンドリファレンスに基づきます。日記制作中にUnityの実行、実機確認、動画撮影、性能計測は行っていません。未コミットのシーン・撮影処理などは今回の成果に含めません。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は、急ぐルミナがストップウォッチで「3秒待つ」つもりになるところから始めました。ろひが「準備OK」の札を出し、アバター・背景・シーケンスの合図がそろってからカチンコを鳴らします。直近回の構図相談や保存先の発見とは違い、便利だった小道具をしまうことで「時計ではなく状態を待つ」意味を伝える寸劇です。会話と札は説明のための創作で、実際の操作画面や実行記録ではありません。</p>
+  <h2>まとめ</h2>
+  <p>AIに撮影の段取りを任せるには、操作の数だけでなく、いつ次へ進めるかを確かめる手段が要ります。VRAS MCPは観測、状態待機、バッチ、撮影・ポーズ・シーケンスの高水準操作を分け、準備がそろったことを確かめながら進める土台を広げました。</p>
+  <h2>本日のひとこと</h2>
+  <p>急がなくていい。合図がそろってから、始めよう。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
