@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>見えている景色で、撮ろう。撮影カメラの参照をそろえた日 | VRAS 開発日記</title>
+  <meta name="description" content="デスクトップの通常撮影・構図・アバター追従が、実際に見えているカメラを参照するよう整えました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-14.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="見えている景色で、撮ろう。撮影カメラの参照をそろえた日 | VRAS 開発日記">
+  <meta property="og:description" content="デスクトップの通常撮影・構図・アバター追従が、実際に見えているカメラを参照するよう整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-14.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-14-comic.png">
+  <meta property="og:image:width" content="1086">
+  <meta property="og:image:height" content="1448">
+  <meta property="og:image:alt" content="ろひとルミナがViewer CameraとCapture Cameraの選択を確認し、撮りたい景色と同じ向きをそろえる4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="見えている景色で、撮ろう。撮影カメラの参照をそろえた日">
+  <meta name="twitter:description" content="デスクトップの通常撮影・構図・アバター追従が、実際に見えているカメラを参照するよう整えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-14-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.14 / Development Log</div>
+  <h1>見えている景色で、撮ろう。撮影カメラの参照をそろえた日</h1>
+  <p class="lead">撮影で使うカメラは、画面で見ているカメラと同じであってほしいものです。VRASでは、デスクトップの撮影・構図・アバター追従が、実際に見えているカメラを参照するよう選択規則を整理しました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-13 03:00:00 JST〜2026-09-14 02:59:59 JST。参照ブランチはmain、終了時点のHEADは471a6f5fe9f937c83a75ad399856eb91dda294fb（ビルド時のShader登録とPlayerログ出力を最適化）。対象は15コミットです。集計開始直前からの差分は140ファイル、73,779行追加・78,063行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+  <p><img src="../assets/images/devlog-2026-09-14-comic.png" alt="ろひとルミナがViewer CameraとCapture Cameraの選択を確認し、撮りたい景色と同じ向きをそろえる4コマ漫画" width="1086" height="1448" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=見えている景色で、撮ろう。撮影カメラの参照をそろえた日%20%7C%20VRAS%20開発日記&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-14.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>見えているカメラを、撮影の基準に</h2>
+  <p>これまでデスクトップの通常操作では、ユーザーに見えていないMCP用Photo Cameraが参照先になる場面がありました。今回、通常のデスクトップではViewer Cameraを使うように選択をそろえました。撮影、画角、状態表示だけでなく、アバターの視線・顔追従や変形操作も、同じユーザー向けCapture Cameraを参照します。</p>
+  <h2>独立カメラが見えているときは、そちらを優先</h2>
+  <p>物理カメラを表示している場合は、そのCapture Cameraを優先します。つまり、通常はViewer Camera、独立した物理カメラを使っているときはそのカメラという、画面上の体験に沿った選択です。VRで独立カメラがない場合だけ、従来のPhoto Cameraへフォールバックします。</p>
+  <h2>選択規則を、3つの条件で確認</h2>
+  <p>回帰テストには、デスクトップで物理カメラがない場合に可視Viewer Cameraを使うこと、物理カメラがある場合にそれを使うこと、VRで独立カメラがない場合にPhoto Cameraを使うことを追加しました。ここで記しているのは期間内のコミット済みコードとテストコードの内容であり、日記制作中にUnity実行、VR実機、撮影結果の実測は行っていません。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>同じ期間には、ビルド時のShader登録とPlayerログ出力の最適化、PhysBone互換処理と回帰検証、VR起動バッチの現行exe名対応、描画プロファイル比較QAなども進みました。今回は、撮影体験に直結して伝えやすいカメラ参照の整理を主題にしています。</p>
+  <h2>4コマの裏話</h2>
+  <p>段ボールのフレームとカメラ小道具で、「見ている景色」と「使うカメラ」を同じ方向へ向ける話にしました。画面やアプリ操作の再現ではなく、選択規則を表すための小さな寸劇です。</p>
+  <h2>まとめ</h2>
+  <p>撮影の操作、構図、アバター追従が実際に見えているカメラを共有することで、ユーザーが意図した景色と処理の参照先がそろいます。独立カメラとVR時のフォールバックも含め、選択規則を明確にしました。</p>
+  <h2>本日のひとこと</h2>
+  <p>撮りたい景色を、ちゃんと見ているところから。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
