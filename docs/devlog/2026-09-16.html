@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PotaToonをVRASへ、既存の描画と共存させた日 | VRAS 開発日記</title>
+  <meta name="description" content="PotaToonのRuntime描画モードをVRASへ統合し、元Materialを守りながら既存のURP経路とSurface Effectを共存させる土台を整えました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-16.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="PotaToonをVRASへ、既存の描画と共存させた日 | VRAS 開発日記">
+  <meta property="og:description" content="PotaToonのRuntime描画モードをVRASへ統合し、元Materialを守りながら既存のURP経路とSurface Effectを共存させる土台を整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-16.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-16-comic.png">
+  <meta property="og:image:width" content="1241">
+  <meta property="og:image:height" content="1268">
+  <meta property="og:image:alt" content="ろひとルミナが、顔・衣装・濡れのレイヤーを分けて共存させる4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PotaToonをVRASへ、既存の描画と共存させた日">
+  <meta name="twitter:description" content="PotaToonのRuntime描画モードをVRASへ統合し、元Materialを守りながら既存のURP経路とSurface Effectを共存させる土台を整えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-16-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.16 / Development Log</div>
+  <h1>PotaToonをVRASへ、既存の描画と共存させた日</h1>
+  <p class="lead">新しい描画モードを足すときほど、これまで使えていた見た目や演出を置いていきたくありません。今回は、PotaToonをVRASのRuntime描画モードとして統合し、既存のURP経路やSurface Effectと共存させる土台を整えました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-15 03:00:00 JST〜2026-09-16 02:59:59 JST。参照ブランチはmain、終了時点のHEADは007e73e65479c25468d1573bb6c6c69a31d32e2f（Shader Tuning Labを追加）。対象は7コミットです。集計開始直前からの差分は70ファイル、6,386行追加・849行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+  <p><img src="../assets/images/devlog-2026-09-16-comic.png" alt="ろひとルミナが、顔・衣装・濡れのレイヤーを分けて共存させる4コマ漫画" width="1241" height="1268" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=PotaToon%E3%82%92VRAS%E3%81%B8%E3%80%81%E6%97%A2%E5%AD%98%E3%81%AE%E6%8F%8F%E7%94%BB%E3%81%A8%E5%85%B1%E5%AD%98%E3%81%95%E3%81%9B%E3%81%9F%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-16.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>描画モードは、元のMaterialを壊さない</h2>
+  <p>PotaToonは、VAB FormatやConverterへ焼き込むのではなく、Viewer Runtime側の描画モードとして扱います。切り替え時には元のMaterialを破壊せず、Runtime用のMaterialを生成します。髪・衣装・身体はGeneral、顔と白目はFace、瞳だけが独立したMaterialとして安全に判定できる場合はEyeとして扱います。</p>
+  <p>すべてを無理に変換しないことも大切です。Fur、Refraction、Gem、Overlayなど、近似で見た目を損ねやすいMaterialは元のMaterialへfallbackします。変換できることより、元の見た目を守ることを優先する方針です。</p>
+  <h2>既存のURP設定を、丸ごと入れ替えない</h2>
+  <p>統合ではPotaToon専用のURP Assetへ置き換えず、VRASの既存Universal Renderer Dataへ必要なRenderer Featureだけを追加します。PotaToonのCharacter/Environment Post ProcessingとCharacter Bloomは既定で無効にし、既存のBeautify 3 URP経路を保ちます。</p>
+  <p>PotaToonモードが使われていないときは、他にPotaToonCharacterが存在しない限りPotaToon用Featureを無効にします。使っていない間まで、不要なRenderer Passを毎Camera実行しないようにしています。</p>
+  <h2>濡れ・ステッカーは、別レイヤーで重ねる</h2>
+  <p>Surface Effectは描画Profileと分離しました。PotaToonの購入Shaderを直接変更せず、専用Overlay MaterialへFluid FlowのWetness・Sticker・Height RTを渡し、描画後に追加合成します。これにより、描画モードを切り替えてもFluid FlowのRTやバックエンドを保持したままMaterialの基準だけを切り替えられます。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>同じ期間には、Moeの濡れ表現と水鉄砲ステッカー、YumekaのPotaToon顔描画を修正しました。また、選択Materialの主要Propertyと全Shader Propertyを確認・編集し、Presetの保存・適用や絞り込みも行えるShader Tuning Labを追加しています。</p>
+  <h2>4コマの裏話</h2>
+  <p>衣装・顔・濡れのパーツを小さな舞台のレイヤーとして分け、顔だけが置いていかれないことと、Surface Effectを後から重ねることを表現しました。実際のアプリ画面やUnity実行、VR実機確認を再現したものではありません。</p>
+  <h2>まとめ</h2>
+  <p>PotaToonをVRASのRuntime描画モードとして迎え入れ、元Materialを守りながら既存のURP・ポストプロセス・Surface Effectと共存させる経路を整えました。描画を切り替えても、アバターの大切な顔や演出を置いていかないための一歩です。</p>
+  <h2>本日のひとこと</h2>
+  <p>新しい描き方にも、いつもの見た目を連れていこう。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
