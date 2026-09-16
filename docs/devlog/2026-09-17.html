@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：衣装も髪型も、見せたい組み合わせを呼び戻す | VRAS 開発日記</title>
+  <meta name="description" content="アバターのパーツ表示状態を名前付きプリセットとして保存し、撮影用や確認用の見せ方を呼び戻せるVRASの既存機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="avatar-part-visibility-presets">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-17.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：衣装も髪型も、見せたい組み合わせを呼び戻す | VRAS 開発日記">
+  <meta property="og:description" content="アバターのパーツ表示状態を名前付きプリセットとして保存し、撮影用や確認用の見せ方を呼び戻せる既存機能を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-17.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-17-comic.png">
+  <meta property="og:image:width" content="1230">
+  <meta property="og:image:height" content="1278">
+  <meta property="og:image:alt" content="ろひとルミナが衣装ラックのセット札でアバターパーツ表示プリセットを紹介する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：衣装も髪型も、見せたい組み合わせを呼び戻す">
+  <meta name="twitter:description" content="アバターのパーツ表示状態を名前付きプリセットとして保存・適用できる既存機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-17-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.17 / Feature Spotlight</div>
+  <h1>閑話休題：衣装も髪型も、見せたい組み合わせを呼び戻す</h1>
+  <p class="lead">撮影用、確認用、あるいはお気に入りの見せ方。アバターのパーツ表示状態を名前付きで残しておけば、毎回の組み立て直しを減らせます。今回は、現行VRASの既存機能「パーツ表示プリセット」を紹介します。</p>
+  <div class="notice">記事種別はfeature-spotlight。集計期間は2026-09-16 03:00:00 JST〜2026-09-17 02:59:59 JST、参照ブランチはmainです。終了時点のHEADは007e73e65479c25468d1573bb6c6c69a31d32e2f（Shader Tuning Labを追加）。期間内コミットは0件でした。Viewer作業ツリーの未コミット差分は実装日を確定できないため当日の実績へ含めず、紹介内容は集計終了時点で確認できた既存実装に基づきます。</div>
+  <p><img src="../assets/images/devlog-2026-09-17-comic.png" alt="ろひとルミナが衣装ラックのセット札でアバターパーツ表示プリセットを紹介する4コマ漫画" width="1230" height="1278" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E8%A1%A3%E8%A3%85%E3%82%82%E9%AB%AA%E5%9E%8B%E3%82%82%E3%80%81%E8%A6%8B%E3%81%9B%E3%81%9F%E3%81%84%E7%B5%84%E3%81%BF%E5%90%88%E3%82%8F%E3%81%9B%E3%82%92%E5%91%BC%E3%81%B3%E6%88%BB%E3%81%99%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-17.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>パーツごとの表示を、ひとつの見せ方として残す</h2>
+  <p>VRASのパーツ一覧では、アバターを構成するRendererごとの表示状態を切り替えられます。現在の状態を名前付きプリセットとして保存しておけば、あとから一覧で選び、その見せ方へ戻せます。</p>
+  <p>衣装やアクセサリーの確認、撮影向けの組み合わせなど、目的ごとに残しておけば、必要なパーツを毎回探して同じ切り替えを繰り返す必要がありません。</p>
+  <h2>探して、まとめて、必要なところだけ切り替える</h2>
+  <p>パーツ一覧には検索、一括表示、一括非表示があり、アバターの階層をたどりながら対象を探せます。複数のMaterialを使うRendererでは、Material slot単位の状態もプリセットに含めます。</p>
+  <p>「このモデルのこの見せ方」を細かく整えた状態を、ひとつの名前として持ち運ぶための仕組みです。</p>
+  <h2>残したセットは、あとから育てられる</h2>
+  <p>保存済みのプリセットは、名前変更、複製、お気に入り、並び替え、削除、現在の状態での上書きに対応します。削除は短時間内の再操作を求める方式なので、意図しない削除を避けるための一呼吸もあります。</p>
+  <p>アバターと内容の版に合わせたプリセット群を読み込み、今の表示状態を新しいセットとして保存したり、既存のセットを更新したりできます。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回はアプリ画面をそのまま描かず、衣装ラックのセット札で表現しました。「お気に入り」を留めたセットを選ぶと、必要な見せ方がすぐ戻る。最後は撮影用と確認用の札を増やしたくなる、ちょっとした余韻です。</p>
+  <h2>まとめ</h2>
+  <p>パーツ表示プリセットは、アバターのRendererやMaterial slotの表示状態を名前付きで保存し、あとから適用できる既存機能です。用途ごとの見せ方を残しておけば、確認や撮影の準備を自分のペースで進められます。</p>
+  <p><strong>本日のひとこと：</strong> 見せたい状態に、ちゃんと名前をつけよう。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
