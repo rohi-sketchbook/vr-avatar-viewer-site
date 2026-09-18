@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>撮影カメラにも、空模様を届ける日 | VRAS 開発日記</title>
+  <meta name="description" content="手動描画するデスクトップ撮影用カメラを環境描画の認識対象へ登録し、撮影する景色にも天候・環境表現が届く経路を整えました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-19.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="撮影カメラにも、空模様を届ける日 | VRAS 開発日記">
+  <meta property="og:description" content="手動描画するデスクトップ撮影用カメラを環境描画の認識対象へ登録し、撮影する景色にも天候・環境表現が届く経路を整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-19.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-19-comic.png">
+  <meta property="og:image:width" content="1244">
+  <meta property="og:image:height" content="1264">
+  <meta property="og:image:alt" content="ろひとルミナが撮影カメラにも雨のある景色を届ける4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="撮影カメラにも、空模様を届ける日">
+  <meta name="twitter:description" content="手動描画するデスクトップ撮影用カメラを環境描画の認識対象へ登録し、撮影する景色にも天候・環境表現が届く経路を整えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-19-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.19 / Development Log</div>
+  <h1>撮影カメラにも、空模様を届ける日</h1>
+  <p class="lead">撮影用に手動で描画するカメラにも、見えているシーンと同じ空模様を届けたい。今回は、環境描画がカメラを見つけられるよう、撮影カメラの登録経路を整えました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-18 03:00:00 JST〜2026-09-19 02:59:59 JST。参照ブランチはmain、終了時点のHEADは4af854e7814bcfee19911fc51ab739d4615d024b（撮影カメラをWeather Maker手動描画対象へ登録）。対象は5コミットです。集計開始直前のa876867f6b397a11ff64952804a09cde35407ff5からの差分は36ファイル、2,381行追加・165行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+  <p><img src="../assets/images/devlog-2026-09-19-comic.png" alt="ろひとルミナが撮影カメラにも雨のある景色を届ける4コマ漫画" width="1244" height="1264" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E6%92%AE%E5%BD%B1%E3%82%AB%E3%83%A1%E3%83%A9%E3%81%AB%E3%82%82%E3%80%81%E7%A9%BA%E6%A8%A1%E6%A7%98%E3%82%92%E5%B1%8A%E3%81%91%E3%82%8B%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-19.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>手動描画でも、環境から外さない</h2>
+  <p>デスクトップ用の撮影専用カメラは、通常のカメラ更新に任せず手動で描画します。そのためカメラ自体は無効のまま維持しますが、Weather Makerのように描画対象カメラを把握する環境システムからは、存在が見える必要があります。</p>
+  <p>そこで撮影用カメラを<code>StudioRenderCameraRegistry</code>へ登録するようにしました。新しく複製する経路だけでなく、既存の撮影カメラを使う経路や、すでに作成済みのカメラを返す経路でも登録します。カメラ管理者が破棄されるときには登録も解除します。</p>
+  <h2>見た目の役割と、描画の役割を分けたままに</h2>
+  <p>今回の変更は、撮影カメラを通常の有効なカメラへ戻すものではありません。手動描画という役割をそのままに、環境側が認識する対象だけへ加える整理です。これにより、撮影する景色と環境表現の接続を保ちながら、既存のカメラ制御へ余計な変更を持ち込みません。</p>
+  <h2>カメラ経路の前提を、回帰QAにも反映</h2>
+  <p>同じ期間に、撮影カメラを選ぶ経路の回帰QAも現行仕様へ更新しました。デスクトップでは可視のViewer Cameraを基本にし、独立した物理カメラがあるときはCapture Cameraを優先します。VRで独立カメラがない場合だけ、従来のPhoto Cameraをフォールバックとして使います。</p>
+  <p>撮影用カメラが無効のままであることと、登録一覧に含まれることを確認するテストも加えました。ここで記しているのは期間内のコミット済みコードとテストコードの内容です。日記制作中にUnity実行、VR実機、実際の撮影、性能計測は行っていません。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>同じ集計期間には、PotaToonの写真品質と顔描画の改善、PotaToon OITのVR Single Pass互換、全グラフィックス設定でForward+を標準描画経路にそろえる変更も入りました。今回は、撮影の景色へ環境表現をつなぐ小さく重要な経路を主題にしています。</p>
+  <h2>4コマの裏話</h2>
+  <p>雲と雨のモビールは環境描画、カメラ枠は撮影用カメラの比喩です。手動で扱うカメラも、同じ景色の仲間として見つけてもらう流れを小さな撮影セットで描きました。アプリ画面や実際の撮影結果を表したものではありません。</p>
+  <h2>まとめ</h2>
+  <p>手動描画する撮影用カメラを環境システムの認識対象へ登録し、撮影する景色にも空模様が届く経路を整えました。カメラごとの役割を保ったまま、撮影と環境描画の接続を確かめやすくしています。</p>
+  <h2>本日のひとこと</h2>
+  <p>撮りたい景色まで、きちんと届くように。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
