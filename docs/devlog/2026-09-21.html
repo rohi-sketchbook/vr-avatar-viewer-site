@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>箱を開けても、寄り道しない日 | VRAS 開発日記</title>
+  <meta name="description" content="UnityPackageからVABへの一括変換を、変換専用経路、欠損入力のスキップ、出力先の照合で安定化しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-21.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="箱を開けても、寄り道しない日 | VRAS 開発日記">
+  <meta property="og:description" content="UnityPackageからVABへの一括変換を、変換専用経路、欠損入力のスキップ、出力先の照合で安定化しました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-21.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-21-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがUnityPackageの箱をVAB保管棚へ仕分ける4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="箱を開けても、寄り道しない日">
+  <meta name="twitter:description" content="UnityPackageからVABへの一括変換を、変換専用経路、欠損入力のスキップ、出力先の照合で安定化しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-21-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.21 / Development Log</div>
+  <h1>箱を開けても、寄り道しない日</h1>
+  <p class="lead">UnityPackageから複数のアバターをVABへ変換するときは、ひとつずつ確かめながらも、余計な寄り道を増やしたくありません。今回は、変換だけを行う入口と、一括処理を止めにくくする確認経路を整えました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-20 03:00:00 JST〜2026-09-21 02:59:59 JST。参照ブランチはmain、終了時点のHEADは54be50ba14037a7f0d441ea24e1983b151f2b550（UnityPackage VAB一括変換を安定化）。対象は9コミットです。集計開始直前の0165706fe9e4a35379ddec55f403b426fec8cd0cからの差分は55ファイル、2,372行追加・78行削除です。期間内の実装と確認できない未コミット変更は除外しました。</div>
+  <p><img src="../assets/images/devlog-2026-09-21-comic.png" alt="ろひとルミナがUnityPackageの箱をVAB保管棚へ仕分ける4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E7%AE%B1%E3%82%92%E9%96%8B%E3%81%91%E3%81%A6%E3%82%82%E3%80%81%E5%AF%84%E3%82%8A%E9%81%93%E3%81%97%E3%81%AA%E3%81%84%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-21.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>変換のあとに、もう一度読み込まない</h2>
+  <p>これまでのUnityPackage変換は、VABを書き出したあとに、その生成物を通常のアバター経路で読み込み直していました。一括変換では変換結果のファイルが必要なので、今回、生成したアバターを再読込せずVABの保存先を返す変換専用の入口を加えました。</p>
+  <p>通常の読み込み経路は従来どおり使えます。一方で一括処理は、必要なVABを書き出すことへ集中できます。変換後は返されたパスが期待するライブラリの保存先と一致することを確認し、出力が一つだけあることを確かめてから完了として扱います。</p>
+  <h2>ない箱は、そこで通過する</h2>
+  <p>一括処理の対象に指定したUnityPackageがディスクにないとき、以前はそこで例外になり、残りの対象まで進みにくい状態でした。今回は見つからないパッケージをログへ残してスキップし、後ろにある対象の変換を続けるようにしました。</p>
+  <p>これは、存在しない入力を成功扱いにする変更ではありません。変換する対象だけを順番に処理し、実際に書き出せたものについては保存先を照合する、という役割分担です。</p>
+  <h2>途中の作業台も、最後に空ける</h2>
+  <p>バッチの実行中はUnityのアセンブリ再読み込みをロックし、処理の途中で環境が切り替わることを避けます。終わりには一時オブジェクトを破棄し、未使用アセットを解放して、次の処理へ持ち越さないようにしました。</p>
+  <p>この日記で記しているのは、集計期間内にコミットされたコードの内容です。日記制作時点でUnity実行、VR実機、性能計測は行っていません。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>同じ集計期間には、AdaptiveGIとVBG Colliderの自動生成、PhysBone 4.5 Legacy変換でのLimit Rotation Curve保持、PotaToon・Beautifyの状態復元と描画監査、Skyboxパノラマの継ぎ目補正なども入りました。今回は、複数のアバターを変換するときの道筋を短く確かめやすくする変更に焦点を当てています。</p>
+  <h2>4コマの裏話</h2>
+  <p>段ボール箱と保管棚はUnityPackageとVABの比喩です。空の棚は見つからない入力を、そのまま通り過ぎる矢印は変換専用経路を表しています。実際のアプリ画面や変換結果を再現したものではありません。</p>
+  <h2>まとめ</h2>
+  <p>UnityPackageからVABへの一括変換で、生成物の再読込を省く変換専用経路を用意し、欠けた入力をスキップしながら後続を続けられるようにしました。書き出したVABは期待した保存先と出力数を確認し、バッチの前後では再読み込みと一時リソースも整理します。</p>
+  <h2>本日のひとこと</h2>
+  <p>行き先が確かなら、道のりはもっと軽くなる。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
