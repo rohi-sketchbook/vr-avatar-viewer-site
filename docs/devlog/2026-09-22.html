@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>光の受け皿を、パスごとに選ばない日 | VRAS 開発日記</title>
+  <meta name="description" content="AdaptiveGIの共通ブリッジがサンプラを持つようにし、lilToonとPotaToonの描画パス別依存を外しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-22.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="光の受け皿を、パスごとに選ばない日 | VRAS 開発日記">
+  <meta property="og:description" content="AdaptiveGIの共通ブリッジがサンプラを持つようにし、lilToonとPotaToonの描画パス別依存を外しました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-22.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-22-comic.png">
+  <meta property="og:image:width" content="1086">
+  <meta property="og:image:height" content="1448">
+  <meta property="og:image:alt" content="ろひとルミナが共通の光源から複数の小さな舞台を照らす4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="光の受け皿を、パスごとに選ばない日">
+  <meta name="twitter:description" content="AdaptiveGIの共通ブリッジがサンプラを持つようにし、lilToonとPotaToonの描画パス別依存を外しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-22-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.22 / Development Log</div>
+  <h1>光の受け皿を、パスごとに選ばない日</h1>
+  <p class="lead">アバターShaderへ間接光をつなぐとき、描画パスごとに違う道具を前提にすると、通れない道が生まれます。今回はAdaptiveGIの橋渡しを共通化し、lilToonとPotaToonの各パスが必要な情報だけを渡せるように整えました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-21 03:00:00 JST〜2026-09-22 02:59:59 JST。参照ブランチはmain、終了時点のHEADは9c4eb64bd3fcbf52eeb1a5b3b953f353761277cf（AdaptiveGI avatar shader integrationの修正）。対象は1コミット、7ファイル、458行追加・57行削除です。未コミット差分は実績へ含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-09-22-comic.png" alt="ろひとルミナが共通の光源から複数の小さな舞台を照らす4コマ漫画" width="1086" height="1448" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E5%85%89%E3%81%AE%E5%8F%97%E3%81%91%E7%9A%BF%E3%82%92%E3%80%81%E3%83%91%E3%82%B9%E3%81%94%E3%81%A8%E3%81%AB%E9%81%B8%E3%81%B0%E3%81%AA%E3%81%84%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-22.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>パスごとの持ち物にしない</h2>
+  <p>AdaptiveGIをlilToonとPotaToonの描画へ足すとき、従来の呼び出しには各パスのサンプラが渡されていました。しかしアウトラインや透明などのパスには、同じサンプラが常にあるとは限りません。そこで共有の<code>AdaptiveGICompatibility.hlsl</code>がサンプラを所有し、呼び出し側はワールド座標と法線だけを渡す二引数の橋渡しへ改めました。</p>
+  <h2>既存の統合も安全に更新する</h2>
+  <p>lilToonのパッチャーは、共通マクロファイルがある場合だけパッチし、既に印を持つ古い三引数の呼び出しは二引数へ更新します。PotaToonでも通常・目・宝石・Simple Toonのそれぞれを同じ方針へそろえました。未知のレイアウトへ無理に書き込むのではなく、期待するアンカーを確認してから処理します。</p>
+  <h2>回帰テストを追加</h2>
+  <p>PotaToonの公式トラブルシューティング向けテストを追加し、対象パスと、<code>sampler_MainTex</code>や<code>sampler_linear_mirror</code>への依存を残さないことを検査します。既存のパッチ済みソースを更新する経路もテスト対象です。</p>
+  <p>この日記で記しているのは集計期間内にコミットされたコードの内容です。日記制作時点でUnity実行、VR実機、性能計測、リリース確認は行っていません。</p>
+  <h2>4コマの裏話</h2>
+  <p>小さなランタンを同じ配電箱へつなぐ場面は、パスごとのサンプラを渡す代わりに共通ブリッジがサンプラを持つ設計の比喩です。実際のアプリ画面やベンチマークを表していません。</p>
+  <h2>まとめ</h2>
+  <p>AdaptiveGIの共通ブリッジへサンプラを集め、lilToonとPotaToonの各描画パスはワールド座標と法線だけを渡す形にそろえました。既存統合の更新と対象パスのテストも加え、パス固有のサンプラに依存しない道筋を整えています。</p>
+  <h2>本日のひとこと</h2>
+  <p>同じ光なら、受け皿もひとつでいい。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
