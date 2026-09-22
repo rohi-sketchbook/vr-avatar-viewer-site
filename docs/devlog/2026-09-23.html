@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tabで、次のアバターへ進む日 | VRAS 開発日記</title>
+  <meta name="description" content="デスクトップでTabキーにより読み込み済みアバターを順番に選択し、破棄済み候補を飛ばして先頭へ循環できるようにしました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-23.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="Tabで、次のアバターへ進む日 | VRAS 開発日記">
+  <meta property="og:description" content="デスクトップでTabキーにより読み込み済みアバターを順番に選択し、破棄済み候補を飛ばして先頭へ循環できるようにしました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-23.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-23-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがTabキーで順番にアバターを選び、空席を飛ばして循環する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tabで、次のアバターへ進む日">
+  <meta name="twitter:description" content="デスクトップでTabキーにより読み込み済みアバターを順番に選択し、破棄済み候補を飛ばして先頭へ循環できるようにしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-23-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.23 / Development Log</div>
+  <h1>Tabで、次のアバターへ進む日</h1>
+  <p class="lead">複数のアバターを並べたとき、次に見たい一人へ移る操作は何度も繰り返します。今回はデスクトップでTabキーを押すと、読み込み済みアバターを順番に選択できるようにしました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-22 03:00:00 JST〜2026-09-23 02:59:59 JST。参照ブランチはmain、終了時点のHEADはe5327dcd609a7f3649872f7461092e3b1c0a2def（Add avatar Tab cycling and clear stale photo screen effects）。対象は3コミット、22ファイル、378行追加・1287行削除です。未コミット差分は実績へ含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-09-23-comic.png" alt="ろひとルミナがTabキーで順番にアバターを選び、空席を飛ばして循環する4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=Tab%E3%81%A7%E3%80%81%E6%AC%A1%E3%81%AE%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC%E3%81%B8%E9%80%B2%E3%82%80%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-23.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>次の一人へ、Tabで進む</h2>
+  <p>複数のアバターを並べていると、次に見たい一人へ選択を移すための操作が繰り返しになります。今回、デスクトップ操作ではTabキーで次のアバターを選べるようにしました。最後の一人まで進むと先頭へ戻るため、同じ操作で一周できます。</p>
+  <h2>いまの操作を邪魔しない</h2>
+  <p>文字を入力している最中、キー割り当てを変更している最中、または選択をロックしている間には、この切替は動きません。Tabを使う場面と入力・設定を扱う場面が重ならないよう、既存の操作状態を確認してから選択を移します。</p>
+  <h2>消えたアバターを飛ばす</h2>
+  <p>一覧に残っていても、すでに破棄されたアバターのルートは選択対象にしません。候補を順番に見ながら有効なものだけを選び、途中に消えたものがあっても次のアバターへ進めます。先頭からの選択、順送り、末尾から先頭への循環、破棄済み候補のスキップはエディターテストで確認する対象に加えました。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>同じ集計期間には、VBG書き出しとライブラリUIの静的監査で見つかった不具合を修正しました。また、Viewer・Preview・Captureの描画で前の要求の画面効果が残らないよう、描画パスを使う前に状態を消去する処理と回帰テストを追加しています。不要になったEditorメニューの整理も行いました。</p>
+  <p>この日記で記しているのは集計期間内にコミットされたコードの内容です。日記制作時点でUnity実行、VR実機、性能計測、リリース確認は行っていません。</p>
+  <h2>4コマの裏話</h2>
+  <p>順番に呼ばれる三つの椅子でTabによる選択循環を表現しました。途中の空席を飛ばす場面は、破棄済みアバターを選ばない処理の比喩です。実際のアプリ画面や実行結果ではありません。</p>
+  <h2>まとめ</h2>
+  <p>Tabキーで読み込み済みアバターを順番に選び、末尾から先頭へ戻れるようにしました。文字入力・キー割り当て変更・選択ロック中の操作を守り、破棄済み候補は飛ばします。</p>
+  <h2>本日のひとこと</h2>
+  <p>見たい一人へ、軽やかに。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
