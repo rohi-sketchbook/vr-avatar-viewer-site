@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>スタジオを、ひと続きの入口にした日 | VRAS 開発日記</title>
+  <meta name="description" content="Desktop版Studioを、背景ライブラリ・シーン内・ライト・環境エフェクト・ショーの5つの同列タブへ整理し、背景の二重階層を解消しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-28.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="スタジオを、ひと続きの入口にした日 | VRAS 開発日記">
+  <meta property="og:description" content="Desktop版Studioを、背景ライブラリ・シーン内・ライト・環境エフェクト・ショーの5つの同列タブへ整理し、背景の二重階層を解消しました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-28.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-28-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが同列に並んだ5つのスタジオ入口を見つける4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="スタジオを、ひと続きの入口にした日">
+  <meta name="twitter:description" content="Desktop版Studioを5つの同列タブへ整理し、背景の二重階層を解消しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-28-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.28 / Development Log</div>
+  <h1>スタジオを、ひと続きの入口にした日</h1>
+  <p class="lead">Desktop版のStudioは、背景を探す場所、シーン内で調整する場所、光や環境を整える場所、ショーを扱う場所へ、同じ高さの入口から進めるようになりました。背景だけがもう一段のタブを持っていた構成をほどき、Studioの作業を一列の5タブに整理した変更です。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-27 03:00:00 JST〜2026-09-28 02:59:59 JST。参照ブランチはmain、終了時点のHEADは393fcb6674e47612ee09dcfd35f4eede5fd4c94a（Unify Studio UI into five tabs）。対象は11コミットです。未コミット差分は実績へ含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-09-28-comic.png" alt="ろひとルミナが同列に並んだ5つのスタジオ入口を見つける4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%AA%E3%82%92%E3%80%81%E3%81%B2%E3%81%A8%E7%B6%9A%E3%81%8D%E3%81%AE%E5%85%A5%E5%8F%A3%E3%81%AB%E3%81%97%E3%81%9F%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-28.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>Studioを開いたら、まず背景ライブラリへ</h2>
+  <p>左のSidebarにある「スタジオ」から入るDesktopのStudio画面は、背景ライブラリを既定入口にしました。そこで背景を探し、読み込み済みの背景を扱いたいときは、すぐ隣の「シーン内」へ進めます。以前のように、背景の中でさらに「ライブラリ / シーン内」を選ぶ二重の階層にはしていません。</p>
+  <h2>5つの仕事を、同じ段に並べる</h2>
+  <p>Studioのコンテキストタブは「ライブラリ」「シーン内」「ライト」「環境エフェクト」「ショー」の5つです。旧「概要」タブを残さず、各作業の入口を同列にしました。背景のライブラリとシーン内背景、光源、環境表現、ショーを行き来するときに、どこが親画面でどこが子画面かを意識しなくてよい構成を目指しています。</p>
+  <h2>背景の一覧と調整を、同じ作業面に</h2>
+  <p>背景ライブラリとシーン内背景の操作は、DesktopのMainAreaを使う全面パネルへまとめました。特にシーン内背景では、読み込み済み背景の一覧と、位置・回転・スケールなどの背景Transform調整を同じ作業面で扱います。背景を選んだあと、調整だけのために別のInspectorを探す必要がない形です。</p>
+  <h2>構造の取り残しも検証する</h2>
+  <p>今回の変更ではUI prefab validatorも更新しました。新しいStudioの要素を要求しつつ、旧<code>BackgroundPage</code>や旧<code>BackgroundTabs</code>が残っていないことを確認する対象にしています。画面を一段にそろえる変更だからこそ、古い入口が混ざらないようにするための検証です。</p>
+  <h2>4コマの裏話</h2>
+  <p>二重だったドアが、5つの横並びのドアになる寸劇です。ドアの札はStudioの5タブ、同じ部屋にある背景棚と調整用イーゼルは、一覧とTransform調整を同じMainAreaで扱うことの比喩です。アプリ画面や実行結果そのものではありません。</p>
+  <h2>まとめ</h2>
+  <p>Desktop版のStudioは、背景ライブラリを既定入口にした「ライブラリ」「シーン内」「ライト」「環境エフェクト」「ショー」の一段5タブへ整理されました。背景の二重階層と旧概要を外し、シーン内背景の一覧と調整を同じ全面作業面へまとめた変更です。</p>
+  <h2>本日のひとこと</h2>
+  <p>入口がそろうと、次の作業へまっすぐ行ける。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
