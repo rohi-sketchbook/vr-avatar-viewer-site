@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>一枚の瞬間に、合図を添えた日 | VRAS 開発日記</title>
+  <meta name="description" content="写真撮影の開始時にCC0シャッター音を一回鳴らす処理を加え、音量設定と第三者ライセンス通知を整えました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-29.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="一枚の瞬間に、合図を添えた日 | VRAS 開発日記">
+  <meta property="og:description" content="写真撮影の開始時にCC0シャッター音を一回鳴らす処理を加え、音量設定と第三者ライセンス通知を整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-29.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-29-comic.png">
+  <meta property="og:image:width" content="1225">
+  <meta property="og:image:height" content="1284">
+  <meta property="og:image:alt" content="ろひとルミナが撮影に小さなシャッター音の合図を添える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="一枚の瞬間に、合図を添えた日">
+  <meta name="twitter:description" content="写真撮影の開始時にCC0シャッター音を一回鳴らす処理を加えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-29-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.29 / Development Log</div>
+  <h1>一枚の瞬間に、合図を添えた日</h1>
+  <p class="lead">写真を撮る瞬間に、小さく「撮れた」と伝わる音を添えました。撮影処理の直前に一度だけ鳴るシャッター音と、その扱いに必要な音量設定・ライセンス通知までを整えた変更です。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-28 03:00:00 JST〜2026-09-29 02:59:59 JST。参照ブランチはmain、終了時点のHEADはc994d34230ba52609203dc3430e3ae45248262f0（VRパーツ一覧の親行クリックを修正）。対象は10コミットです。未コミット差分は実績へ含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-09-29-comic.png" alt="ろひとルミナが撮影に小さなシャッター音の合図を添える4コマ漫画" width="1225" height="1284" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E4%B8%80%E6%9E%9A%E3%81%AE%E7%9E%AC%E9%96%93%E3%81%AB%E3%80%81%E5%90%88%E5%9B%B3%E3%82%92%E6%B7%BB%E3%81%88%E3%81%9F%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-29.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>撮影の直前に、一度だけ鳴らす</h2>
+  <p>写真撮影を開始するとき、実際のキャプチャ要求を送る直前にシャッター音を一回再生するようにしました。撮影中という状態表示だけでなく、押した瞬間の小さな合図を加える意図です。</p>
+  <h2>撮影専用の音源を用意する</h2>
+  <p>音源は<code>Resources/Audio/CameraShutter</code>から初期化時に読み込みます。再生中は撮影コントローラーの子に専用の<code>AudioSource</code>を用意し、空間化せず、ループさせずに一回だけ鳴らします。リスナーが一時停止中でもこの合図は再生できる設定です。</p>
+  <h2>音量は、必要な分だけ</h2>
+  <p>シャッター音の音量はインスペクターから0〜1の範囲で調整できます。既定値は0.8です。映像の邪魔をするほど大きくせず、撮影したことが分かる程度へ調整できるようにしています。</p>
+  <h2>CC0音源の出どころも記録する</h2>
+  <p>同梱した音源はCC0 1.0の素材です。利用にあたり、第三者ライセンス通知へ音源の出典、ライセンス、同梱ファイル、SHA-256を記録しました。音だけを追加して終わりにせず、由来をあとから確認できる形にしています。</p>
+  <h2>4コマの裏話</h2>
+  <p>無音の「撮れた……のかな？」を最初に置き、最後の「カシャッ」で返す伏線回収の寸劇です。音源ケースの小さなCC0札は、音の出どころを記録した今回の作業を示しています。アプリ画面や実行結果そのものではありません。</p>
+  <h2>まとめ</h2>
+  <p>写真撮影の直前に、CC0シャッター音を一回再生するようにしました。撮影専用の非空間・非ループ音源を準備し、音量を0〜1で調整できるようにするとともに、音源の由来とライセンス情報も通知へ記録しています。</p>
+  <h2>本日のひとこと</h2>
+  <p>一枚の合図があると、瞬間が手元に残る。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
