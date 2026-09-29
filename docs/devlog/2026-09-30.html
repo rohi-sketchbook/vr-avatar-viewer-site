@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>動くポーズを、止めた場所から触れる日 | VRAS 開発日記</title>
+  <meta name="description" content="内蔵ポーズモーションを再生し、任意の姿勢で止めて通常のIK・関節編集へ引き継げるようにしました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-30.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="動くポーズを、止めた場所から触れる日 | VRAS 開発日記">
+  <meta property="og:description" content="内蔵ポーズモーションを再生し、任意の姿勢で止めて通常のIK・関節編集へ引き継げるようにしました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-09-30.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-30-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが動くポーズを止め、通常編集と再生をつなぐ4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="動くポーズを、止めた場所から触れる日">
+  <meta name="twitter:description" content="動くポーズを止めて通常編集へ引き継ぎ、整えた位置から再開できるようにしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-09-30-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.09.30 / Development Log</div>
+  <h1>動くポーズを、止めた場所から触れる日</h1>
+  <p class="lead">内蔵ポーズモーションを再生したまま、好きなフレームで止めて通常のポーズ編集へ移れるようにしました。再開するときも、止めている間に動かしたアバターの位置と向きを新しい基準として引き継ぎます。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-29 03:00:00 JST〜2026-09-30 02:59:59 JST。参照ブランチはmain、終了時点のHEADは0abfa80fc73781554a820b8765ad857e100a4afd（ポーズモーション再生と編集操作を改善）。対象は3コミットです。未コミット差分は実績へ含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-09-30-comic.png" alt="ろひとルミナが動くポーズを止め、通常編集と再生をつなぐ4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E5%8B%95%E3%81%8F%E3%83%9D%E3%83%BC%E3%82%BA%E3%82%92%E3%80%81%E6%AD%A2%E3%82%81%E3%81%9F%E5%A0%B4%E6%89%80%E3%81%8B%E3%82%89%E8%A7%A6%E3%82%8C%E3%82%8B%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-09-30.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>ポーズを「見る」だけで終わらせない</h2>
+  <p>これまで内蔵のHumanoid AnimationClipは、指定フレームで静止ポーズとして使えました。今回は通常再生にも対応し、座り・寝姿勢・脚上げなどの作者ポーズをループで確認できるようにしました。再生開始時のアバター位置・向きを基準にするため、クリップの原点へ引っ張られません。歩行向けのFinal IK GrounderとRoot Motionはポーズモーション中に使わず、作者が意図した姿勢を優先します。</p>
+  <h2>止めた瞬間から、いつもの編集へ</h2>
+  <p>ポーズメニューと撮影ポーズの両方に「一時停止 / 再開」を用意しました。一時停止時はPlayableGraphによるボーンの上書きを外すため、そのフレームの姿勢を起点にIKや関節回転など、普段のポーズ編集を続けられます。再生を止めたままアバターを移動・回転しても、操作が再生側から巻き戻されないようにしています。</p>
+  <h2>再開後も、いま置いた場所から</h2>
+  <p>再開時には、一時停止中に変更したアバター本体の位置・向きを新しい再生基準として採用します。右クリック相当の回転やRootドラッグで構図を整えてから再生に戻っても、元の開始角へ戻りません。ランダム連続中に一時停止した場合は、次の候補へ切り替えるタイマーも止まり、再開時から保持時間を数え直します。</p>
+  <h2>候補は一つのカタログから</h2>
+  <p>撮影ポーズの候補とカテゴリは通常のポーズメニューと同じ共通カタログへ統合しました。個別ポーズを増減したとき、撮影側と通常メニュー側で候補が食い違わない構成です。今回のテストでは、停止後のTransform編集、再開時の新しいアンカー、再生中と停止時にユーザー回転を保持することを確認しています。</p>
+  <h2>4コマの裏話</h2>
+  <p>動いているポーズを「眺めるだけ」と思ったろひが、止めた瞬間から手を加えられると気づく小さな発見の寸劇です。最後の一言は、停止中に整えた構図をそのまま再生の基準にできる今回の改善を表しています。</p>
+  <h2>まとめ</h2>
+  <p>内蔵ポーズモーションを通常再生し、任意のフレームで止めて通常編集へ引き継げるようにしました。Root Motionや歩行向け補正で作者ポーズを崩さず、停止中のアバター配置は再開時の新しい基準として扱います。撮影ポーズと通常ポーズの候補も共通カタログにまとめました。</p>
+  <h2>本日のひとこと</h2>
+  <p>止められるから、ポーズは自分のものになる。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
