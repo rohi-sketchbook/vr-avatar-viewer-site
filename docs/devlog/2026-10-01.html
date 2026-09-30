@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>手がかりを、変換先へ渡す日 | VRAS 開発日記</title>
+  <meta name="description" content="Converter 0.4.9で旧Toon系の描画意味をViewer向けsemanticへ整理し、BoingBonesも安全な物理近似へつなげるようにしました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-01.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="手がかりを、変換先へ渡す日 | VRAS 開発日記">
+  <meta property="og:description" content="旧Toon系の描画意味をViewer向けsemanticへ整理し、BoingBonesも安全な物理近似へつなげるようにしました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-01.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-01-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが質感と揺れの手がかりを変換先へ渡す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="手がかりを、変換先へ渡す日">
+  <meta name="twitter:description" content="旧Toon系の描画意味とBoingBonesの揺れを、安全に変換先へつなげる改善です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-01-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.01 / Development Log</div>
+  <h1>手がかりを、変換先へ渡す日</h1>
+  <p class="lead">Converter 0.4.9で、古いToon系シェーダーが持つ質感の意味をViewer向けのsemanticへ整理して保存できるようにしました。BoingBonesの揺れも、既存の物理と重ならない範囲でLegacy DynamicBone互換の近似へつなぎます。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-09-30 03:00:00 JST〜2026-10-01 02:59:59 JST。参照ブランチはmain、終了時点のHEADは489b315bdc6d488e343aac0b7ab3935e3cbaa319（Converter高優先度互換を反映）。対象は8コミットです。未コミット差分は実績へ含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-01-comic.png" alt="ろひとルミナが質感と揺れの手がかりを変換先へ渡す4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E6%89%8B%E3%81%8C%E3%81%8B%E3%82%8A%E3%82%92%E3%80%81%E5%A4%89%E6%8F%9B%E5%85%88%E3%81%B8%E6%B8%A1%E3%81%99%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-01.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>名前ではなく、描画の役目を見る</h2>
+  <p>UnityChanToonShader 2.xとReflex Shader 2について、元のシェーダー名をそのまま動かすのではなく、Viewerで再構築できるlilToon semanticへ正規化する経路を追加しました。Base、Shadow、Normal、Emission、MatCap、Rim、Outlineに加え、AlphaやStencilなど、取得できる描画上の意味を変換時に扱います。</p>
+  <h2>透明や輪郭も、状態として引き継ぐ</h2>
+  <p>透明・Cutout・TransClippingのように表示結果へ影響する面の状態は、Render QueueやZWriteを含めて変換計画に反映します。lilToon Multi系の明示ZWriteも保持するようにしました。すべてのCustom Shaderを完全再現するものではなく、意味が同じでない項目は機械的な名前コピーではなく、安全な近似として扱います。</p>
+  <h2>揺れの情報も、既存の物理とぶつけない</h2>
+  <p>Boing KitのBoingBonesは、Chain単位でLegacy DynamicBone互換の物理へ近似変換できるようにしました。重力・減衰・弾性・剛性・Collision Radiusを共通の係数で正規化し、既にDynamicBoneが扱っている同じ階層とは重複しないようにします。Box形状など互換先に対応がないものを無理に置き換えるのではなく、対応できる範囲を明示して扱います。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>この期間には、VAB復元時の読み込み安定化とlilToon Multi状態の保持、PotaToonの顔方向・影参照の復元、Forward+環境でのアバター照明と髪の一貫性、VBG Studio Stateのpost effects schema 3読込修正なども進みました。期間内の8コミットは合計74ファイル、4,021行追加・148行削除です。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は、元の質感や揺れを「名前」ではなく変換先へ渡せる手がかりとして扱う話です。最後の一言は、完全な複製を約束せずとも、意味を確かめて近い表現へつなぐ今回の方針を表しています。</p>
+  <h2>まとめ</h2>
+  <p>Converter 0.4.9で、旧Toon系の描画意味をViewer向けsemanticへ正規化し、透明・輪郭・Stencilを含む取得可能な状態を変換に使えるようにしました。BoingBonesも既存物理との重複を避けながら、対応可能なChainをLegacy DynamicBone互換へ近似します。</p>
+  <h2>本日のひとこと</h2>
+  <p>手がかりが残れば、変換先でも「らしさ」を探せる。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
