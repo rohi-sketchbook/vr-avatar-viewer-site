@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>輪郭だけを、主役に残す日 | VRAS 開発日記</title>
+  <meta name="description" content="スタジオのリムライトを、アバターだけを対象に描く専用パスへ置き換え、既存の調整入口を保ちながら輪郭を見つけやすくする土台を整えました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-03.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="輪郭だけを、主役に残す日 | VRAS 開発日記">
+  <meta property="og:description" content="スタジオのリムライトを、アバターだけを対象に描く専用パスへ置き換えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-03.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-03-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがアバターだけへリムライトを残す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="輪郭だけを、主役に残す日">
+  <meta name="twitter:description" content="リムライトをアバターだけへ描く専用パスに移し、既存の調整入口を保つ改善です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-03-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.03 / Development Log</div>
+  <h1>輪郭だけを、主役に残す日</h1>
+  <p class="lead">スタジオのリムライトを、アバターだけを対象に描く専用パスへ置き換えました。既存の調整入口を保ちながら、背景を巻き込まずに輪郭を見つけやすくする改善です。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-10-02 03:00:00 JST〜2026-10-03 02:59:59 JST。参照ブランチはmain、終了時点のHEADは1fe5fa66652a3f6e3bfbce097693f0a167fd6c34（Replace studio rim light with avatar-only rim pass）。対象は10コミットです。未コミット差分は実績へ含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-03-comic.png" alt="ろひとルミナがアバターだけへリムライトを残す4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E8%BC%AA%E9%83%AD%E3%81%A0%E3%81%91%E3%82%92%E3%80%81%E4%B8%BB%E5%BD%B9%E3%81%AB%E6%AE%8B%E3%81%99%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-03.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>アバターの輪郭を、背景から分ける</h2>
+  <p>スタジオのリムライトは、アバターの輪郭を背景から見つけやすくするための光です。今回、この表現を通常のリアルタイムライトに任せるのではなく、アバターの描画情報だけを集める専用のレンダラーパスへ移しました。</p>
+  <p>背景やスタジオ小物までまとめて照らすのではなく、アバターを主役として縁取る経路です。既存のライト設定はUIと保存データの窓口として引き継ぎつつ、実際のリム表現は専用のオーバーレイ描画で扱います。</p>
+  <h2>いつもの設定を、そのまま使えるように</h2>
+  <p>従来のスタジオ用リムライトにある有効状態、色、方向、幅、やわらかさ、光量といった調整内容を、専用パスへ渡す形にしました。既存の設定を急に別物にせず、調整する入口は保ったまま、描画する役割だけを分けています。</p>
+  <p>専用の描画対象は、アバターとして管理されているRendererから構成します。カメラに映らないものや影だけを描くものは対象にせず、LODの選択もカメラの状態に合わせます。</p>
+  <h2>描画経路として確認する</h2>
+  <p>専用オーバーレイ用シェーダーと合成用シェーダーを追加し、すべてのViewer向けRenderer設定に機能が有効であることをテストで確認できるようにしました。PotaToonとの統合や、Bloomの影響範囲を扱うためのマスクもこの経路へ合わせています。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>この期間には、環境照明とVBG GIの扱いを共通化してCommonToonの環境光を決定的にする整理、PotaToonの背面ライト寄与の修正、デスクトップのキーボード入力経路の統一、環境プリセット自動選択の修正、内蔵ポーズの空カテゴリをUIから除く改善も入りました。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は、部屋全体を照らすライトのつもりで見ていた光が、実はアバターの輪郭だけを静かに助ける役へ移る話です。派手に増やすより、主役へ必要な光だけを残す小さな安心感で締めました。</p>
+  <h2>まとめ</h2>
+  <p>リムライトの調整入口を保ちながら、描画対象をアバターへ限定する専用パスへ移しました。スタジオの背景を巻き込まず、アバターの輪郭を見つけやすくするための土台です。</p>
+  <h2>本日のひとこと</h2>
+  <p>光は、主役のそばにだけ残そう。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
