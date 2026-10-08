@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>上書きする前に、ひと呼吸おく日 | VRAS 開発日記</title>
+  <meta name="description" content="VRASのVAB・VBG変換で、同名の出力を上書きする前に確認し、安全に置き換えるよう整えた日です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-09.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="上書きする前に、ひと呼吸おく日 | VRAS 開発日記">
+  <meta property="og:description" content="VAB・VBG変換で、同名の出力を上書きする前に確認し、安全に置き換えるよう整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-09.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-09-comic.png">
+  <meta property="og:image:width" content="1246">
+  <meta property="og:image:height" content="1263">
+  <meta property="og:image:alt" content="ろひとルミナがVAB・VBG変換の上書き確認を扱う4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="上書きする前に、ひと呼吸おく日">
+  <meta name="twitter:description" content="VAB・VBG変換の同名出力を、確認してから安全に置き換える改善です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-09-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.09 / Development Log</div>
+  <h1>上書きする前に、ひと呼吸おく日</h1>
+  <p class="lead">VAB・VBGの変換で同名の出力を上書きする前に確認し、既存ファイルを意図せず変えない経路を整えました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-10-08 03:00:00 JST〜2026-10-09 02:59:59 JST。参照ブランチはmain、終了時点のHEADは386461e258d2e9be11bd273dc782aa1310a3354b（同名の変換出力を上書きする前に確認）です。対象は10コミットです。未コミット差分は実績に含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-09-comic.png" alt="ろひとルミナがVAB・VBG変換の上書き確認を扱う4コマ漫画" width="1246" height="1263" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E4%B8%8A%E6%9B%B8%E3%81%8D%E3%81%99%E3%82%8B%E5%89%8D%E3%81%AB%E3%80%81%E3%81%B2%E3%81%A8%E5%91%BC%E5%90%B8%E3%81%8A%E3%81%8F%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-09.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>同名の出力を、確認なしで置き換えない</h2>
+  <p>PrefabからVABを作る入口、UnityPackageからVABを作る入口、背景からVBGを作る入口で、同じ名前の出力ファイルがすでにある場合に確認ダイアログを出すようにしました。生成を続けるかキャンセルするかを、書き込みの前に選べます。</p>
+  <h2>キャンセルなら、既存ファイルはそのまま</h2>
+  <p>上書きを選ばなければ変換を中止し、既存のVABやVBGへ手を加えません。うっかり同じファイル名を指定しても、現在の出力を意図せず置き換えないことを優先しました。</p>
+  <h2>上書きを選んだときも、安全に入れ替える</h2>
+  <p>置換を明示的に選んだ場合は、まず一時ファイルとしてアーカイブを作成して検証し、その後に既存ファイルと置き換えます。置換成功後は一時バックアップを残さないようにしています。既存VBGで、明示的な置換なしでは拒否され、置換ありでは完了することをエディタテストでも確認しました。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は「確認→選択→完了」の小さな安心を、同名の箱が並ぶ引き出しで表しました。変換を止めるためではなく、続ける判断を自分で選べるようにする改善です。</p>
+  <h2>まとめ</h2>
+  <p>VAB・VBG変換で同名の出力があるときは、先に確認してから置き換えるようになりました。キャンセルなら既存ファイルを守り、上書きを選んだときだけ検証済みの出力へ安全に入れ替えます。</p>
+  <h2>本日のひとこと</h2>
+  <p>上書きは、ひと呼吸おいてから。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
