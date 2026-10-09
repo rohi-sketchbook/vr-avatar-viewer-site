@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>根っこを残して、揺れを読む日 | VRAS 開発日記</title>
+  <meta name="description" content="VRASのUnityPackage PhysBone取込で、Ignore指定がルートまで外さないようにし、旧形式の読み込み互換性も整えた日です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-10.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="根っこを残して、揺れを読む日 | VRAS 開発日記">
+  <meta property="og:description" content="UnityPackage由来のPhysBoneで、Ignore指定がルートまで外さないようにし、旧形式の読み込み互換性も整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-10.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-10-comic.png">
+  <meta property="og:image:width" content="1224">
+  <meta property="og:image:height" content="1285">
+  <meta property="og:image:alt" content="ろひとルミナがPhysBoneのルートと子枝を整える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="根っこを残して、揺れを読む日">
+  <meta name="twitter:description" content="UnityPackage由来のPhysBoneで、Ignore指定と旧形式読み込みの互換性を整えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-10-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記一覧</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.10 / Development Log</div>
+  <h1>根っこを残して、揺れを読む日</h1>
+  <p class="lead">UnityPackageから取り込むPhysBoneで、Ignore指定がルートまで外さないようにし、旧形式の読み込み互換性も整えました。</p>
+  <div class="notice">記事種別はdevelopment。集計期間は2026-10-09 03:00:00 JST〜2026-10-10 02:59:59 JST。参照ブランチはmain、終了時点のHEADはcb0f61c8445026bb981169a0584c74c3f2a6831d（Runtime UnityPackageのPhysBone Ignore処理を修正）です。対象は8コミットです。未コミット差分は実績に含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-10-comic.png" alt="ろひとルミナがPhysBoneのルートと子枝を整える4コマ漫画" width="1224" height="1285" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E6%A0%B9%E3%81%A3%E3%81%93%E3%82%92%E6%AE%8B%E3%81%97%E3%81%A6%E3%80%81%E6%8F%BA%E3%82%8C%E3%82%92%E8%AA%AD%E3%82%80%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-10.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>Ignoreは子枝だけに効かせる</h2>
+  <p>VRChat側の挙動では、PhysBoneのルートは常に読み込みの起点になります。一方、Ignore Transformsはそこから先の子枝を対象にします。これまでルート自身がIgnore一覧にあるデータでは、読み込み開始前にルートまで外れてしまう余地がありました。今回、ルートは残し、子階層だけを除外する扱いに合わせました。</p>
+  <h2>古いPhysBoneも、記録どおりに判定する</h2>
+  <p>旧いPhysBone 1.0形式では、versionが保存されていないPrefabがあります。versionがない場合は1.0として扱い、明示されている値は従来どおり読み取ります。既存の記録を推測で新しい形式へ寄せず、保存された内容に沿って取り込むための調整です。</p>
+  <h2>重複した確認を減らす</h2>
+  <p>PhysBoneの読み込み時に繰り返していた重複検証も削減しました。読み込みの正しさを保ちつつ、同じ確認を何度も行わない構造へ整理しています。</p>
+  <h2>ほかにも進んだこと</h2>
+  <p>同じ集計期間には、アバター読み込み中でもUI操作を続けられるようにする調整や、PhysBoneのランタイム処理とテストの整備も進みました。今回は、UnityPackage由来のデータを正しくたどる入口を主題にしています。</p>
+  <h2>4コマの裏話</h2>
+  <p>枝に付けた「ここから先は入れない」の札を、根っこそのものに付けたらどうなるか、という小さな勘違いから始めました。根が残れば、必要な揺れをたどれます。</p>
+  <h2>まとめ</h2>
+  <p>UnityPackage由来のPhysBoneでIgnore指定がルートまで消してしまわないようにし、古いversion未記録のPrefabも1.0として読み取れるようにしました。互換性を保ちながら、必要な骨のつながりを残す改善です。</p>
+  <h2>本日のひとこと</h2>
+  <p>枝を整える前に、根っこは残しておこう。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / いもけんぴ工房</div></footer>
+</body>
+</html>
