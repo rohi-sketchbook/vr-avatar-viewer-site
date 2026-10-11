@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>表舞台には、必要なものだけ置く日 | VRAS 開発日記</title>
+  <meta name="description" content="VRASの配布版で、目印を付けた開発用UIだけを隠す表示制御を追加しました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-12.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="表舞台には、必要なものだけ置く日 | VRAS 開発日記">
+  <meta property="og:description" content="配布版では、目印を付けた開発用UIだけを隠し、利用者向けの画面を整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-12.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-12-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナが配布版の舞台から裏方の道具を整理する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="表舞台には、必要なものだけ置く日">
+  <meta name="twitter:description" content="配布版では、目印を付けた開発用UIだけを隠し、利用者向けの画面を整えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-12-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.12 / Development Log</div>
+  <h1>表舞台には、必要なものだけ置く日</h1>
+  <p class="lead">配布版で不要な開発用UIだけを明示的に隠し、利用者が使う画面を読みやすく整えました。</p>
+  <div class="notice">開発実績の記録です。集計期間は 2026-10-11 03:00:00 JST から 2026-10-12 02:59:59 JST。対象ブランチは main、集計終了時点のHEADは <code>1bde2614ac8f7dabe74db482c41e476b89a8dc73</code>、対象は3コミットです。未コミットの変更は含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-12-comic.png" alt="ろひとルミナが配布版の舞台から裏方の道具を整理する4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E8%A1%A8%E8%88%9E%E5%8F%B0%E3%81%AB%E3%81%AF%E3%80%81%E5%BF%85%E8%A6%81%E3%81%AA%E3%82%82%E3%81%AE%E3%81%A0%E3%81%91%E7%BD%AE%E3%81%8F%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-12.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>配布版の画面を、明示的に選んで整える</h2>
+  <p>利用者に見せる画面と、開発中の確認に使うUIは役割が違います。そこで、UI要素へ「配布時には隠す」目印を付けられる仕組みを追加しました。配布版では印のある要素だけを非表示にするため、通常の利用に必要なUIまでまとめて消えることはありません。</p>
+  <h2>確認してから、舞台袖へ下げる</h2>
+  <p>対象を確認して設定するためのUnityエディタ用ウィンドウを追加し、表示制御を確かめるテストも用意しました。どの要素を配布版から外すかを意図して選べるようにし、開発用の確認導線を利用者向け画面へ残さないための土台を整えています。</p>
+  <h2>デスクトップ操作と取り込みも見直す</h2>
+  <p>同じ期間にはデスクトップUIのナビゲーションを修正し、古い操作を整理しました。UnityPackageから読み込む静的アクセサリーについても、階層を復元する処理を改善しています。画面の見せ方だけでなく、そこへ届くまでの操作と取り込みの流れも整える更新です。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は舞台転換の物語にしました。裏方の道具を全部なくすのではなく、印を付けて確認したものだけを舞台袖へ下げる。配布版の表示制御が持つ「必要なものは残す」という性質を、短い場面として描いています。</p>
+  <h2>まとめ</h2>
+  <p>配布時に隠すUIを明示的に管理し、設定用ウィンドウとテストで確認できるようにしました。デスクトップの操作整理とアクセサリー階層の復元改善も合わせ、利用者が触れる画面をより素直に見せるための調整を進めています。</p>
+  <h2>本日のひとこと</h2>
+  <p>見せたいものを残すために、下げるものを選ぼう。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
