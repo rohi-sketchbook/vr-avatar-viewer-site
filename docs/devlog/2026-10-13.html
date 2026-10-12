@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>β0.9へ向けて、配るための道しるべをそろえる日 | VRAS 開発日記</title>
+  <meta name="description" content="VRAS β0.9のWindows配布に向け、版数、起動方法、配布物、再現可能なビルドの確認条件を整えました。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-13.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="β0.9へ向けて、配るための道しるべをそろえる日 | VRAS 開発日記">
+  <meta property="og:description" content="VRAS β0.9のWindows配布に向け、版数、起動方法、配布物、再現可能なビルドの確認条件を整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-13.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-13-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがβ0.9の配布準備を旅行かばんに見立てて整える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="β0.9へ向けて、配るための道しるべをそろえる日">
+  <meta name="twitter:description" content="VRAS β0.9のWindows配布に向け、版数、起動方法、配布物、再現可能なビルドの確認条件を整えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-13-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.13 / Development Log</div>
+  <h1>β0.9へ向けて、配るための道しるべをそろえる日</h1>
+  <p class="lead">VRAS β0.9のWindows配布に向け、版数、起動方法、配布物、再現可能なビルドの確認条件を整えました。</p>
+  <div class="notice">開発実績の記録です。集計期間は 2026-10-12 03:00:00 JST から 2026-10-13 02:59:59 JST。対象ブランチは main、集計終了時点のHEADは <code>02353dd90294eb32eed94eda74182b401b98555a</code>、対象は4コミットです。未コミットの変更は含めていません。なおβ0.9は配布準備中であり、公開完了を表すものではありません。</div>
+  <p><img src="../assets/images/devlog-2026-10-13-comic.png" alt="ろひとルミナがβ0.9の配布準備を旅行かばんに見立てて整える4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%CE%B20.9%E3%81%B8%E5%90%91%E3%81%91%E3%81%A6%E3%80%81%E9%85%8D%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AE%E9%81%93%E3%81%97%E3%82%8B%E3%81%B9%E3%82%92%E3%81%9D%E3%82%8D%E3%81%88%E3%82%8B%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-13.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>配る前に、迷わない入口をそろえる</h2>
+  <p>今回の主題は、VRAS β0.9のWindows配布へ向けた準備です。表示版数を<code>β0.9</code>、内部版数を<code>0.9.0</code>へ進め、前回公開版をβ0.8として管理するようにしました。ただし、現在のrelease statusは<code>development</code>です。この更新はβ0.9の公開完了ではなく、配る前に必要な道しるべを整える作業です。</p>
+  <h2>配布物と起動方法を、ひとつの構成へ</h2>
+  <p>配布フォルダには<code>VRAS.exe</code>のほか、Desktop用・VR用の起動バッチ、操作マニュアル、更新履歴、BuildInfo、第三者ライセンス通知をそろえる構成を整えました。起動バッチは対象の実行ファイルを明示し、DesktopまたはVRモードで起動します。診断時に探すログの場所も案内するため、使い始めるときの入口を分けつつ、迷いにくくします。</p>
+  <h2>正式配布は、同じ状態を確かめてから</h2>
+  <p>正式な配布ビルドでは、公開状態、更新履歴の日付、PlayerSettingsの同期、Git作業ツリーがクリーンであることを確認するGuardを追加しました。ビルドの前後で同じコミット・同じ作業状態を保てているかも確認します。配布用の出力を再現可能な状態に寄せ、開発中の差分が混ざったまま渡らないための条件です。</p>
+  <h2>ほかにも、操作の流れを整える</h2>
+  <p>同じ集計期間には、スタジオのシーン保存・読込をライブラリへ移し、ポーズ・アニメ上段メニューとVAC編集への遷移を修正しました。移動・歩行の経路編集では、地点追加操作もひとつの流れへ統合しています。配布の外枠だけでなく、日常的に触る操作の経路も見直した更新です。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は旅行かばんを配布フォルダに見立てました。中身と経路がそろっても、かばんには「開発中」の札が残っています。整えることと、実際に公開することを混同しないための、静かな出発前の場面です。</p>
+  <h2>まとめ</h2>
+  <p>β0.9へ向けて、版数、配布物、起動方法、再現可能なビルドの確認条件を整えました。正式配布は必要な公開条件を満たしてから行うものとして、準備と公開を区別しながら進めています。</p>
+  <h2>本日のひとこと</h2>
+  <p>出発の前に、迷わない地図を入れておこう。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
