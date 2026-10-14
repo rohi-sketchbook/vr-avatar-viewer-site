@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>一枚のために、ポーズを選ぶ日 | VRAS 開発日記</title>
+  <meta name="description" content="VRASで使えるPose・BlendShape・パーツ表示・Materialの調整と、背景・撮影支援を組み合わせる流れを紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="アバター調整と撮影支援">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-15.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="一枚のために、ポーズを選ぶ日 | VRAS 開発日記">
+  <meta property="og:description" content="VRASで使えるPose・BlendShape・パーツ表示・Materialの調整と、背景・撮影支援を組み合わせる流れを紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-15.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-15-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひがポーズカードを選び、ルミナと撮影の準備をする4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="一枚のために、ポーズを選ぶ日">
+  <meta name="twitter:description" content="VRASで使えるPose・BlendShape・パーツ表示・Materialの調整と、背景・撮影支援を組み合わせる流れを紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-15-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.15 / Development Log</div>
+  <h1>一枚のために、ポーズを選ぶ日</h1>
+  <p class="lead">VRASで使えるアバター調整と撮影支援を組み合わせて、撮りたい一枚へ寄せる流れを紹介します。</p>
+  <div class="notice">機能紹介です。集計期間は 2026-10-14 03:00:00 JST から 2026-10-15 02:59:59 JST。対象ブランチは main、集計終了時点のHEADは <code>e489bb2e2ced26e7c42dc7bc34e7664684774baf</code>、対象コミットは0件です。未コミットの変更は時刻の裏付けがないため含めていません。この記事は、現在実装済みの機能を紹介するもので、当日の実装完了を示すものではありません。</div>
+  <p><img src="../assets/images/devlog-2026-10-15-comic.png" alt="ろひがポーズカードを選び、ルミナと撮影の準備をする4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E4%B8%80%E6%9E%9A%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E3%83%9D%E3%83%BC%E3%82%BA%E3%82%92%E9%81%B8%E3%81%B6%E6%97%A5%20%7C%20VRAS%20%E9%96%8B%E7%99%BA%E6%97%A5%E8%A8%98&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-15.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>そのアバターらしい姿をつくる</h2>
+  <p>VRASではVRM / VABアバターを読み込んだあと、パーツ表示、BlendShape、Pose、Materialを調整できます。同じアバターでも、手の向きや立ち方、表情で印象は大きく変わります。衣装や表情を含めて、撮りたい雰囲気を一つずつ整えていくための入口です。</p>
+  <h2>背景とカメラの前で確かめる</h2>
+  <p>調整はそれだけで終わりではありません。VBG背景やStudio Stateを読み込めるので、用意した場面の中でアバターの見え方を確かめられます。DesktopとVRのどちらでも扱えるUI、そしてスクリーンショット・撮影支援を使いながら、決めたポーズを一枚の画として残す流れにつなげます。</p>
+  <h2>4コマの裏話</h2>
+  <p>撮影の前の「どの手にしよう」「どんな表情にしよう」は、完成の少し手前にある楽しい迷いです。今回は、ろひが物理的なポーズカードを選び、ルミナがカメラを構える小さな撮影会にしました。今日この機能を実装したという意味ではなく、現在のVRASで使える調整と撮影支援を題材にしています。</p>
+  <h2>まとめ</h2>
+  <p>VRASは、アバターのPose、BlendShape、パーツ表示、Materialを調整し、背景と撮影支援を組み合わせて「撮りたい一枚」をつくるためのローカルViewer / Studioです。</p>
+  <h2>本日のひとこと</h2>
+  <p>一枚の写真は、選んだポーズからはじまる。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
