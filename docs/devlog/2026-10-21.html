@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：声に合わせて、アバターが話し出す | VRAS 開発日記</title>
+  <meta name="description" content="VRASで使える、マイク音声をあ・い・う・え・おの口形状へ反映するリアルタイムリップシンクを紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="microphone-realtime-lipsync">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-21.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：声に合わせて、アバターが話し出す | VRAS 開発日記">
+  <meta property="og:description" content="マイク音声を解析し、アバターのあ・い・う・え・おの口形状へ反映する既存のリップシンク機能を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-21.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-21-comic.png">
+  <meta property="og:image:width" content="1086">
+  <meta property="og:image:height" content="1448">
+  <meta property="og:image:alt" content="ろひとルミナが、声と五つの母音ランタンでアバターのリップシンクを確かめる4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：声に合わせて、アバターが話し出す">
+  <meta name="twitter:description" content="マイク音声をあ・い・う・え・おの口形状へ反映する、VRASの既存リップシンク機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-21-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.21 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：声に合わせて、アバターが話し出す</h1>
+  <p class="lead">今回は新しい実装実績ではなく、VRASで使えるリアルタイムリップシンクを紹介します。マイク音声を解析し、アバターの口形状へ反映して、話している印象をつくる既存機能です。</p>
+  <div class="notice">今回は <strong>feature-spotlight（閑話休題）</strong> です。集計期間は2026-10-20 03:00:00 JSTから2026-10-21 02:59:59 JST、参照ブランチはViewerの <code>main</code> です。集計終了時点のHEADは <code>f3a72c3dd1a8d6cbd3a5e3c7818394d653668929</code>、期間内コミットは0件でした。未コミット差分は対象期間の実績と確認できないため含めず、現在実装済みの機能を紹介します。</div>
+  <p><img src="../assets/images/devlog-2026-10-21-comic.png" alt="ろひとルミナが、声と五つの母音ランタンでアバターのリップシンクを確かめる4コマ漫画" width="1086" height="1448" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=VRAS%E3%81%AE%E3%83%AA%E3%82%A2%E3%83%AB%E3%82%BF%E3%82%A4%E3%83%A0%E3%83%AA%E3%83%83%E3%83%97%E3%82%B7%E3%83%B3%E3%82%AF%E3%82%92%E7%B4%B9%E4%BB%8B&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-21.html&amp;hashtags=VRAvatarStudio,VRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>声の特徴を、口元へつなぐ</h2>
+  <p>VRASのリップシンクは、マイクから入る音声を解析し、あ・い・う・え・おに対応する口の形へ反映します。声量だけで口を開け閉めするのではなく、母音ごとの違いを口元へ渡すことで、話している表情をつくります。</p>
+  <h2>VRMでも、別の名前のBlendShapeでも</h2>
+  <p>対応先は、VRMで定義された口形状だけではありません。アバター側のBlendShape名から既知の母音表現を探す経路もあり、名前が異なるアバターでも、使える口形状を見つけられるようにしています。見つけた対象は、アバターを読み込んだときにまとめて扱います。</p>
+  <h2>DesktopとVRで、同じ声を使う</h2>
+  <p>リップシンクはViewer全体で共有する仕組みです。DesktopとVRで別々にマイクを扱うのではなく、同じ音声解析と口形状への反映を使うため、見る場所が変わってもアバターの声に合わせた表情を保ちやすくなります。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は五つの母音を小さなランタンに見立てました。ろひの声に合わせてランタンが灯り、その光が小さなアバターの口元へ届くという場面です。今日この機能を実装したという意味ではなく、VRASにあるリップシンクの流れを小さな寸劇にしています。</p>
+  <h2>まとめ</h2>
+  <p>VRASはマイク音声を解析し、あ・い・う・え・おの口形状をアバターへ反映できます。VRMの定義やBlendShape名を手がかりに対象を解決し、DesktopとVRの両方で共有する、声に合わせた表情のための既存機能です。</p>
+  <h2>本日のひとこと</h2>
+  <p>声の形が届けば、あいさつはもう少し伝わる。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
