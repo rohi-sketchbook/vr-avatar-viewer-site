@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>読み込みの手前を、軽くする日 | VRAS 開発日記</title>
+  <meta name="description" content="VRASのアバター読み込みと衣装表面の選択処理を見直し、メインスレッドで待つ仕事と一時的な割り当てを減らした開発日記です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-25.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="読み込みの手前を、軽くする日 | VRAS 開発日記">
+  <meta property="og:description" content="VABの判定、VRM/GLBの読み込み準備、衣装表面の選択処理を見直した一日です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-25.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-25-comic.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1310">
+  <meta property="og:image:alt" content="ろひとルミナが、舞台裏でアバター読み込みの準備を整える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="読み込みの手前を、軽くする日">
+  <meta name="twitter:description" content="VABの判定、VRM/GLBの読み込み準備、衣装表面の選択処理を見直した一日です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-25-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.25 / Development Log</div>
+  <h1>読み込みの手前を、軽くする日</h1>
+  <p class="lead">アバターを読み込むまでの「準備」を見直しました。VABの形式判定、VRM/GLBの読み込み準備、衣装表面の選択処理を整え、Unityのメインスレッドで待つ仕事と一時的な割り当てを減らしています。</p>
+  <div class="notice">今回は <strong>development（開発進捗）</strong> です。集計期間は2026-10-24 03:00:00 JSTから2026-10-25 02:59:59 JST、参照ブランチはViewerの <code>main</code> です。集計終了時点のHEADは <code>95b98c8450c02c819797998c176ea8a99178aed6</code>、期間内コミットは1件でした。未コミット差分は対象期間の実績と確認できないため含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-25-comic.png" alt="ろひとルミナが、舞台裏でアバター読み込みの準備を整える4コマ漫画" width="1200" height="1310" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF%E3%81%AE%E6%89%8B%E5%89%8D%E3%82%92%E3%80%81%E8%BB%BD%E3%81%8F%E3%81%99%E3%82%8B%E6%97%A5&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-25.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>判定のために、もう一度開かない</h2>
+  <p>VABを探す処理では、すでに読み込んだManifestの形式情報を使って分類するようにしました。分類だけのために同じVABを開き直さず、最初に確認した情報をそのまま活かします。</p>
+  <h2>重い準備は、画面の外で</h2>
+  <p>VRM/GLBの外部モデル読み込みでは、ファイルを読むことと純粋なバイナリ/JSON解析をUnityのメインスレッド外で進めます。一方で、Unityオブジェクトを扱うインポート処理はメインスレッドに残します。安全に分けられる準備を分け、画面を動かす本来の仕事を守るための見直しです。</p>
+  <h2>選ぶときも、近い候補から</h2>
+  <p>デスクトップで衣装表面を選ぶ処理は、候補を近い順に調べる形へ変更しました。候補リストとレイキャスト用バッファは繰り返し使い、クリックごとの一時的な割り当てを抑えています。VRで広いアバター操作用コライダーかを確認する処理も、動的な追加を妨げない範囲でキャッシュします。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は、舞台を止めずに舞台裏で準備を進める小さな劇にしました。ファイルを読むことと解析を舞台裏へ移し、最後の布見本で近い候補から確かめる流れを表しています。</p>
+  <h2>まとめ</h2>
+  <p>目に見えるボタンを増やす日ではありませんが、読み込みや選択の手前にある反復作業を減らすことで、アバターに向き合う時間を少しでも素直にしていきます。</p>
+  <h2>本日のひとこと</h2>
+  <p>舞台に立つ前の準備ほど、静かに整えておきたい。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
