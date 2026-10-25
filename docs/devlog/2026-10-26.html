@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>背景を選ぶ前に、見た目が分かる日 | VRAS 開発日記</title>
+  <meta name="description" content="VCI背景のサムネイルを生成してライブラリカードへ反映し、背景の反射と選択中背景名の表示を整えた開発日記です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-26.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="背景を選ぶ前に、見た目が分かる日 | VRAS 開発日記">
+  <meta property="og:description" content="VCI背景の見た目をサムネイルとしてカードへ映し、選びやすさを整えた一日です。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-26.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-26-comic.png">
+  <meta property="og:image:width" content="1224">
+  <meta property="og:image:height" content="1285">
+  <meta property="og:image:alt" content="ろひとルミナが背景カードの見た目を比べる4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="背景を選ぶ前に、見た目が分かる日">
+  <meta name="twitter:description" content="VCI背景の見た目をサムネイルとしてカードへ映し、選びやすさを整えた一日です。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-26-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.26 / Development Log</div>
+  <h1>背景を選ぶ前に、見た目が分かる日</h1>
+  <p class="lead">VCI背景を選ぶ前に、どんな景色かをつかみやすくしました。背景を有効にしたときにサムネイルを生成してライブラリのカードへ反映し、今選んでいる背景名も確認しやすくしています。</p>
+  <div class="notice">今回は <strong>development（開発進捗）</strong> です。集計期間は2026-10-25 03:00:00 JSTから2026-10-26 02:59:59 JST、参照ブランチはViewerの <code>main</code> です。集計終了時点のHEADは <code>02b7fd203d8ab95eb6c61053e173848483728b61</code>、期間内コミットは3件でした。未コミット差分は対象期間の実績と確認できないため含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-26-comic.png" alt="ろひとルミナが背景カードの見た目を比べる4コマ漫画" width="1224" height="1285" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E8%83%8C%E6%99%AF%E3%82%92%E9%81%B8%E3%81%B6%E5%89%8D%E3%81%AB%E3%80%81%E8%A6%8B%E3%81%9F%E7%9B%AE%E3%81%8C%E5%88%86%E3%81%8B%E3%82%8B%E6%97%A5&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-26.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この開発日記をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>カードに、景色の手がかりを</h2>
+  <p>VCI背景を有効にしたとき、その背景のサムネイルを生成して背景ライブラリのカードへ反映するようにしました。文字だけで候補を追うのではなく、景色の雰囲気を手がかりに選べます。</p>
+  <h2>必要なときに生成して、次は使い回す</h2>
+  <p>サムネイルは背景ごとにキャッシュし、必要になったときに生成します。カードの更新経路と待機処理も整え、読み込みや再描画の途中に表示が取り残されないようにしました。</p>
+  <h2>景色の光と、今いる場所もつなぐ</h2>
+  <p>背景を有効にする際には、その景色に対応するキューブマップ反射も生成して利用します。反射用キューブマップは512pxへ調整し、選択中の背景名はヘッダーでも確認できるようにしました。非アクティブな通知を不用意に消さない修正も同じ集計期間に入っています。</p>
+  <h2>4コマの裏話</h2>
+  <p>今回は、無地だった小さな背景カードが景色を見せてくれる寸劇です。カードで雰囲気を比べ、最後に選んだ景色の名前を確認する流れにしました。</p>
+  <h2>まとめ</h2>
+  <p>背景の選択は、スタジオの空気を決める入口です。選ぶ前に見えること、選んだ後に分かることをそろえて、景色づくりへ気持ちよく入れるようにしていきます。</p>
+  <h2>本日のひとこと</h2>
+  <p>選ぶ前に見えると、背景づくりはぐっと楽しい。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
