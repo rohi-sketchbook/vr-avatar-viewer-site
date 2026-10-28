@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：カメラに、ゆっくり回ってもらう | VRAS 開発日記</title>
+  <meta name="description" content="VRASに既存のカメラパス生成で、Orbit／Dolly／Craneの動きを選び、アバターを中心にした撮影の見え方を組み立てる機能紹介です。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="camera-path-orbit-dolly-crane">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-29.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：カメラに、ゆっくり回ってもらう | VRAS 開発日記">
+  <meta property="og:description" content="Orbit／Dolly／Craneの既存カメラパスを使い、視点の動きからアバターの見せ方を探します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-29.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-29-comic.png">
+  <meta property="og:image:width" content="1248">
+  <meta property="og:image:height" content="1260">
+  <meta property="og:image:alt" content="ろひとルミナがカメラのOrbit、Dolly、Craneの動きでアバターの撮影構図を探す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：カメラに、ゆっくり回ってもらう">
+  <meta name="twitter:description" content="Orbit／Dolly／Craneの既存カメラパスを使い、視点の動きからアバターの見せ方を探します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-29-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.29 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：カメラに、ゆっくり回ってもらう</h1>
+  <p class="lead">新規実装の報告ではなく、VRASにある既存のカメラパス生成を紹介する回です。Orbit、Dolly、Craneという視点の動きから、アバターの見せ方を探します。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-10-28 03:00:00 JSTから2026-10-29 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>56b3a0827ee7a5acdc37fc72864ff964d4c60792</code>、期間内コミットは0件でした。未コミット差分は、期間内の実装事実として確認できないため実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-29-comic.png" alt="ろひとルミナがカメラのOrbit、Dolly、Craneの動きでアバターの撮影構図を探す4コマ漫画" width="1248" height="1260" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E3%82%AB%E3%83%A1%E3%83%A9%E3%81%AB%E3%80%81%E3%82%86%E3%81%A3%E3%81%8F%E3%82%8A%E5%9B%9E%E3%81%A3%E3%81%A6%E3%82%82%E3%82%89%E3%81%86&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-29.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>視点を、ひとつの場所に止めない</h2>
+  <p>アバターを撮るとき、カメラを一度決めただけでは、横顔の表情や衣装の立体感が見えにくいことがあります。VRASのカメラパス生成では、被写体のまわりを巡る <code>Orbit</code>、前後へ寄る <code>Dolly</code>、高さを変える <code>Crane</code> という既存の動きを選べます。まず動きの型を選んでから、撮りたい一瞬を探せるのがポイントです。</p>
+  <h2>同じアバターでも、見えるものが変わる</h2>
+  <p>Orbitでは輪郭や背面までゆっくり見比べやすく、Dollyでは顔や小物へ視線を近づけられます。Craneでは目線の高さを変えながら全身のバランスを確かめられます。どれかひとつが正解というより、見せたい場所に合わせて視点の動きを選ぶための道具です。</p>
+  <h2>4コマの話</h2>
+  <p>静止画の前で構図を迷っていたろひが、ルミナと床に描かれた軌道線をたどります。視点を巡らせると、同じアバターにも別の表情があることに気づき、最後は「ここだ」と思える一瞬を選びます。新しい機能を作った日ではなく、すでにある撮影の選択肢をゆっくり眺める回です。</p>
+  <h2>まとめ</h2>
+  <p>カメラパスのOrbit／Dolly／Craneは、構図を固定してから悩む代わりに、視点の動きから見え方を探すための既存機能です。アバターを一周して、寄って、少し高い場所から見てみる。その小さな往復が、残したい一枚を見つける助けになります。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
