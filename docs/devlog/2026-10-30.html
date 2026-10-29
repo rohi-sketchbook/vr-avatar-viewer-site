@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>動く見本から、カメラの一手を選ぶ | VRAS 開発日記</title>
+  <meta name="description" content="VRASのDesktop向けカメラモーション編集で、18種類の動く見本から選び、今の構図を起点に試せるようにした開発記録です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-30.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="動く見本から、カメラの一手を選ぶ | VRAS 開発日記">
+  <meta property="og:description" content="18種類のカメラモーションを動く見本から選び、現在の構図を起点にプレビューできるDesktop向け編集を追加しました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-30.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-30-comic.png">
+  <meta property="og:image:width" content="1223">
+  <meta property="og:image:height" content="1286">
+  <meta property="og:image:alt" content="ろひとルミナが動くカメラモーションの見本から一手を選び、構図を保って試し、タイムラインへ置く4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="動く見本から、カメラの一手を選ぶ">
+  <meta name="twitter:description" content="18種類のカメラモーションを動く見本から選び、現在の構図を起点にプレビューできるDesktop向け編集を追加しました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-30-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.30 / Development Log</div>
+  <h1>動く見本から、カメラの一手を選ぶ</h1>
+  <p class="lead">Desktop向けのカメラモーション編集を追加しました。18種類の動きを、名称だけではなく動く模式図から選び、今つくっている構図を基準にプレビューできます。</p>
+  <div class="notice">今回は <strong>development（開発進捗）</strong> です。集計期間は2026-10-29 03:00:00 JSTから2026-10-30 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>e865a85c76e9c5ac31c2f90579234171bc6a2409</code>、期間内コミットは1件でした。未コミット差分は期間内の実装事実として確認できないため、実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-30-comic.png" alt="ろひとルミナが動くカメラモーションの見本から一手を選び、構図を保って試し、タイムラインへ置く4コマ漫画" width="1223" height="1286" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E5%8B%95%E3%81%8F%E8%A6%8B%E6%9C%AC%E3%81%8B%E3%82%89%E3%80%81%E3%82%AB%E3%83%A1%E3%83%A9%E3%81%AE%E4%B8%80%E6%89%8B%E3%82%92%E9%81%B8%E3%81%B6&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-30.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>動きの名前より、まず見本を見る</h2>
+  <p>撮影・出力の中に、通常の「カメラ」と分けた「カメラモーション」タブを用意しました。そこでは人物撮影・基本・演出を含む18種類のプリセットを、同じカード一覧で見比べられます。OrbitやDolly、Craneのように位置を動かすものだけでなく、Pan、Tilt、Zoom、Trackingなども、動く模式図で雰囲気をつかめます。</p>
+  <p>カードを選んだ後は、時間、距離、高さ、角度、FOV、イージング、注視対象などを調整してプレビューします。見本を眺めて「この感じかも」と選び、その場で細部を詰めるための入口です。</p>
+  <h2>構図を壊さずに、ひとまず試す</h2>
+  <p>プレビューを始めるたびに、現在の撮影カメラの位置・向き・FOVと、選択中アバターの最新Boundsを取り直します。既定の自動フレーミングを使う場合も、今のカメラの向きとFOVを保ちながら開始位置を計算するため、以前の別の構図へ勝手に戻すことはありません。手動で決めた構図を使いたいときは、自動フレーミングを切ってそのまま試せます。</p>
+  <p>プレビューは確認用です。終わると、カメラの位置・向き・FOVは元に戻ります。気に入った動きだけを明示的にVASタイムラインへ追加するので、「試しただけの動き」が記録に混ざらないようにしています。</p>
+  <h2>今回の範囲</h2>
+  <p>実装対象はDesktopです。VR用のHMD UIは今回の対象外として保留しています。EditModeテストは5件すべて成功し、18種類のプリセット、軌道生成、追従クリップ、独立タブの構成を確認しました。一方で、実アバターでのモーション再生と、保存したVASの映像確認はこれからです。</p>
+  <h2>4コマの話</h2>
+  <p>「動かすと、せっかくの構図が消えてしまいそう」という不安から始め、試写のあとにカメラが小さな星印へ戻る様子を手品のように描きました。最後に、気に入った一手だけをタイムラインへ置くところが、今回の使い方です。</p>
+  <h2>まとめ</h2>
+  <p>カメラモーションを、名前の暗記ではなく動く見本から選び、今の構図を起点に確かめられるようになりました。撮りたいアバターに合わせて少し試し、残したい動きだけをタイムラインへ進める。撮影の試行錯誤を、もう少し気軽にするための入口です。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
