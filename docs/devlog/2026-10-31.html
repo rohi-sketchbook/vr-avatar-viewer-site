@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>映画っぽさを、ちゃんと選べるように | VRAS 開発日記</title>
+  <meta name="description" content="VRASのDesktop向けカメラモーション編集で、映像的な見本と、選択中の動きに意味のある調整項目を整えた開発記録です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-31.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="映画っぽさを、ちゃんと選べるように | VRAS 開発日記">
+  <meta property="og:description" content="カメラモーションを、奥行きのある見本と、選択中の動きに効く調整から選びやすくしました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-10-31.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-31-comic.png">
+  <meta property="og:image:width" content="1086">
+  <meta property="og:image:height" content="1448">
+  <meta property="og:image:alt" content="ろひとルミナがカメラモーションの見本と有効な調整を使い、アバターの大きさに合わせて構図を整える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="映画っぽさを、ちゃんと選べるように">
+  <meta name="twitter:description" content="カメラモーションを、奥行きのある見本と、選択中の動きに効く調整から選びやすくしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-10-31-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.10.31 / Development Log</div>
+  <h1>映画っぽさを、ちゃんと選べるように</h1>
+  <p class="lead">Desktop向けカメラモーション編集の仕上げとして、プリセットの見本をより映像らしくし、選んだ動きに意味のある調整だけを見せるように整えました。</p>
+  <div class="notice">今回は <strong>development（開発進捗）</strong> です。集計期間は2026-10-30 03:00:00 JSTから2026-10-31 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>0a78dfea89208ef83c4a960b942d776bef7e4577</code>、期間内コミットは2件でした。未コミット差分は期間内に実装された事実を確定できないため、実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-10-31-comic.png" alt="ろひとルミナがカメラモーションの見本と有効な調整を使い、アバターの大きさに合わせて構図を整える4コマ漫画" width="1086" height="1448" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E6%98%A0%E7%94%BB%E3%81%A3%E3%81%BD%E3%81%95%E3%82%92%E3%80%81%E3%81%A1%E3%82%83%E3%82%93%E3%81%A8%E9%81%B8%E3%81%B9%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-10-31.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>見本が「何を動かすか」を伝える</h2>
+  <p>18種類のカメラモーションには、人物撮影・基本・演出それぞれの意図があります。今回、カードの模式プレビューを、奥行きの分かる固定シーン、被写体、カメラの動きで描き直しました。パンやチルトは位置を保った視線の動き、ドリーやトラックは位置の移動、ズームは画角の変化として見分けられます。</p>
+  <p>人物撮影用の一部プリセットには、最初の調整値も用意しました。フェイス・プッシュイン、ファッション・オービット、クレーン・リビールなどの性格を、選んだ直後から確認しやすくするためです。</p>
+  <h2>効かないつまみを置かない</h2>
+  <p>すべてのモーションに同じ調整項目を並べるのではなく、実際にそのプリセットで使われる項目だけを出すようにしました。追従・ハンドヘルド・ウィップパンには効かないイージングを出さず、パン／チルト／ロールのような回転中心の動きでは、状況に応じて注視対象やアバター相対の項目を隠します。</p>
+  <p>画面内の左右・上下のフレーミング調整は、固定のメートル値ではなく、選択中アバターの見えている高さを基準にします。アバターの大きさが違っても、構図を少しずらす感覚を保てるようにしました。</p>
+  <h2>今回の範囲</h2>
+  <p>対象はDesktop向けのカメラモーション編集です。動きの評価、表示項目、プリセットごとの推奨値、カード用の映像的な模式プレビューを整えました。</p>
+  <h2>4コマの話</h2>
+  <p>同じ「映画っぽい」でも、どの動きが何に効くか分からないと選びにくいものです。今回は、派手に盛り上がった試写を二人で見てから、必要なつまみだけを残して一番気持ちよい一手へ戻る、小さな反転の話にしました。</p>
+  <h2>まとめ</h2>
+  <p>カメラモーションを、名前と抽象的な線だけで選ばず、奥行きのある見本と目的に合う調整から選べるように整えました。撮りたい一枚に必要な動きを、迷わず試せるための仕上げです。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
