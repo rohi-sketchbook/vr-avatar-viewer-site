@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VAC編集を、ひとつの道具として整える | VRAS 開発日記</title>
+  <meta name="description" content="VRASのVAC編集ワークスペースで、テーマ・操作性・Canvas表示設定を統一した開発記録です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-01.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="VAC編集を、ひとつの道具として整える | VRAS 開発日記">
+  <meta property="og:description" content="VAC編集の見た目と操作の流れをそろえ、Canvas表示設定も同じ編集体験へつなげました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-01.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-01-comic.png">
+  <meta property="og:image:width" content="1254">
+  <meta property="og:image:height" content="1254">
+  <meta property="og:image:alt" content="ろひとルミナがVAC編集の道具と表示案内を一つの作業机へ整える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VAC編集を、ひとつの道具として整える">
+  <meta name="twitter:description" content="VAC編集の見た目と操作の流れをそろえ、Canvas表示設定も同じ編集体験へつなげました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-01-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.01 / Development Log</div>
+  <h1>VAC編集を、ひとつの道具として整える</h1>
+  <p class="lead">VAC編集ワークスペースの見た目と操作の流れをそろえ、Canvas上の表示設定も同じ考え方で扱えるようにしました。</p>
+  <div class="notice">今回は <strong>development（開発進捗）</strong> です。集計期間は2026-10-31 03:00:00 JSTから2026-11-01 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>698d4a82e9e5b63cbe5598ff16c31672c01148cb</code>、期間内コミットは1件でした。未コミット差分は期間内に実装された事実を確定できないため、実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-01-comic.png" alt="ろひとルミナがVAC編集の道具と表示案内を一つの作業机へ整える4コマ漫画" width="1254" height="1254" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=VAC%E7%B7%A8%E9%9B%86%E3%82%92%E3%80%81%E3%81%B2%E3%81%A8%E3%81%A4%E3%81%AE%E9%81%93%E5%85%B7%E3%81%A8%E3%81%97%E3%81%A6%E6%95%B4%E3%81%88%E3%82%8B&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-01.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>作業の途中で迷わないために</h2>
+  <p>VAC編集には、タイムライン、操作パネル、表示切り替えなど、作品を形にするための道具が集まっています。今回の変更では、それぞれが別の画面から来たように見えないよう、共通のテーマとレイアウトへ寄せました。必要な操作を探すより、編集そのものへ意識を向けやすくするための整理です。</p>
+  <h2>操作と見た目を同じ場所でつなぐ</h2>
+  <p>ワークスペースの組み立て、ガード処理、タイムライン、表示制御を見直し、編集状態に応じた案内と操作の置き方をそろえました。Canvasに何を表示するかという設定も、編集の流れから切り離さず扱えるようにしています。</p>
+  <p>あわせて、UIの配布状態を確認する仕組みと、UGUIのスモークチェックも更新しました。これは新しい演出を増やす変更ではなく、同じ編集作業を落ち着いて続けられる土台を整える作業です。</p>
+  <h2>今回の範囲</h2>
+  <p>対象はVAC編集UIのテーマ、操作性、Canvas表示設定です。ワークスペース構築、操作ガード、タイムライン、表示制御とUI確認を整えました。</p>
+  <h2>4コマの話</h2>
+  <p>今回は、いろいろな場所に散らばっていた制作道具を、二人で一つの編集机へ戻していく話にしました。派手な成功を急がず、「次に触るものが自然に見つかる」感覚を最後の小さな達成にしています。</p>
+  <h2>まとめ</h2>
+  <p>VAC編集を、機能が並ぶだけの場所ではなく、見た目と操作がつながった一つの道具として整えました。制作の途中で立ち止まる回数を減らし、作品づくりへ集中しやすくするための改善です。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
