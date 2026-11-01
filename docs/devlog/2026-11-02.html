@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>プレビューを止める前に、ちゃんと戻す | VRAS 開発日記</title>
+  <meta name="description" content="VRASのカメラモーションで、カード選択とプレビューの復帰を安定させた開発記録です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-02.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="プレビューを止める前に、ちゃんと戻す | VRAS 開発日記">
+  <meta property="og:description" content="表示中のカードだけを反応させ、状況が変わればカメラを安全に戻して試し直せるようにしました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-02.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-02-comic.png">
+  <meta property="og:image:width" content="1226">
+  <meta property="og:image:height" content="1283">
+  <meta property="og:image:alt" content="ろひとルミナがカメラモーションのプレビューを開始位置へ戻して試し直す4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="プレビューを止める前に、ちゃんと戻す">
+  <meta name="twitter:description" content="表示中のカードだけを反応させ、状況が変わればカメラを安全に戻して試し直せるようにしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-02-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.02 / Development Log</div>
+  <h1>プレビューを止める前に、ちゃんと戻す</h1>
+  <p class="lead">カメラモーションのカード選択とプレビューを、状況が変わっても落ち着いて試せる操作へ整えました。</p>
+  <div class="notice">今回は <strong>development（開発進捗）</strong> です。集計期間は2026-11-01 03:00:00 JSTから2026-11-02 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>cb2052a40b4fd17de53c74da9880748a1b0c2f0e</code>、期間内コミットは1件でした。未コミット差分は期間内に実装された事実を確定できないため、実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-02-comic.png" alt="ろひとルミナがカメラモーションのプレビューを開始位置へ戻して試し直す4コマ漫画" width="1226" height="1283" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E3%83%97%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC%E3%82%92%E6%AD%A2%E3%82%81%E3%82%8B%E5%89%8D%E3%81%AB%E3%80%81%E3%81%A1%E3%82%83%E3%82%93%E3%81%A8%E6%88%BB%E3%81%99&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-02.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>いま見えている一枚だけを動かす</h2>
+  <p>モーションを探すとき、検索やカテゴリで絞り込んだカードだけが、ホバーやキーボード操作に正しく反応するようにしました。前に表示していたカードの領域が残って、いま見えていないカードが反応を奪うことはありません。どのカードを動かすかも、表示中の候補から一つだけ先に決めます。</p>
+  <h2>カードごとの設定を取り違えない</h2>
+  <p>カードを切り替えた直後は、新しく選んだモーションの設定を使って右側の調整欄を描くように修正しました。これで、前のカードの項目で新しい設定を上書きしてしまう可能性を避け、各プリセットが持つ構図や時間の設定をそれぞれ保てます。</p>
+  <h2>変わったら、いったん戻ってから始める</h2>
+  <p>プレビュー中に注視対象、自動構図合わせ、アバター相対の基準を変えた場合は、いったん開始時のカメラ位置・向き・FOVへ戻してから、新しい基準でプレビューを再開します。追従先のアバターや撮影カメラがなくなったときも、安全に停止して理由を知らせます。</p>
+  <p>停止すればカメラの位置・向き・FOVは元に戻るため、何もしない重複した「位置を戻す」ボタンもなくしました。今回の変更は、新しいカメラモーションを増やすものではなく、試す途中の状態を迷子にしないための修正です。</p>
+  <h2>4コマの話</h2>
+  <p>今回は、カメラの試写を始める前に「持ち場」を確認する小さな舞台裏の話にしました。カードは目の前の一枚だけ、基準が変わったら最初の立ち位置へ。派手な成功ではなく、安心してもう一度試せるところを締めにしています。</p>
+  <h2>まとめ</h2>
+  <p>表示中のカードだけを反応させ、カードごとの設定を守り、状況が変われば安全に戻して再開する。カメラモーションのプレビューを、試行錯誤を続けやすい操作に整えました。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
