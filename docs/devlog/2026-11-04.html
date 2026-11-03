@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>点の景色を、変換せずに置く日 | VRAS 開発日記</title>
+  <meta name="description" content="Gaussian PLYをメッシュへ変換せず、背景・展示・シーン内アイテムとして直接描画できるようにしたVRASの開発記録です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-04.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="点の景色を、変換せずに置く日 | VRAS 開発日記">
+  <meta property="og:description" content="Gaussian PLYを直接描画し、背景・展示・シーン内アイテムとして取り込み、サイズも調整できるようにしました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-04.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-04-comic.png">
+  <meta property="og:image:width" content="1312">
+  <meta property="og:image:height" content="1199">
+  <meta property="og:image:alt" content="ろひとルミナがGaussian PLYを変換せずに置き、サイズを調整する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="点の景色を、変換せずに置く日">
+  <meta name="twitter:description" content="Gaussian PLYを直接描画し、背景・展示・シーン内アイテムとして取り込み、サイズも調整できるようにしました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-04-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.04 / Development Log</div>
+  <h1>点の景色を、変換せずに置く日</h1>
+  <p class="lead">Gaussian PLYを三角形メッシュへ変換せず、背景・静的展示・シーン内アイテムとして直接読み込めるようにしました。</p>
+  <div class="notice">今回は <strong>development（開発進捗）</strong> です。集計期間は2026-11-03 03:00:00 JSTから2026-11-04 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>aa5c7bc823b013fdfc622ec1d7aa1b85c9da8e5e</code>、期間内コミットは1件でした。<code>MainScene.unity</code> の未コミット差分は期間内に実装された事実を確定できないため、実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-04-comic.png" alt="ろひとルミナがGaussian PLYを変換せずに置き、サイズを調整する4コマ漫画" width="1312" height="1199" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E7%82%B9%E3%81%AE%E6%99%AF%E8%89%B2%E3%82%92%E3%80%81%E5%A4%89%E6%8F%9B%E3%81%9B%E3%81%9A%E3%81%AB%E7%BD%AE%E3%81%8F%E6%97%A5&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-04.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>PLYを、そのまま描く</h2>
+  <p>標準3DGS PLYとPlayCanvas圧縮PLYを、元データのまま非同期で読み込み、GPUへ転送して表示します。VABやVBGへ暗黙変換しないため、元のPLYは専用のライブラリフォルダに保持されます。背景、アバターライブラリの静的展示、シーン内アイテムのいずれにも取り込め、ドラッグ＆ドロップとファイル選択の両方で受け付けます。</p>
+  <h2>置いたあとも、大きさを選べる</h2>
+  <p>読み込んだGaussian PLYと通常のシーン内アイテムは、Desktopでは5〜2000%のサイズスライダー、VRでは縮小・拡大・原寸操作で調整できます。読込時のローカルスケールを100%として比率を保ち、選んだアイテムだけを変更します。Desktopの一覧も左側のコンパクトパネルへそろえ、プレビュー領域を残したままサイズの変化を見られるようにしました。</p>
+  <h2>まずは対応範囲を、正確に</h2>
+  <p>バイナリlittle-endianの標準3DGS PLYとPlayCanvas圧縮PLYに対応し、ASCII PLYや通常の点群PLYは対象外です。Gaussianは床や壁の物理Colliderを自動生成せず、静的展示には選択用のBoundsを用意します。骨・モーション・表情もPLYからは生成しません。</p>
+  <h2>検査した範囲</h2>
+  <p>EditModeではGaussian PLYの取込・直接ロード・アイテム登録・URP設定を検査し、GaussianPlyIntegrationTests 11/11、ファイル選択経路のRuntimeFilePickerContentImportTests 7/7、WebP実行時分離のWebPRuntimeIsolationTests 2/2が成功しました。アイテムサイズUIは直接NUnit assertionで確認しています。一方で、大規模PLYの写実的表示、VR HMD両眼、撮影カメラ・鏡での見え方、実機入力操作は未検証です。</p>
+  <h2>4コマの話</h2>
+  <p>今回は「点の景色は、変換しないと置けない？」という思い込みから開始。変換待ちの箱を横に置いたまま、PLYをそのまま呼び込んで、最後は大きさまで選べることに気付く構成にしました。点の集まりを別の形に作り替えず、置き場所と見せ方を増やした一日です。</p>
+  <h2>まとめ</h2>
+  <p>Gaussian PLYを変換せずに読み込み、背景・展示・アイテムとして配置してからも大きさを選べるようにしました。対応形式と未検証範囲を明確に保ちながら、点の景色をVRASの空間へ置ける入口を整えています。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
