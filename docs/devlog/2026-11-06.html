@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：置いた小物に、手を伸ばす | VRAS 開発日記</title>
+  <meta name="description" content="VRASにあるアイテム・VCIの操作を紹介します。置いた小物へ手を伸ばし、場面づくりの中で扱えます。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="vci-item-grab-and-two-hand-manipulation">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-06.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：置いた小物に、手を伸ばす | VRAS 開発日記">
+  <meta property="og:description" content="既存のアイテム・VCI操作で、置いた小物へ手を伸ばし、場面づくりの中で扱えます。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-06.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-06-comic.png">
+  <meta property="og:image:width" content="1247">
+  <meta property="og:image:height" content="1261">
+  <meta property="og:image:alt" content="ろひとルミナが置いた小物へ手を伸ばし、二人で大きさを変えて場面へ加える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：置いた小物に、手を伸ばす">
+  <meta name="twitter:description" content="既存のアイテム・VCI操作で、置いた小物へ手を伸ばし、場面づくりの中で扱えます。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-06-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.06 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：置いた小物に、手を伸ばす</h1>
+  <p class="lead">新規実装の報告ではなく、VRASにすでにあるアイテム・VCIの操作を紹介する回です。置いた小物へ近づき、対象に応じて手元で扱えるようにする、スタジオの小さな入口を眺めます。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-05 03:00:00 JSTから2026-11-06 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>aa5c7bc823b013fdfc622ec1d7aa1b85c9da8e5e</code>、期間内コミットは0件でした。<code>MainScene.unity</code> の未コミット差分は、期間内の実装事実として確認できないため実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-06-comic.png" alt="ろひとルミナが置いた小物へ手を伸ばし、二人で大きさを変えて場面へ加える4コマ漫画" width="1247" height="1261" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E7%BD%AE%E3%81%84%E3%81%9F%E5%B0%8F%E7%89%A9%E3%81%AB%E3%80%81%E6%89%8B%E3%82%92%E4%BC%B8%E3%81%B0%E3%81%99&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-06.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>置くだけで終わらない小物</h2>
+  <p>VRASでは、アイテムを読み込み、配置して、スタジオの中で扱えます。VR操作では、対象へ触れる操作とRayによる操作を使い分け、Grabを利用できます。対象に応じて両手での拡縮やUSE操作にも対応します。</p>
+  <h2>VCIも、対応範囲で手元へ</h2>
+  <p>VCIのSubItemも、対応範囲内でGrabなどの操作対象になります。VRASが扱うのはローカルでのTransform・Material・Animation・Audio・Lua等の限定された範囲です。VirtualCastの他ユーザー機能、ネットワーク同期、OSCを再現するものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>今回は、ろひが小さな小物を前に「触れない展示品」だと思い込むところから始めます。ルミナが手を伸ばすことで、置いたものがスタジオの景色の仲間になる、という小さな発見で締めます。今日完成した機能ではなく、現在実装されている操作の紹介です。</p>
+  <h2>まとめ</h2>
+  <p>VRASでは、配置したアイテムや対応範囲のVCI SubItemを、VRの接触・Ray操作で扱えます。小物をただ置くだけで終わらせず、場面づくりの中で手を伸ばせることが、このスタジオの使い方を少し広げます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
