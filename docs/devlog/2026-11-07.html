@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：表情を、ひとつずつ選ぶ | VRAS 開発日記</title>
+  <meta name="description" content="VRASで読み込んだアバターのBlendShapeを選び、表情・体形・その他の形状を調整する既存機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="avatar-blendshape-expression-adjustment">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-07.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：表情を、ひとつずつ選ぶ | VRAS 開発日記">
+  <meta property="og:description" content="読み込んだアバターのBlendShapeを選び、アバターらしい表情をひとつずつ探せます。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-07.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-07-comic.png">
+  <meta property="og:image:width" content="1287">
+  <meta property="og:image:height" content="1222">
+  <meta property="og:image:alt" content="ろひとルミナがアバターの表情をひとつずつ見比べ、笑顔を選ぶ4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：表情を、ひとつずつ選ぶ">
+  <meta name="twitter:description" content="読み込んだアバターのBlendShapeを選び、アバターらしい表情をひとつずつ探せます。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-07-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.07 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：表情を、ひとつずつ選ぶ</h1>
+  <p class="lead">新規実装の報告ではなく、VRASにすでにあるアバター調整を紹介する回です。表情・体形などに使われるBlendShapeを選び、今の一体へ少しずつ表情を重ねていく時間を眺めます。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-06 03:00:00 JSTから2026-11-07 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>aa5c7bc823b013fdfc622ec1d7aa1b85c9da8e5e</code>、期間内コミットは0件でした。<code>MainScene.unity</code> の未コミット差分は、期間内の実装事実として確認できないため実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-07-comic.png" alt="ろひとルミナがアバターの表情をひとつずつ見比べ、笑顔を選ぶ4コマ漫画" width="1287" height="1222" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E8%A1%A8%E6%83%85%E3%82%92%E3%80%81%E3%81%B2%E3%81%A8%E3%81%A4%E3%81%9A%E3%81%A4%E9%81%B8%E3%81%B6&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-07.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>表情の入口を、アバターごとに</h2>
+  <p>VRASでは、読み込んだアバターの位置・回転・Scaleに加えて、Renderer単位の表示、Material Slot、BlendShapeを調整できます。BlendShapeは表情・体形・その他の形状を変えるための入口で、アバターごとに用意された項目を見ながら、目的の変化を選びます。</p>
+  <h2>一度に決めず、見比べる</h2>
+  <p>すべてのアバターが同じBlendShapeを持つわけではなく、見える結果は読み込んだアバターのデータに依存します。いま作りたい一枚や場面に合う変化を、ひとつずつ試して選ぶことが、アバターらしい表情へ近づく入口になります。</p>
+  <h2>4コマの話</h2>
+  <p>今回は、ろひが無表情のアバターを前に候補を急いで選ぼうとするところから始めます。ルミナと小さな変化を見比べるうち、そのアバターらしい笑顔が場面になじみます。今日完成した機能ではなく、現在使える調整の紹介です。</p>
+  <h2>まとめ</h2>
+  <p>VRASでは、読み込んだアバターのBlendShapeを調整し、表情・体形・その他の形状をアバターごとの対応範囲で扱えます。ひとつずつ選ぶ手間が、アバターらしい表情へ近づく入口になります。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
