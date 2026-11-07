@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：点の集まりが、景色になる | VRAS 開発日記</title>
+  <meta name="description" content="VRASに既にあるGaussian PLY直接描画を紹介します。色付きの点群が視点に応じて奥行きのある景色になる既存機能です。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="gaussian-ply-direct-rendering">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-08.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：点の集まりが、景色になる | VRAS 開発日記">
+  <meta property="og:description" content="既存のGaussian PLY直接描画で、色付きの点群が奥行きのある景色になる様子を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-08.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-08-comic.png">
+  <meta property="og:image:width" content="1218">
+  <meta property="og:image:height" content="1292">
+  <meta property="og:image:alt" content="ろひとルミナがGaussian PLYの色付き点群から景色を見つける4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：点の集まりが、景色になる">
+  <meta name="twitter:description" content="既存のGaussian PLY直接描画で、点群が奥行きのある景色になる様子を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-08-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.08 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：点の集まりが、景色になる</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にあるGaussian PLY直接描画を紹介します。色付きの点群が、見る角度に応じて奥行きのある景色へと立ち上がります。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-07 03:00:00 JSTから2026-11-08 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>aa5c7bc823b013fdfc622ec1d7aa1b85c9da8e5e</code>、期間内コミットは0件でした。<code>MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-08-comic.png" alt="ろひとルミナがGaussian PLYの色付き点群から景色を見つける4コマ漫画" width="1218" height="1292" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E7%82%B9%E3%81%AE%E9%9B%86%E3%81%BE%E3%82%8A%E3%81%8C%E3%80%81%E6%99%AF%E8%89%B2%E3%81%AB%E3%81%AA%E3%82%8B&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-08.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>点の集まりを、景色として眺める</h2>
+  <p>VRASには、Gaussian PLYの内容を直接描画する既存機能があります。色付きの点の重なりは、ただの平面画像ではなく、視点を変えることで奥行きのある場として見えてきます。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>この機能紹介では、Gaussian PLYを読み込み、空間的な景色として描画する部分に絞っています。対応する見え方はデータの内容に依存します。今回は新しいリリースや当日実装、未確認の対応環境を示すものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひが点の雲に近づくと、ルミナのひと言で景色の輪郭と奥行きが浮かび上がります。最後に残るのは、たくさんの点がひとつの場所らしさを作っているという発見です。</p>
+  <h2>まとめ</h2>
+  <p>VRASのGaussian PLY直接描画は、点群データをシーン内で眺めるための既存機能です。見る角度に合わせて景色が立ち上がる感覚を、静かに楽しめます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
