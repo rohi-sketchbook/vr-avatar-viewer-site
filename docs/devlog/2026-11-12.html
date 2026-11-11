@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：見た目のモードを、光にあわせて選ぶ | VRAS 開発日記</title>
+  <meta name="description" content="VRASに既にある4つのアバター描画モードを、スタジオの光と背景にあわせて見比べる仕組みを紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="avatar-render-mode-selection">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-12.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：見た目のモードを、光にあわせて選ぶ | VRAS 開発日記">
+  <meta property="og:description" content="VRASに既にある4つのアバター描画モードを、スタジオの光と背景にあわせて見比べる仕組みを紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-12.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-12-comic.png">
+  <meta property="og:image:width" content="1247">
+  <meta property="og:image:height" content="1261">
+  <meta property="og:image:alt" content="ろひとルミナが4つの描画モードを見比べ、景色に合う表現を選ぶ4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：見た目のモードを、光にあわせて選ぶ">
+  <meta name="twitter:description" content="VRASに既にある4つのアバター描画モードを、スタジオの光と背景にあわせて見比べる仕組みを紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-12-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.12 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：見た目のモードを、光にあわせて選ぶ</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にあるアバターの描画モードを紹介します。読み込んだアバターの素材や、作りたい場面に合わせて、見た目の扱い方を選ぶための機能です。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-11 03:00:00 JSTから2026-11-12 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-12-comic.png" alt="ろひとルミナが4つの描画モードを見比べ、景色に合う表現を選ぶ4コマ漫画" width="1247" height="1261" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E8%A6%8B%E3%81%9F%E7%9B%AE%E3%81%AE%E3%83%A2%E3%83%BC%E3%83%89%E3%82%92%E3%80%81%E5%85%89%E3%81%AB%E3%81%82%E3%82%8F%E3%81%9B%E3%81%A6%E9%81%B8%E3%81%B6&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-12.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>同じアバターを、どう見せるか</h2>
+  <p>VRASでは、アバターの描画を「オリジナル / 共通Lit / 共通Toon / PotaToon」の4モードから選べます。素材が持つ見た目を手がかりにしながら、スタジオの光や背景に合う表現を探すための入口です。</p>
+  <h2>モードは、作品ごとの正解を決めるものではない</h2>
+  <p>オリジナルは素材本来の表現を優先します。共通Lit、共通Toon、PotaToonは、対応できる範囲で素材をそれぞれの描画の流れへ変換します。特殊なシェーダーや透明表現では、同じ見え方を完全に再現できないことがあります。</p>
+  <h2>光を変えたら、もう一度見る</h2>
+  <p>描画モードは、背景やライト、撮影の狙いと切り離せません。ひとつを万能な答えと決めず、同じアバターを見比べて、その場面で納得できる見え方を選べます。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>これは既存の描画モードの紹介です。全シェーダー・全アバターでの完全互換や、当日の実装・品質検証完了を示すものではありません。VRChat Runtimeと同じ描画を保証する機能でもありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは、同じアバターが光の下で少しずつ違って見えることに気づきます。ルミナは四つの小さな額を並べ、どれか一つを急いで正解にしないよう案内します。最後は二人で、今日の景色に似合う一枚を選びます。</p>
+  <h2>まとめ</h2>
+  <p>VRASの描画モードは、アバターの素材と場面に合わせて見た目を選ぶ既存機能です。光と背景の中で見比べながら、その一枚に合う表現を探せます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
