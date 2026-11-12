@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：空模様を、スタジオの演出にする | VRAS 開発日記</title>
+  <meta name="description" content="VRASに既にあるスタジオ環境の空、雲、霧、雨や雪といった表現を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="studio-weather-and-environment-effects">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-13.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：空模様を、スタジオの演出にする | VRAS 開発日記">
+  <meta property="og:description" content="VRASに既にあるスタジオ環境の空、雲、霧、雨や雪といった表現を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-13.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-13-comic.png">
+  <meta property="og:image:width" content="1263">
+  <meta property="og:image:height" content="1245">
+  <meta property="og:image:alt" content="ろひとルミナがスタジオの空、霧、雨上がりの光を見比べる4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：空模様を、スタジオの演出にする">
+  <meta name="twitter:description" content="VRASに既にあるスタジオ環境の空、雲、霧、雨や雪といった表現を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-13-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.13 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：空模様を、スタジオの演出にする</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にあるスタジオ環境の表現を紹介します。アバターを置く景色の空や雲、霧、雨や雪といった要素を、撮りたい一枚の雰囲気に合わせて組み立てるための機能です。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-12 03:00:00 JSTから2026-11-13 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-13-comic.png" alt="ろひとルミナがスタジオの空、霧、雨上がりの光を見比べる4コマ漫画" width="1263" height="1245" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-13.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>景色は、アバターの外側にある演出</h2>
+  <p>VRASのスタジオでは、VBG背景やSkyboxに加え、空、雲、霧、雨や雪、水面などのPhysical Weatherと環境エフェクトを扱えます。アバターのポーズを変えなくても、周囲の表情が変わると一枚の印象は大きく変化します。</p>
+  <h2>今日はどんな空にする？</h2>
+  <p>晴れた空をそのまま使うだけでなく、少し雲を足したり、遠くを霧でやわらげたりできます。雨や雪も、画面をにぎやかにするためだけの飾りではなく、場面の気分を考える手がかりになります。</p>
+  <h2>光とは分けて考える</h2>
+  <p>環境の見え方には、SkyboxやUnity Ambientを扱うGlobal Environmentと、VBG Baked ProbeまたはAdaptiveGIで扱うLocal GIという別の要素があります。Local GIは二重に適用しない設計です。景色を決めたあとで光の方向や明るさを見直すと、狙った雰囲気を探しやすくなります。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>これは現行実装のスタジオ環境機能の紹介です。すべての背景・アバター・効果の組み合わせでの品質検証完了や、当日の新規実装を示すものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは、同じポーズでも空が変わると気分まで変わることに気づきます。ルミナは雨を大げさな事件にせず、景色の一部としてそっと足す提案をします。最後は、二人が小さな雨上がりの光を眺めて締めます。</p>
+  <h2>まとめ</h2>
+  <p>VRASのスタジオ環境は、空や天候の要素を使ってアバターを置く場所の印象を整える既存機能です。背景と光を見比べながら、その場面に似合う景色を探せます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
