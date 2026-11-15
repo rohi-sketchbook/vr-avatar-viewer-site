@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：フレームの中に、仕上がりを先に見る | VRAS 開発日記</title>
+  <meta name="description" content="VRASの物理カメラプレビューで、撮影前に景色とカメラの表現をあわせて見通す既存機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="physical-camera-preview-effect-routing">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-16.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：フレームの中に、仕上がりを先に見る | VRAS 開発日記">
+  <meta property="og:description" content="VRASの物理カメラプレビューで、撮影前に景色とカメラの表現をあわせて見通す既存機能を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-16.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-16-comic.png">
+  <meta property="og:image:width" content="1312">
+  <meta property="og:image:height" content="1199">
+  <meta property="og:image:alt" content="ろひとルミナが物理カメラのプレビューで撮影前の仕上がりを確かめる4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：フレームの中に、仕上がりを先に見る">
+  <meta name="twitter:description" content="VRASの物理カメラプレビューで、撮影前に景色とカメラの表現をあわせて見通す既存機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-16-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.16 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：フレームの中に、仕上がりを先に見る</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にある物理カメラのプレビューで、撮影前に景色とカメラの表現を見通す考え方を紹介します。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-15 03:00:00 JSTから2026-11-16 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p><img src="../assets/images/devlog-2026-11-16-comic.png" alt="ろひとルミナが物理カメラのプレビューで撮影前の仕上がりを確かめる4コマ漫画" width="1312" height="1199" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0%E3%81%AE%E4%B8%AD%E3%81%AB%E3%80%81%E4%BB%95%E4%B8%8A%E3%81%8C%E3%82%8A%E3%82%92%E5%85%88%E3%81%AB%E8%A6%8B%E3%82%8B&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-16.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>まず、カメラの枠をのぞく</h2>
+  <p>スタジオには空や光、霧など、場面全体をつくる環境側の要素があります。そこへカメラ側の表現を重ねると、同じ場所でも写真の受け取り方は少し変わります。物理カメラのプレビューは、撮る前にその枠の中を確かめるための入口です。</p>
+  <h2>景色とカメラの表現を、一緒に見る</h2>
+  <p>VRASでは、環境側の効果とアクティブなCapture Cameraに属する効果を分けて扱います。物理カメラのプレビューと最終Captureでは、どちらも環境とカメラの効果をあわせて確認できるので、撮影後に初めて印象の違いに気づくことを減らせます。</p>
+  <h2>画面の補助表示は写真に残さない</h2>
+  <p>撮影画像へライト操作ガイドなどのViewer補助表示を混入させないことも、撮影経路の約束です。構図を整えるための案内は操作中に役立ち、残したい一枚には入れない――その役割を分けています。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>これは現行実装の紹介です。当日に新しく実装・検証完了したことを示すものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひはスタジオで、同じ背景を見ながら「撮る一枚の見え方」を確かめます。ルミナは物理カメラの枠へ目を向け、景色とカメラの表現を重ねて見られることを伝えます。ろひは枠の内側で仕上がりを見通し、最後は補助表示のない写真を思い浮かべます。</p>
+  <h2>まとめ</h2>
+  <p>物理カメラのプレビューと最終Captureでは、環境側とカメラ側の効果をあわせて扱います。撮影前にフレームの中を確かめ、操作用の補助表示を写真へ残さず、意図した一枚を整えるための既存機能です。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
