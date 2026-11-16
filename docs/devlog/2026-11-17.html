@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：アバターの「いつもの動き」を、スタジオへ | VRAS 開発日記</title>
+  <meta name="description" content="VRASのAV3互換で、外部Converterから取り込んだ対応範囲の表情・衣装切替・Gesture・Actionをスタジオで扱う既存機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="av3-safe-runtime-compatibility">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-17.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：アバターの「いつもの動き」を、スタジオへ | VRAS 開発日記">
+  <meta property="og:description" content="外部Converterから取り込んだAV3アバターの対応範囲の動きを、ローカルのスタジオで確かめる既存機能を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-17.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-17-comic.png">
+  <meta property="og:image:width" content="1312">
+  <meta property="og:image:height" content="1199">
+  <meta property="og:image:alt" content="ろひとルミナが、対応するアバターの動きをスタジオで確かめる4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：アバターの「いつもの動き」を、スタジオへ">
+  <meta name="twitter:description" content="外部Converterから取り込んだAV3アバターの対応範囲の動きを、ローカルのスタジオで確かめる既存機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-17-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.17 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：アバターの「いつもの動き」を、スタジオへ</h1>
+  <p class="lead">新規実装の報告ではなく、VRASにあるAV3互換の考え方を紹介する回です。外部Converterを通して取り込んだアバターの、対応範囲にある表情・衣装切替・GestureやActionを、ローカルのスタジオでも確かめられます。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-16 03:00:00 JSTから2026-11-17 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p class="article-image"><img src="../assets/images/devlog-2026-11-17-comic.png" alt="ろひとルミナが、対応するアバターの動きをスタジオで確かめる4コマ漫画" width="1312" height="1199" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC%E3%81%AE%E3%80%8C%E3%81%84%E3%81%A4%E3%82%82%E3%81%AE%E5%8B%95%E3%81%8D%E3%80%8D%E3%82%92%E3%80%81%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%AA%E3%81%B8&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-17.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>アバターの「いつもの合図」を見たいとき</h2>
+  <p>VRChat Avatar 3.0（AV3）のアバターでは、表情や衣装、ジェスチャーなどがAnimatorの状態とパラメータの組み合わせで動きます。VRASでは、外部Converterが必要な情報を読み取り、安全な中間表現へ変換して、VRAS内で扱える表情・モーション・表示切替へつなげます。</p>
+  <h2>持ち込める動きと、持ち込まない仕組み</h2>
+  <p>対応範囲には、表情、衣装・アクセサリーの切替、Gesture、Action、互換対象のアニメーション動作があります。一方で、任意のスクリプトやDLLを実行したり、ネットワーク同期やWorld Scriptを再現したりはしません。許可した範囲のRuntime Graphを使うことで、ローカルのスタジオで安全に扱う方針です。</p>
+  <h2>アバターごとの違いを確かめながら</h2>
+  <p>VRASが目指すのはVRChat Clientそのものの完全再現ではありません。アバター側の構成によって利用できる表現や再現度は異なるため、取り込んだあとに「どこまで使えるか」を確かめながら、撮影や調整へつなげます。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>これは現行実装の紹介です。当日に新しく実装・検証完了したことや、全アバターでの動作を示すものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは、アバターのいつもの挨拶をスタジオでも見られるか気にします。ルミナは、対応する動きをつなげられる一方で、何でも実行する仕組みではないことを伝えます。最後は、できる範囲を見ながら楽しむことにしました。</p>
+  <h2>まとめ</h2>
+  <p>VRASは、外部Converterで取り込んだAV3アバターについて、対応範囲の表情、衣装切替、Gesture、Actionなどを安全な形でスタジオへつなげます。VRChat Clientの完全互換ではないことを前提に、アバターごとの違いを見ながら使う既存機能です。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
