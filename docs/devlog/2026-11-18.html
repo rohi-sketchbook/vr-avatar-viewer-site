@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：揺れた髪を、手元でそっと止める | VRAS 開発日記</title>
+  <meta name="description" content="VRASのVRモードで、対応する髪・スカート・アクセサリーなどの揺れ物を手元からそっと整える既存機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="vr-secondary-motion-grab-and-pin">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-18.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：揺れた髪を、手元でそっと止める | VRAS 開発日記">
+  <meta property="og:description" content="対応する揺れ物をVRの手元から整え、アバターと一緒に保てる既存機能を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-18.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-18-comic.png">
+  <meta property="og:image:width" content="1247">
+  <meta property="og:image:height" content="1261">
+  <meta property="og:image:alt" content="ろひとルミナが、VRの手元から対応する髪の揺れをそっと整える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：揺れた髪を、手元でそっと止める">
+  <meta name="twitter:description" content="対応する揺れ物をVRの手元から整え、アバターと一緒に保てる既存機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-18-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.18 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：揺れた髪を、手元でそっと止める</h1>
+  <p class="lead">新規実装の報告ではなく、VRASのVRモードにある揺れ物操作を紹介します。対応する髪、スカート、アクセサリーなどを手元からそっと整え、撮影や場面づくりの小さな調整へつなげられます。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-17 03:00:00 JSTから2026-11-18 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p class="article-image"><img src="../assets/images/devlog-2026-11-18-comic.png" alt="ろひとルミナが、VRの手元から対応する髪の揺れをそっと整える4コマ漫画" width="1247" height="1261" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E6%8F%BA%E3%82%8C%E3%81%9F%E9%AB%AA%E3%82%92%E3%80%81%E6%89%8B%E5%85%83%E3%81%A7%E3%81%9D%E3%81%A3%E3%81%A8%E6%AD%A2%E3%82%81%E3%82%8B&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-18.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>手元で、少しだけ整えたいとき</h2>
+  <p>VRモードでは、手のColliderを通じて、対応する髪、スカート、アクセサリーなどの揺れ物へ穏やかに干渉できます。大きく形を変えるためではなく、前髪を顔の脇へ寄せる、衣装や飾りの見え方を落ち着かせる、といった場面づくりのための小さな手助けです。</p>
+  <h2>掴んでいる間と、離したあと</h2>
+  <p>対応する物理粒子を見つけると、掴んでいる間はコントローラー位置へ留められます。固定モードでは、手を離したあともアバターのRootから見た相対位置として保持します。アバター全体を移動しても、整えた揺れ物だけが世界に置き去りにならない考え方です。</p>
+  <h2>アバターごとに、できる範囲を見ながら</h2>
+  <p>VRASではNative PhysBoneと互換物理の経路を扱います。ただし、すべての髪、スカート、アクセサリーが同じように操作できることや、VRC PhysBone、VRChat Clientとの完全な一致は保証しません。取り込んだアバターの構成に合わせて、使える範囲を確かめながら扱います。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>これは現行実装の紹介です。当日に新しく実装・検証完了したことや、すべてのアバターでの動作を示すものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは撮影前に、顔へかかった髪をほんの少しだけ寄せたくなります。ルミナは対応する揺れ物を手元で整え、固定した位置がアバターと一緒についてくる仕組みを見せます。最後は、整った一枚を二人で眺めました。</p>
+  <h2>まとめ</h2>
+  <p>VRASのVR揺れ物操作は、対応する髪、スカート、アクセサリーなどを手元からそっと整え、必要に応じてアバターと一緒に位置を保つ既存機能です。アバターごとの構成と対応範囲を確認しながら、撮影や演出の細部を整えられます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
