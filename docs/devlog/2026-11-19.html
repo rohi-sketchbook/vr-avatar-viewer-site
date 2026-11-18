@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：手のひとことまで、ポーズにする | VRAS 開発日記</title>
+  <meta name="description" content="VRASに既にある指ポーズプリセットで、全身のポーズを保ちながら左右それぞれの手の形を整える仕組みを紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="finger-pose-presets-and-per-hand-application">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-19.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：手のひとことまで、ポーズにする | VRAS 開発日記">
+  <meta property="og:description" content="既存の指ポーズプリセットで、全身のポーズを保ちながら左右それぞれの手の形を整える仕組みを紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-19.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-19-comic.png">
+  <meta property="og:image:width" content="1312">
+  <meta property="og:image:height" content="1199">
+  <meta property="og:image:alt" content="ろひとルミナが、アバターの手にピースなどの指ポーズを添える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：手のひとことまで、ポーズにする">
+  <meta name="twitter:description" content="既存の指ポーズプリセットで、全身のポーズを保ちながら左右それぞれの手の形を整える仕組みを紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-19-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.19 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：手のひとことまで、ポーズにする</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にある指ポーズプリセットを紹介します。全身のポーズを決めたあとに、手の形を選び、写真の意図を指先から補える機能です。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-18 03:00:00 JSTから2026-11-19 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p class="article-image"><img src="../assets/images/devlog-2026-11-19-comic.png" alt="ろひとルミナが、アバターの手にピースなどの指ポーズを添える4コマ漫画" width="1312" height="1199" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E6%89%8B%E3%81%AE%E3%81%B2%E3%81%A8%E3%81%93%E3%81%A8%E3%81%BE%E3%81%A7%E3%80%81%E3%83%9D%E3%83%BC%E3%82%BA%E3%81%AB%E3%81%99%E3%82%8B&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-19.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>手の形が、写真の意味を少し変える</h2>
+  <p>VRASの指ポーズプリセットには、ピース、OK、グー、チョキ、パー、指さし、サムズアップ、リラックス、やわらかく開く・握る、ピンチなどが用意されています。全身のポーズを変えずに、選んだ手だけへ適用できます。</p>
+  <h2>左右を選び、最後に整える</h2>
+  <p>Desktopのポーズ画面では各プリセットを左手・右手ごとに適用できます。VRでは、対応する手元へUSE＋トリガーで触れることで、用意された指ポーズを順に切り替える操作もあります。手の表情を決めるために全身を作り直さず、撮影の最後に少しだけ整えるための仕組みです。</p>
+  <h2>アバターの構成を見ながら</h2>
+  <p>指ポーズはHumanoidのFinger Muscleを使えるアバターではその経路を優先し、それが使えない場合はVRASの共通リグ経路を使います。取り込んだアバターの指ボーン構成によって適用できる範囲は変わるため、すべてのモデルで同じ見た目になることを保証するものではありません。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>これは現行実装の紹介です。当日に新しく実装・検証完了したことを示すものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは撮影の構図を決めたのに、手だけが少し物足りないと気づきます。ルミナが指ポーズをいくつか見せ、ろひはピースを選択。最後は、手のひとことまで決まった一枚に二人で頷きます。</p>
+  <h2>まとめ</h2>
+  <p>VRASの指ポーズプリセットは、全身のポーズを保ったまま、左右それぞれの手へ選んだ形を加える既存機能です。撮影の仕上げで、アバターの気持ちを指先から補えます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
