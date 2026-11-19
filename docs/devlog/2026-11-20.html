@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：一枚のために、解像度を選ぶ | VRAS 開発日記</title>
+  <meta name="description" content="VRASに既にある撮影解像度プリセットで、用途にあわせて一枚の大きさを選ぶ仕組みを紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="photo-capture-resolution-presets">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-20.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：一枚のために、解像度を選ぶ | VRAS 開発日記">
+  <meta property="og:description" content="既存の撮影解像度プリセットで、用途にあわせて一枚の大きさを選ぶ仕組みを紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-20.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-20-comic.png">
+  <meta property="og:image:width" content="1217">
+  <meta property="og:image:height" content="1293">
+  <meta property="og:image:alt" content="ろひとルミナが、撮影する一枚に合う解像度を選ぶ4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：一枚のために、解像度を選ぶ">
+  <meta name="twitter:description" content="既存の撮影解像度プリセットで、用途にあわせて一枚の大きさを選ぶ仕組みを紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-20-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.20 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：一枚のために、解像度を選ぶ</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にある撮影解像度プリセットを紹介します。撮りたい一枚の用途にあわせて、まず無理のない大きさを選んでから撮影へ進める仕組みです。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-19 03:00:00 JSTから2026-11-20 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p class="article-image"><img src="../assets/images/devlog-2026-11-20-comic.png" alt="ろひとルミナが、撮影する一枚に合う解像度を選ぶ4コマ漫画" width="1217" height="1293" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E4%B8%80%E6%9E%9A%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E8%A7%A3%E5%83%8F%E5%BA%A6%E3%82%92%E9%81%B8%E3%81%B6&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-20.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>一枚に合う大きさから</h2>
+  <p>VRASの撮影には、1280×720、1920×1080、2560×1440、3840×2160の解像度プリセットがあります。用途や扱いやすさに合わせて、撮影前に近いサイズを選べます。</p>
+  <h2>撮影のための品質を整える</h2>
+  <p>撮影時は、選択した解像度で専用の出力を作ります。保存している撮影サイズは次回の起動でも使えるため、いつもの用途に合わせた入口を保てます。</p>
+  <h2>無理のない範囲で</h2>
+  <p>解像度は最小640×360から最大3840×2160の範囲に収めます。大きな画像ほど常に正解というわけではなく、見せたい場所と扱いやすさに合わせて選ぶことが大切です。</p>
+  <h2>今回の紹介範囲</h2>
+  <p>これは現行実装の紹介です。当日に新しく実装・検証完了したことを示すものではありません。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは「大きいほどいい」と迷い、ルミナと用途を思い出します。まずは扱いやすい一枚を撮ってみると、選ぶべきなのは数字の大きさではなく、その写真が行く先だと気づきます。</p>
+  <h2>まとめ</h2>
+  <p>VRASの撮影解像度プリセットは、撮りたい一枚に合わせて1280×720から3840×2160までのサイズを選べる既存機能です。目的に合う大きさから、撮影を始められます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
