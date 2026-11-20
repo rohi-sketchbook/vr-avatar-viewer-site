@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：アバターを迎える、最初の入口 | VRAS 開発日記</title>
+  <meta name="description" content="VRASがVRM／VABを直接読み込み、他の対応形式を安全な取り込み経路で扱う既存機能を紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="multi-format-avatar-loading">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-21.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：アバターを迎える、最初の入口 | VRAS 開発日記">
+  <meta property="og:description" content="VRM／VABと各種対応入力を、安全な取り込み経路でスタジオへ迎える既存機能を紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-21.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-21-comic.png">
+  <meta property="og:image:width" content="1249">
+  <meta property="og:image:height" content="1259">
+  <meta property="og:image:alt" content="ろひとルミナが、異なる形式のアバターを安全な入口からスタジオへ迎える4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：アバターを迎える、最初の入口">
+  <meta name="twitter:description" content="VRM／VABと各種対応入力を、安全な取り込み経路でスタジオへ迎える既存機能を紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-21-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.21 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：アバターを迎える、最初の入口</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にあるアバター読込の入口を紹介します。形式ごとの違いをそのまま実行するのではなく、扱える形へ整えてからスタジオへ迎える仕組みです。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-20 03:00:00 JSTから2026-11-21 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p class="article-image"><img src="../assets/images/devlog-2026-11-21-comic.png" alt="ろひとルミナが、異なる形式のアバターを安全な入口からスタジオへ迎える4コマ漫画" width="1249" height="1259" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E3%82%A2%E3%83%90%E3%82%BF%E3%83%BC%E3%82%92%E8%BF%8E%E3%81%88%E3%82%8B%E3%80%81%E6%9C%80%E5%88%9D%E3%81%AE%E5%85%A5%E5%8F%A3&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-21.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>いろいろなアバターを、ひとつのスタジオへ</h2>
+  <p>VRASは、一般的な <code>.vrm</code> と独自の <code>.vab</code> を直接読み込めます。FBX、GLB、PMX、UnityPackage、Prefab、Unity Sceneは取り込み対象として扱い、必要に応じてVAB 4系へ正規化します。</p>
+  <h2>まずは安全に、使える形へ</h2>
+  <p>Windows Playerの取り込みでは、元のUnityPackageからC#、DLL、任意のUnity ComponentやShaderを実行しません。静的なAssetを読み取り、VRASで扱える範囲へ変換する設計です。</p>
+  <h2>入口ごとに、できることは違う</h2>
+  <p>これは完全なUnity Scene再生ではなく、すべてのアバターや入力形式で同じ再現を約束するものでもありません。無理にそのまま動かすのではなく、対応範囲を保ちながらスタジオへ迎えます。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは「この子も連れてこられるかな」とアバターの箱を前に迷い、ルミナと一緒に「入口は違っても、会うために整える」という役割を見つけます。</p>
+  <h2>まとめ</h2>
+  <p>VRASはVRM／VABを直接読み込み、他の対応入力は安全な取り込み経路で扱います。形式ごとの差を隠すのではなく、無理に実行しない境界を保ちながら、アバターをスタジオへ迎えます。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
