@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>閑話休題：スタジオの道具を、すぐそばに | VRAS 開発日記</title>
+  <meta name="description" content="VRASの既存ManagedLibraryで、アプリに同梱したスタジオ用コンテンツを必要なときに使い、ユーザー管理のコンテンツと分けて扱う仕組みを紹介します。">
+  <meta name="devlog:type" content="feature-spotlight">
+  <meta name="devlog:feature" content="managed-library-bundled-content">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-24.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="閑話休題：スタジオの道具を、すぐそばに | VRAS 開発日記">
+  <meta property="og:description" content="既存ManagedLibraryで、アプリに同梱したスタジオ用コンテンツを必要なときに使い、ユーザー管理のコンテンツと分けて扱う仕組みを紹介します。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-24.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-24-comic.png">
+  <meta property="og:image:width" content="1217">
+  <meta property="og:image:height" content="1293">
+  <meta property="og:image:alt" content="ろひとルミナが、同梱されたスタジオの道具と自分のコンテンツを分けて選ぶ4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="閑話休題：スタジオの道具を、すぐそばに">
+  <meta name="twitter:description" content="既存ManagedLibraryで、アプリに同梱したスタジオ用コンテンツを必要なときに使い、ユーザー管理のコンテンツと分けて扱う仕組みを紹介します。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-24-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.24 / Development Log / Feature Spotlight</div>
+  <h1>閑話休題：スタジオの道具を、すぐそばに</h1>
+  <p class="lead">新規実装の報告ではなく、VRASに既にあるManagedLibraryを紹介します。アプリに同梱したスタジオ用コンテンツを必要なときに使い、ユーザーが管理するコンテンツとは分けて扱うための既存機能です。</p>
+  <div class="notice">今回は <strong>feature-spotlight（機能紹介）</strong> です。集計期間は2026-11-23 03:00:00 JSTから2026-11-24 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>c33733a41be121b814a1732df8c9eae089ace2ea</code>、期間内コミットは0件でした。<code>Assets/Scenes/MainScene.unity</code> の未コミット差分は、期間内に実装された事実を確定できないため実績には含めていません。</div>
+  <p class="article-image"><img src="../assets/images/devlog-2026-11-24-comic.png" alt="ろひとルミナが、同梱されたスタジオの道具と自分のコンテンツを分けて選ぶ4コマ漫画" width="1217" height="1293" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E9%96%91%E8%A9%B1%E4%BC%91%E9%A1%8C%EF%BC%9A%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%AA%E3%81%AE%E9%81%93%E5%85%B7%E3%82%92%E3%80%81%E3%81%99%E3%81%90%E3%81%9D%E3%81%B0%E3%81%AB&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-24.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>最初からある道具を、必要なときに</h2>
+  <p>ManagedLibraryは、VRASに同梱するコンテンツを扱うための仕組みです。開発中の収録元は <code>Assets/ManagedLibrary</code>、Windows Playerでは <code>VRAS_Data/ManagedLibrary.vml</code> を使います。</p>
+  <h2>スタジオづくりの選択肢</h2>
+  <p>VABアバター、背景、Skybox、アニメーション、シーケンス、音声、ステッカー、ロゴといった同梱コンテンツを扱えます。内蔵アイテムのPrefabは、Unity Asset参照で収録されます。</p>
+  <h2>自分のものと混ぜない</h2>
+  <p>Playerは起動時にManagedLibraryの索引をマウントし、内容は必要になった時点で取り出します。ユーザーが管理するコンテンツは <code>UserData</code> 側に分かれているため、同梱物と同じ置き場に混ぜずに扱えます。</p>
+  <h2>4コマの話</h2>
+  <p>ろひは仕上げのひとつを探し、ルミナはすぐそばの道具棚を示します。自分の大切な箱とは分けたまま、必要なものだけを選ぶ小さな場面にしました。今日は新規実装の報告ではなく、既存のManagedLibraryを使うときの感覚を描いています。</p>
+  <h2>まとめ</h2>
+  <p>ManagedLibraryは、同梱コンテンツを必要なときに扱いながら、ユーザー管理のコンテンツと分ける既存機能です。スタジオづくりの選択肢を、すぐそばに置く役割を取り上げました。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
