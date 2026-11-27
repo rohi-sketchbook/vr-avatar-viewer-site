@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>迷子にしない。設計書の入口を整えた日 | VRAS 開発日記</title>
+  <meta name="description" content="VRASの設計文書の入口と現行仕様への参照を整理し、必要な情報へ迷わず進める道筋を整えた記録です。">
+  <meta name="devlog:type" content="development">
+  <link rel="canonical" href="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-28.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VRAS - VR AVATAR STUDIO -">
+  <meta property="og:title" content="迷子にしない。設計書の入口を整えた日 | VRAS 開発日記">
+  <meta property="og:description" content="設計文書の入口と現行仕様への参照を整理し、必要な情報へ迷わず進める道筋を整えました。">
+  <meta property="og:url" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/devlog/2026-11-28.html">
+  <meta property="og:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-28-comic.png">
+  <meta property="og:image:width" content="1218">
+  <meta property="og:image:height" content="1292">
+  <meta property="og:image:alt" content="ろひとルミナが、設計文書の入口と履歴を整理する4コマ漫画">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="迷子にしない。設計書の入口を整えた日">
+  <meta name="twitter:description" content="設計文書の入口と現行仕様への参照を整理し、必要な情報へ迷わず進める道筋を整えました。">
+  <meta name="twitter:image" content="https://rohi-sketchbook.github.io/vr-avatar-viewer-site/docs/assets/images/devlog-2026-11-28-comic.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../">VRAS</a><nav class="nav-links"><a href="../">トップ</a><a href="./">開発日記</a></nav></div></header>
+<main class="container"><article class="article">
+  <div class="eyebrow">2026.11.28 / Development</div>
+  <h1>迷子にしない。設計書の入口を整えた日</h1>
+  <p class="lead">設計文書の入口と現行仕様への参照を整理し、必要な情報へ迷わず進める道筋を整えた記録です。</p>
+  <div class="notice">集計期間は2026-11-27 03:00:00 JSTから2026-11-28 02:59:59 JSTまで、対象はViewerの <code>main</code> です。集計終了時点のHEADは <code>b3b65a0902e523e41f33cab99744de3ff6474619</code>、対象コミットは2件です。未コミット差分は期間内の実装事実を確定できないため実績に含めていません。</div>
+  <p class="article-image"><img src="../assets/images/devlog-2026-11-28-comic.png" alt="ろひとルミナが、設計文書の入口と履歴を整理する4コマ漫画" width="1218" height="1292" style="max-width: 100%; height: auto;"></p>
+  <div class="share-actions"><a class="button x-share" href="https://x.com/intent/tweet?text=%E8%BF%B7%E5%AD%90%E3%81%AB%E3%81%97%E3%81%AA%E3%81%84%E3%80%82%E8%A8%AD%E8%A8%88%E6%9B%B8%E3%81%AE%E5%85%A5%E5%8F%A3%E3%82%92%E6%95%B4%E3%81%88%E3%81%9F%E6%97%A5&amp;url=https%3A%2F%2Frohi-sketchbook.github.io%2Fvr-avatar-viewer-site%2Fdocs%2Fdevlog%2F2026-11-28.html&amp;hashtags=VRAvatarStudio%2CVRChat" target="_blank" rel="noopener noreferrer" aria-label="この記事をXで共有する"><span aria-hidden="true">𝕏</span> Xで共有</a></div>
+  <h2>仕様の階層を先に示す</h2>
+  <p>ドキュメント入口に、要件・製品仕様、基本設計、詳細設計、品質・運用、履歴・改修候補という役割を整理しました。現行仕様、検証中の設計、過去の記録を同じものとして扱わないための案内です。すべてを読むのではなく、作業に必要な正本だけへ進めます。</p>
+  <h2>機能別の道しるべを追加</h2>
+  <p>作業別の索引には、Gaussian PLY直接描画、VACエディタ、Desktopカメラモーションの詳細設計への参照を追加しました。現行アプリ仕様にも、対応する3DGS PLYをVAB/VBGに変換せず直接描画すること、静的展示モデルには骨・表情・IKがないこと、背景・アイテムでの扱いと保存場所を明記しています。</p>
+  <h2>履歴と未解決事項を混ぜない</h2>
+  <p>作業ログはアーカイブへ整理し、未解決バックログは現行設計の正本ではないと明示しました。過去の調査結果を残しながらも、実装を変えるときは現在のコードと照合する、という境界を保ちます。</p>
+  <h2>4コマの話</h2>
+  <p>ろひが資料の山から「今の約束はどれ？」と探し、ルミナが役割ごとの入口を示します。必要な設計だけを選んで進め、最後は履歴と現行仕様が混ざらない棚に整う、小さな文書整理の一日です。</p>
+  <h2>まとめ</h2>
+  <p>今回は、機能を増やす前に参照の道筋を整えた記録です。設計の正本、作業別の入口、履歴と未解決事項の境界を明確にし、VRASを扱うときに必要な情報へ迷わず進める状態を目指しました。</p>
+</article></main>
+<footer class="site-footer"><div class="container">© 2026 VRAS - VR AVATAR STUDIO - / ろひのらくがき帳</div></footer>
+</body>
+</html>
